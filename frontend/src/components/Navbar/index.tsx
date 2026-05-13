@@ -46,7 +46,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <Link to="/" className="nav-logo">
-        DentaLink
+        Visus
       </Link>
 
       <div className="nav-links" onKeyDown={handleKeyDown}>

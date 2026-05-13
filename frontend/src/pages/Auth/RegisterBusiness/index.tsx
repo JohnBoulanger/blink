@@ -178,7 +178,7 @@ export default function RegisterBusiness() {
           Already have an account? <Link to="/login">Sign in</Link>
         </p>
         <p className="auth-footer">
-          Are you a dental professional? <Link to="/register">Register as professional</Link>
+          Are you an optometry professional? <Link to="/register">Register as professional</Link>
         </p>
       </div>
     </div>

@@ -68,7 +68,7 @@ export default function BusinessList() {
 
   return (
     <div className="BusinessList page-enter">
-      <h1>Dental clinics</h1>
+      <h1>Optometry clinics</h1>
       <p className="list-subtitle">{count} clinics on the platform</p>
 
       {/* search + sort controls */}

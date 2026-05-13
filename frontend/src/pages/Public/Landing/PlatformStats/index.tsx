@@ -2,7 +2,7 @@ import "./style.css";
 
 // platform trust signals — numbers that show the platform is active
 const STATS = [
-  { value: "10+", label: "dental clinics on the platform" },
+  { value: "15+", label: "optometry clinics on the platform" },
   { value: "12", label: "staffing position types" },
   { value: "real-time", label: "shift matching & negotiation" },
 ];

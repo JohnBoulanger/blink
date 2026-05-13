@@ -1,6 +1,6 @@
 import "./style.css";
 
-// platform feature highlights — why dentalink
+// platform feature highlights — why visus
 const FEATURES = [
   {
     icon: "\u2714",
@@ -22,7 +22,7 @@ const FEATURES = [
 export default function FeatureCards() {
   return (
     <section className="features">
-      <p className="section-label">why dentalink</p>
+      <p className="section-label">why visus</p>
       <div className="features-grid">
         {FEATURES.map((feature) => (
           <div key={feature.title} className="feature-card">

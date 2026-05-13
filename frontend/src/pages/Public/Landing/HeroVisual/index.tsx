@@ -80,7 +80,7 @@ function ClinicMarker({ clinic }: { clinic: BusinessLocation }) {
   );
 }
 
-// interactive map of all dental clinics on the platform
+// interactive map of all optometry clinics on the platform
 export default function HeroVisual() {
   const [clinics, setClinics] = useState<BusinessLocation[]>([]);
 
@@ -91,7 +91,7 @@ export default function HeroVisual() {
   }, []);
 
   return (
-    <div className="hero-visual" aria-label="Map of dental clinics in Toronto">
+    <div className="hero-visual" aria-label="Map of optometry clinics in Toronto">
       <div className="hero-map-frame">
         <div className="hero-map-header">
           <span className="hero-map-dot" />

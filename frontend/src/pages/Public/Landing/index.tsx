@@ -7,16 +7,16 @@ import "./style.css";
 
 // position types shown in the scrolling ticker
 const TICKER_ITEMS = [
-  "Dental Hygienist",
-  "Orthodontist",
-  "Registered Dental Assistant",
-  "Oral Surgeon",
-  "Periodontist",
-  "Endodontist",
-  "Dental Therapist",
-  "General Dentist",
-  "Prosthodontist",
-  "Pediatric Dentist",
+  "Optometrist",
+  "Licensed Optician",
+  "Optometric Assistant",
+  "Contact Lens Specialist",
+  "Pre-test Technician",
+  "Vision Therapist",
+  "Optical Lab Technician",
+  "Practice Manager",
+  "Pediatric Vision Assistant",
+  "Retail Optical Associate",
 ];
 
 export default function Landing() {
@@ -35,11 +35,11 @@ export default function Landing() {
       <section className="hero">
         <div className="hero-grid">
           <div className="hero-inner">
-            <p className="hero-eyebrow">dental staffing, simplified</p>
+            <p className="hero-eyebrow">optometry staffing, simplified</p>
             <h1>
               The modern way to
               <br />
-              staff dental clinics
+              staff optometry clinics
             </h1>
             <p className="hero-subtitle">
               Connect qualified professionals with clinics that need them. Flexible shifts, verified
@@ -74,7 +74,7 @@ export default function Landing() {
           <div className="step">
             <span className="step-num">01</span>
             <h2>Create your account</h2>
-            <p>Register as a dental professional or a clinic. Activation takes under a minute.</p>
+            <p>Register as an optometry professional or a clinic. Activation takes under a minute.</p>
           </div>
           <div className="step-divider" aria-hidden="true" />
           <div className="step">
@@ -123,7 +123,7 @@ export default function Landing() {
       <section className="browse-cta">
         <h2>Ready to find your next shift?</h2>
         <p className="browse-cta-subtitle">
-          Explore dental clinics and open positions across the platform.
+          Explore optometry clinics and open positions across the platform.
         </p>
         <Link to="/businesses" className="btn-primary hero-btn">
           Browse clinics

@@ -58,7 +58,7 @@ export default function RegisterUser() {
     <div className="RegisterUser page-enter">
       <div className="auth-card">
         <h1>Create account</h1>
-        <p className="auth-subtitle">Join as a dental professional</p>
+        <p className="auth-subtitle">Join as an optometry professional</p>
 
         <form onSubmit={handleSubmit}>
           {error && <p className="error-message">{error}</p>}
