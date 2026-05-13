@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "prepare": "husky",
+    "dev": "concurrently --names backend,frontend --prefix-colors cyan,magenta --kill-others-on-fail \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "cd backend && node --watch src/server.js 3000",
+    "dev:frontend": "cd frontend && npm run dev",
     "format": "prettier --write \"frontend/src/**/*.{ts,tsx,css}\" \"backend/src/**/*.js\"",
     "format:check": "prettier --check \"frontend/src/**/*.{ts,tsx,css}\" \"backend/src/**/*.js\"",
     "lint": "cd frontend && npx eslint src/"
@@ -21,6 +24,7 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "eslint": "^10.1.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
