@@ -1,7 +1,7 @@
 /*
- * Seed script for A3 — populates the database with demo data.
- * Usage: npm run seed
- * Re runs whenever changes are commited
+ * Seed script — populates the database with demo data for Visus.
+ * Usage: npm run seed (or npx prisma db seed)
+ * Re-runs whenever changes are committed in environments that auto-seed.
  */
 'use strict';
 
@@ -11,23 +11,23 @@ const prisma = new PrismaClient();
 
 const PASSWORD = '123123';
 
-// Toronto-area dental clinic names and coordinates
+// Toronto-area optometry clinic names and coordinates
 const BUSINESS_DATA = [
-  { name: 'Bahen Dental Clinic', owner: 'Sarah Chen', lon: -79.3957, lat: 43.6596, address: '40 St George St, Toronto', phone: '416-555-0101' },
-  { name: 'Spadina Smiles', owner: 'Michael Park', lon: -79.3985, lat: 43.6554, address: '200 Spadina Ave, Toronto', phone: '416-555-0102' },
-  { name: 'Bloor Dental Care', owner: 'Emily Watson', lon: -79.3990, lat: 43.6677, address: '700 Bloor St W, Toronto', phone: '416-555-0103' },
-  { name: 'King West Dental', owner: 'David Kim', lon: -79.3940, lat: 43.6445, address: '500 King St W, Toronto', phone: '416-555-0104' },
-  { name: 'Danforth Dental Studio', owner: 'Priya Sharma', lon: -79.3520, lat: 43.6784, address: '300 Danforth Ave, Toronto', phone: '416-555-0105' },
-  { name: 'Queen Street Dental', owner: 'James Liu', lon: -79.3820, lat: 43.6485, address: '100 Queen St W, Toronto', phone: '416-555-0106' },
-  { name: 'Yorkville Dental Group', owner: 'Anna Martinez', lon: -79.3920, lat: 43.6715, address: '55 Yorkville Ave, Toronto', phone: '416-555-0107' },
-  { name: 'College Dental Clinic', owner: 'Robert Nguyen', lon: -79.3965, lat: 43.6580, address: '400 College St, Toronto', phone: '416-555-0108' },
-  { name: 'Harbourfront Dental', owner: 'Lisa Thompson', lon: -79.3810, lat: 43.6390, address: '10 Queens Quay W, Toronto', phone: '416-555-0109' },
-  { name: 'CSSU Dental', owner: 'Kevin Brown', lon: -79.3950, lat: 43.6600, address: '6 Hoskin Ave, Toronto', phone: '416-555-0110' },
-  { name: 'Annex Dental Studio', owner: 'Stephanie Ross', lon: -79.4050, lat: 43.6690, address: '388 Bloor St W, Toronto', phone: '416-555-0111' },
-  { name: 'Rosedale Dental', owner: 'Patrick O\'Brien', lon: -79.3780, lat: 43.6770, address: '1030 Yonge St, Toronto', phone: '416-555-0112' },
-  { name: 'Liberty Village Dental', owner: 'Michelle Tran', lon: -79.4200, lat: 43.6380, address: '171 E Liberty St, Toronto', phone: '416-555-0113' },
-  { name: 'Leslieville Dental Care', owner: 'Andrew Campbell', lon: -79.3290, lat: 43.6650, address: '1100 Queen St E, Toronto', phone: '416-555-0114' },
-  { name: 'Midtown Dental Centre', owner: 'Laura Singh', lon: -79.3930, lat: 43.6870, address: '2300 Yonge St, Toronto', phone: '416-555-0115' },
+  { name: 'Bahen Vision Clinic', owner: 'Sarah Chen', lon: -79.3957, lat: 43.6596, address: '40 St George St, Toronto', phone: '416-555-0101' },
+  { name: 'Spadina Vision Centre', owner: 'Michael Park', lon: -79.3985, lat: 43.6554, address: '200 Spadina Ave, Toronto', phone: '416-555-0102' },
+  { name: 'Bloor Eye Care', owner: 'Emily Watson', lon: -79.3990, lat: 43.6677, address: '700 Bloor St W, Toronto', phone: '416-555-0103' },
+  { name: 'King West Optometry', owner: 'David Kim', lon: -79.3940, lat: 43.6445, address: '500 King St W, Toronto', phone: '416-555-0104' },
+  { name: 'Danforth Vision Studio', owner: 'Priya Sharma', lon: -79.3520, lat: 43.6784, address: '300 Danforth Ave, Toronto', phone: '416-555-0105' },
+  { name: 'Queen Street Eyecare', owner: 'James Liu', lon: -79.3820, lat: 43.6485, address: '100 Queen St W, Toronto', phone: '416-555-0106' },
+  { name: 'Yorkville Optometry Group', owner: 'Anna Martinez', lon: -79.3920, lat: 43.6715, address: '55 Yorkville Ave, Toronto', phone: '416-555-0107' },
+  { name: 'College Vision Clinic', owner: 'Robert Nguyen', lon: -79.3965, lat: 43.6580, address: '400 College St, Toronto', phone: '416-555-0108' },
+  { name: 'Harbourfront Eye Care', owner: 'Lisa Thompson', lon: -79.3810, lat: 43.6390, address: '10 Queens Quay W, Toronto', phone: '416-555-0109' },
+  { name: 'CSSU Eyecare', owner: 'Kevin Brown', lon: -79.3950, lat: 43.6600, address: '6 Hoskin Ave, Toronto', phone: '416-555-0110' },
+  { name: 'Annex Vision Studio', owner: 'Stephanie Ross', lon: -79.4050, lat: 43.6690, address: '388 Bloor St W, Toronto', phone: '416-555-0111' },
+  { name: 'Rosedale Optometry', owner: 'Patrick O\'Brien', lon: -79.3780, lat: 43.6770, address: '1030 Yonge St, Toronto', phone: '416-555-0112' },
+  { name: 'Liberty Village Eye Centre', owner: 'Michelle Tran', lon: -79.4200, lat: 43.6380, address: '171 E Liberty St, Toronto', phone: '416-555-0113' },
+  { name: 'Leslieville Vision Care', owner: 'Andrew Campbell', lon: -79.3290, lat: 43.6650, address: '1100 Queen St E, Toronto', phone: '416-555-0114' },
+  { name: 'Midtown Eye Centre', owner: 'Laura Singh', lon: -79.3930, lat: 43.6870, address: '2300 Yonge St, Toronto', phone: '416-555-0115' },
 ];
 
 const REGULAR_FIRST_NAMES = [
@@ -45,41 +45,41 @@ const REGULAR_LAST_NAMES = [
 ];
 
 const POSITION_TYPES = [
-  { name: 'Dental Assistant (Level 1)', description: 'Entry-level dental assistant responsible for chair-side support, sterilization, and patient preparation.' },
-  { name: 'Dental Assistant (Level 2)', description: 'Experienced dental assistant with expanded duties including radiography and impressions.' },
-  { name: 'Dental Hygienist', description: 'Licensed dental hygienist performing cleanings, scaling, and patient education.' },
-  { name: 'Dental Receptionist', description: 'Front desk staff handling scheduling, billing, and patient communications.' },
-  { name: 'Orthodontic Assistant', description: 'Specialized assistant supporting orthodontic procedures and appliance adjustments.' },
-  { name: 'Oral Surgery Assistant', description: 'Assistant trained in surgical procedures, sedation monitoring, and post-op care.' },
-  { name: 'Pediatric Dental Assistant', description: 'Assistant specializing in pediatric dentistry and child behavior management.' },
-  { name: 'Dental Lab Technician', description: 'Technician fabricating dental prosthetics, crowns, and other restorations.' },
-  { name: 'Sterilization Technician', description: 'Specialist responsible for instrument sterilization and infection control protocols.' },
-  { name: 'Treatment Coordinator', description: 'Coordinates patient treatment plans, insurance verification, and case presentations.' },
-  { name: 'Dental Office Manager', description: 'Manages day-to-day clinic operations, staffing, and administrative workflows.' },
-  { name: 'Endodontic Assistant', description: 'Specialized assistant supporting root canal treatments and endodontic procedures.' },
+  { name: 'Optometric Assistant (Level 1)', description: 'Entry-level optometric assistant supporting pre-tests, instrument prep, and patient flow.' },
+  { name: 'Optometric Assistant (Level 2)', description: 'Experienced optometric assistant performing pretesting, OCT scans, and visual field testing.' },
+  { name: 'Licensed Optician', description: 'Licensed optician fitting and dispensing prescription eyewear and contact lenses.' },
+  { name: 'Front Desk Coordinator', description: 'Front desk staff handling scheduling, insurance verification, and patient communications.' },
+  { name: 'Contact Lens Specialist', description: 'Specialist focused on contact lens fitting, training, and follow-up care.' },
+  { name: 'Pediatric Vision Assistant', description: 'Assistant specializing in pediatric optometry and child behaviour management.' },
+  { name: 'Optical Lab Technician', description: 'Technician fabricating and edging prescription lenses to frame specifications.' },
+  { name: 'Pre-test Technician', description: 'Specialist responsible for auto-refraction, tonometry, and pre-exam diagnostics.' },
+  { name: 'Practice Manager', description: 'Manages day-to-day clinic operations, staffing, and administrative workflows.' },
+  { name: 'Vision Therapist', description: 'Conducts therapy sessions for binocular vision, amblyopia, and visual processing.' },
+  { name: 'Optometrist', description: 'Licensed optometrist performing comprehensive eye exams and ocular health assessments.' },
+  { name: 'Retail Optical Associate', description: 'Sales-floor associate guiding patients through frame selection and lens options.' },
 ];
 
 const BIOGRAPHIES = [
-  'Experienced dental professional with a passion for patient care and community health.',
-  'Recent graduate with strong clinical skills and enthusiasm for learning.',
-  'Dedicated healthcare worker with 5 years of experience in dental settings.',
-  'Detail-oriented professional committed to maintaining the highest standards of care.',
-  'Bilingual dental professional fluent in English and French.',
-  'Certified dental professional with expertise in pediatric dentistry.',
-  'Skilled clinician with a background in orthodontic support.',
-  'Healthcare professional with experience in both private practice and community clinics.',
-  'Passionate about oral health education and preventive care.',
+  'Experienced optometry professional with a passion for patient care and community vision health.',
+  'Recent graduate with strong clinical skills and enthusiasm for learning in eye care.',
+  'Dedicated healthcare worker with 5 years of experience in optometry settings.',
+  'Detail-oriented professional committed to maintaining the highest standards of vision care.',
+  'Bilingual optometry professional fluent in English and French.',
+  'Certified optometric assistant with expertise in pediatric vision testing.',
+  'Skilled clinician with a background in contact lens fitting and patient education.',
+  'Healthcare professional with experience in both private practice and community vision clinics.',
+  'Passionate about preventive eye care and patient education.',
   'Reliable team player with excellent patient communication skills.',
-  'Graduate student with an interest in healthcare technology and community outreach.',
-  'Experienced professional transitioning from general to specialized dental care.',
-  'Trained in advanced sterilization and infection control protocols.',
+  'Graduate student with an interest in vision science and community outreach.',
+  'Experienced professional transitioning from general to specialty contact lens care.',
+  'Trained in advanced pretesting protocols including OCT and visual field testing.',
   'Committed to continuing education and professional development.',
-  'Experienced in high-volume dental clinics with diverse patient populations.',
-  'Focused on patient comfort and anxiety-free dental experiences.',
-  'Proficient with digital dental records and imaging software.',
-  'Specializing in geriatric dental care and accessibility.',
-  'Strong background in dental lab work and prosthetic fabrication.',
-  'Enthusiastic about integrating technology into dental practice.',
+  'Experienced in high-volume optometry clinics with diverse patient populations.',
+  'Focused on patient comfort and accessible vision care experiences.',
+  'Proficient with digital patient records and ophthalmic imaging software.',
+  'Specializing in geriatric vision care and low-vision rehabilitation.',
+  'Strong background in optical lab work and lens edging.',
+  'Enthusiastic about integrating technology into modern optometry practice.',
 ];
 
 async function main() {
@@ -101,14 +101,14 @@ async function main() {
   // --- Admin ---
   const adminAccount = await prisma.account.create({
     data: {
-      email: 'admin1@csc309.utoronto.ca',
+      email: 'admin1@visus.dev',
       password: hashedPassword,
       role: 'admin',
       activated: true,
       administrator: { create: {} },
     },
   });
-  console.log(`Created admin: admin1@csc309.utoronto.ca (id: ${adminAccount.id})`);
+  console.log(`Created admin: admin1@visus.dev (id: ${adminAccount.id})`);
 
   // --- Businesses ---
   const businessIds = [];
@@ -116,7 +116,7 @@ async function main() {
     const b = BUSINESS_DATA[i];
     const account = await prisma.account.create({
       data: {
-        email: `business${i + 1}@csc309.utoronto.ca`,
+        email: `business${i + 1}@visus.dev`,
         password: hashedPassword,
         role: 'business',
         activated: true,
@@ -129,13 +129,13 @@ async function main() {
             lon: b.lon,
             lat: b.lat,
             verified: i < 8, // first 8 verified, rest unverified
-            biography: `${b.name} is a modern dental clinic in the heart of Toronto, dedicated to providing exceptional dental care.`,
+            biography: `${b.name} is a modern optometry clinic in the heart of Toronto, dedicated to providing exceptional eye care.`,
           },
         },
       },
     });
     businessIds.push(account.id);
-    console.log(`Created business: business${i + 1}@csc309.utoronto.ca (id: ${account.id})`);
+    console.log(`Created business: business${i + 1}@visus.dev (id: ${account.id})`);
   }
 
   // --- Regular Users ---
@@ -143,7 +143,7 @@ async function main() {
   for (let i = 0; i < 20; i++) {
     const account = await prisma.account.create({
       data: {
-        email: `regular${i + 1}@csc309.utoronto.ca`,
+        email: `regular${i + 1}@visus.dev`,
         password: hashedPassword,
         role: 'regular',
         activated: true,
@@ -162,7 +162,7 @@ async function main() {
       },
     });
     regularIds.push(account.id);
-    console.log(`Created regular: regular${i + 1}@csc309.utoronto.ca (id: ${account.id})`);
+    console.log(`Created regular: regular${i + 1}@visus.dev (id: ${account.id})`);
   }
 
   // --- Position Types ---
@@ -214,7 +214,7 @@ async function main() {
   await prisma.qualification.create({
     data: {
       userId: regularIds[0],
-      positionTypeId: positionTypeIds[2], // dental hygienist
+      positionTypeId: positionTypeIds[2], // licensed optician
       status: 'rejected',
       note: 'Previous submission was incomplete — please resubmit with updated certification.',
     },
