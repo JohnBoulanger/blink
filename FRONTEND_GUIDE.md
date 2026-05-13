@@ -1,6 +1,6 @@
-# DentaLink — Frontend Technical Guide
+# Visus — Frontend Technical Guide
 
-> a concept-heavy reference for understanding the react/typescript patterns and techniques used in this dental staffing platform. read alongside the source code — file paths and line numbers are provided throughout.
+> a concept-heavy reference for understanding the react/typescript patterns and techniques used in this optometry staffing platform. read alongside the source code — file paths and line numbers are provided throughout.
 
 ---
 

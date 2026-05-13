@@ -1,7 +1,7 @@
 {
-  "name": "temping-platform",
-  "version": "0.0.1",
-  "description": "Temporary Staffing Platform",
+  "name": "visus-backend",
+  "version": "0.1.0",
+  "description": "Visus — optometry staffing platform backend (Express + Prisma + Socket.IO)",
   "main": "server.js",
   "scripts": {
     "start": "node src/server.js ${PORT:-3000}",
@@ -11,8 +11,8 @@
     "clean": "rm -rf prisma/dev.db* node_modules package-lock.json prisma/migrations/",
     "format": "prettier --write \"src/**/*.js\""
   },
-  "author": "CSC309 Student, Winter 2026",
-  "license": "ISC",
+  "author": "John Boulanger",
+  "license": "MIT",
   "dependencies": {
     "@prisma/client": "^6.3.1",
     "bcrypt": "^5.1.1",
