@@ -8,7 +8,7 @@ A real-time optometry staffing platform connecting qualified eye care profession
 
 [https://visus-production-ceda.up.railway.app](https://visus-production-ceda.up.railway.app/)
 
-> The Railway subdomain still says `dentalink` — it's the original deployment URL. A custom domain swap is on the backlog; the app itself is fully rebranded.
+> The Railway subdomain still says `visus` — it's the original deployment URL. A custom domain swap is on the backlog; the app itself is fully rebranded.
 
 ### Demo accounts
 
