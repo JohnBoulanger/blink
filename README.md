@@ -2,11 +2,11 @@
 
 A real-time optometry staffing platform connecting qualified eye care professionals with clinics that need them. Built with React, Express.js, Prisma, and Socket.IO.
 
-![Landing page](docs/screenshots/01-landing.png)
+<img width="1115" height="888" alt="image" src="https://github.com/user-attachments/assets/b2fa3f7f-b333-439e-baa8-1b4e9eae08b8" />
 
 ## Live demo
 
-[https://dentalink-production-ceda.up.railway.app](https://dentalink-production-ceda.up.railway.app)
+[https://visus-production-ceda.up.railway.app](https://visus-production-ceda.up.railway.app/)
 
 > The Railway subdomain still says `dentalink` — it's the original deployment URL. A custom domain swap is on the backlog; the app itself is fully rebranded.
 
@@ -28,8 +28,10 @@ All accounts use the password `123123`.
 - Express interest in jobs and receive invitations from clinics
 - Real-time negotiation chat with 15-minute time-boxed windows
 
-![Browse jobs](docs/screenshots/03-regular-jobs.png)
-![Qualifications](docs/screenshots/04-regular-qualifications.png)
+<img width="1147" height="844" alt="image" src="https://github.com/user-attachments/assets/467c4470-a55c-44fc-8bc8-94b6dd53e2fb" />
+
+<img width="1114" height="514" alt="image" src="https://github.com/user-attachments/assets/e27bd172-00cf-4521-8fa2-14a7dbfcf4f2" />
+
 
 ### For optometry clinics
 - Post shifts with position type, salary range, and time window
@@ -37,7 +39,7 @@ All accounts use the password `123123`.
 - Invite candidates and track mutual interest
 - Negotiate terms in real time and confirm hires
 
-![Business jobs](docs/screenshots/05-business-jobs.png)
+<img width="1137" height="872" alt="image" src="https://github.com/user-attachments/assets/315e5b6b-d2cd-47c5-b6fe-c2feed98e46a" />
 
 ### For platform administrators
 - Manage users (suspend/unsuspend) and businesses (verify/unverify)
@@ -45,14 +47,15 @@ All accounts use the password `123123`.
 - Configure system settings: negotiation window, reset cooldown, job start window, availability timeout
 - Manage position types
 
-![Admin users](docs/screenshots/06-admin-users.png)
-![Admin settings](docs/screenshots/07-admin-settings.png)
+<img width="1144" height="841" alt="Screenshot 2026-07-19 211052" src="https://github.com/user-attachments/assets/e6bba49a-52de-4379-a0d5-c4e7f145a1c9" />
+<img width="1138" height="899" alt="Screenshot 2026-07-19 211045" src="https://github.com/user-attachments/assets/d5e345e8-b82d-4dbb-a838-f45a9553d819" />
+
 
 ### Public pages
 - Browse verified optometry clinics with search and sorting
 - View clinic profiles with location map, contact info, and open positions
 
-![Clinics list](docs/screenshots/08-clinics-list.png)
+<img width="1161" height="861" alt="Screenshot 2026-07-19 211138" src="https://github.com/user-attachments/assets/98daf952-1a18-46d7-a5ce-60dc7a3eb49c" />
 
 ### Authentication
 - JWT-based auth with role-dependent dashboards
@@ -60,8 +63,9 @@ All accounts use the password `123123`.
 - Password reset flow
 - Registration for both professionals and clinics
 
-![Login](docs/screenshots/02-login.png)
-![Register](docs/screenshots/09-register.png)
+<img width="1163" height="769" alt="Screenshot 2026-07-19 211150" src="https://github.com/user-attachments/assets/f0ba3018-174b-4727-acd6-79f30d787d73" />
+<img width="1130" height="587" alt="Screenshot 2026-07-19 211145" src="https://github.com/user-attachments/assets/2d860cfd-4ff4-48c3-8819-490895ecf6f0" />
+
 
 ## Tech stack
 
