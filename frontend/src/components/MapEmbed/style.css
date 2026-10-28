@@ -1,8 +1,10 @@
 /* embedded leaflet map wrapper */
 .map-embed {
-  border-radius: 10px;
+  /* keeps leaflet's pane z-indexes below the sticky top bar */
+  isolation: isolate;
+  border-radius: var(--radius-card);
   overflow: hidden;
-  border: 1px solid var(--border-light);
+  border: 1px solid var(--color-border);
 }
 
 .map-container {

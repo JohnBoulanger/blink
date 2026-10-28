@@ -1,4 +1,4 @@
-# Visus — Frontend Technical Guide
+# Blink — Frontend Technical Guide
 
 > a concept-heavy reference for understanding the react/typescript patterns and techniques used in this optometry staffing platform. read alongside the source code — file paths and line numbers are provided throughout.
 

@@ -12,14 +12,18 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
 
   return (
     <div className="Pagination">
-      <button className="btn-secondary" onClick={() => onPageChange(page - 1)} disabled={page <= 1}>
+      <button
+        className="btn-secondary btn-sm"
+        onClick={() => onPageChange(page - 1)}
+        disabled={page <= 1}
+      >
         Previous
       </button>
       <span className="page-indicator">
         {page} of {totalPages}
       </span>
       <button
-        className="btn-secondary"
+        className="btn-secondary btn-sm"
         onClick={() => onPageChange(page + 1)}
         disabled={page >= totalPages}
       >

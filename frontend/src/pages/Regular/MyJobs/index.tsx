@@ -3,8 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
 import { useNegotiation } from "../../../contexts/NegotiationContext/NegotiationContext";
+import { formatDay, formatRate } from "../../../utils/format";
 import Pagination from "../../../components/Pagination";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import StatusBadge from "../../../components/StatusBadge";
+import NegotiationBanner from "../../../components/NegotiationBanner";
+import { JOB_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
 
 // shared job row shape
@@ -25,6 +29,56 @@ interface Interest {
 }
 
 type Tab = "interests" | "invitations" | "confirmed";
+
+// job status shown as a dot and a label
+function JobStatus({ status }: { status: string }) {
+  const s = getStatus(JOB_STATUS, status);
+  return <StatusBadge tone={s.tone}>{s.label}</StatusBadge>;
+}
+
+// role, clinic, date and rate: the left part of every row
+function JobSummary({ job }: { job: JobEntry }) {
+  return (
+    <>
+      <div className="myjob-main">
+        <Link to={`/jobs/${job.id}`} className="myjob-title">
+          {job.position_type.name}
+        </Link>
+        <span className="myjob-meta">
+          {job.business.business_name}
+          <span aria-hidden="true"> · </span>
+          <span className="tabular">{formatDay(job.start_time)}</span>
+        </span>
+      </div>
+      <span className="myjob-rate tabular">
+        {formatRate(job.salary_min, job.salary_max)}
+        <span className="myjob-rate-unit"> /hr</span>
+      </span>
+    </>
+  );
+}
+
+function EmptyState({
+  title,
+  text,
+  to,
+  action,
+}: {
+  title: string;
+  text: string;
+  to: string;
+  action: string;
+}) {
+  return (
+    <div className="myjobs-empty">
+      <p className="myjobs-empty-title">{title}</p>
+      <p>{text}</p>
+      <Link to={to} className="btn-secondary">
+        {action}
+      </Link>
+    </div>
+  );
+}
 
 export default function MyJobs() {
   const navigate = useNavigate();
@@ -113,171 +167,174 @@ export default function MyJobs() {
   const invitationsTotalPages = Math.ceil(invitationsCount / limit);
   const confirmedTotalPages = Math.ceil(confirmedCount / limit);
 
+  const tabs: { id: Tab; label: string; count: number }[] = [
+    { id: "interests", label: "My interests", count: interestsCount },
+    { id: "invitations", label: "Invitations", count: invitationsCount },
+    { id: "confirmed", label: "Work history", count: confirmedCount },
+  ];
+
+  let body: React.ReactNode;
+  if (loading) {
+    body = <LoadingSpinner />;
+  } else if (error) {
+    body = <p className="error-message">{error}</p>;
+  } else if (tab === "interests") {
+    body = (
+      <>
+        {interests.length === 0 ? (
+          <EmptyState
+            title="No interests yet"
+            text="Open a shift and press I'm interested. It shows up here while the clinic decides."
+            to="/jobs"
+            action="Find shifts"
+          />
+        ) : (
+          <ul className="myjobs-list">
+            {interests.map((item) => (
+              <li key={item.interest_id} className="myjob-row">
+                <JobSummary job={item.job} />
+                <span className="myjob-status">
+                  {item.mutual && item.job.status === "open" && (
+                    <StatusBadge tone="success">Both interested</StatusBadge>
+                  )}
+                  {/* job filled after successful negotiation */}
+                  {item.mutual && item.job.status === "filled" && (
+                    <StatusBadge tone="success">Job confirmed</StatusBadge>
+                  )}
+                  {!item.mutual && item.job.status === "open" && (
+                    <StatusBadge tone="pending">Waiting for the clinic</StatusBadge>
+                  )}
+                </span>
+                <span className="myjob-action">
+                  {/* mutual interest with open job — show negotiation button or in-progress label */}
+                  {item.mutual &&
+                    item.job.status === "open" &&
+                    (hasActiveNeg ? (
+                      <Link to="/negotiations/me" className="btn-secondary btn-sm">
+                        Negotiation in progress
+                      </Link>
+                    ) : (
+                      <button
+                        className="btn-primary btn-sm"
+                        onClick={() => handleStartNegotiation(item.interest_id)}
+                        disabled={negotiationLoading === item.interest_id}
+                      >
+                        {negotiationLoading === item.interest_id
+                          ? "Starting…"
+                          : "Start negotiation"}
+                      </button>
+                    ))}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <Pagination
+          page={interestsPage}
+          totalPages={interestsTotalPages}
+          onPageChange={setInterestsPage}
+        />
+      </>
+    );
+  } else if (tab === "invitations") {
+    body = (
+      <>
+        {invitations.length === 0 ? (
+          <EmptyState
+            title="No invitations yet"
+            text="Clinics can invite you when you are available and hold an approved qualification."
+            to="/profile"
+            action="Check your profile"
+          />
+        ) : (
+          <ul className="myjobs-list">
+            {invitations.map((job) => (
+              <li key={job.id} className="myjob-row">
+                <JobSummary job={job} />
+                <span className="myjob-status">
+                  <JobStatus status={job.status} />
+                </span>
+                <span className="myjob-action">
+                  {/* invitation: user hasn't responded yet — express interest on job detail */}
+                  <Link to={`/jobs/${job.id}`} className="btn-secondary btn-sm">
+                    View and respond
+                  </Link>
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        <Pagination
+          page={invitationsPage}
+          totalPages={invitationsTotalPages}
+          onPageChange={setInvitationsPage}
+        />
+      </>
+    );
+  } else {
+    body = (
+      <>
+        {confirmed.length === 0 ? (
+          <EmptyState
+            title="No work history yet"
+            text="Shifts you confirm in a negotiation appear here."
+            to="/jobs"
+            action="Find shifts"
+          />
+        ) : (
+          <ul className="myjobs-list">
+            {confirmed.map((item) => (
+              <li key={item.interest_id} className="myjob-row">
+                <JobSummary job={item.job} />
+                <span className="myjob-status">
+                  <JobStatus status={item.job.status} />
+                </span>
+                <span className="myjob-action" />
+              </li>
+            ))}
+          </ul>
+        )}
+        <Pagination
+          page={confirmedPage}
+          totalPages={confirmedTotalPages}
+          onPageChange={setConfirmedPage}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="MyJobs page-enter">
-      <h1>My jobs</h1>
+      <h1>My shifts</h1>
 
       {/* active negotiation banner */}
       {hasActiveNeg && (
-        <div className="myjobs-neg-banner">
-          You have an active negotiation. <Link to="/negotiations/me">View it →</Link>
-        </div>
+        <NegotiationBanner
+          to="/negotiations/me"
+          text="You have a 15-minute window open with a clinic."
+        />
       )}
 
       {/* tab switcher */}
-      <div className="myjobs-tabs">
-        <button
-          className={tab === "interests" ? "tab active" : "tab"}
-          onClick={() => setTab("interests")}
-        >
-          My interests
-          {interestsCount > 0 && <span className="tab-count">{interestsCount}</span>}
-        </button>
-        <button
-          className={tab === "invitations" ? "tab active" : "tab"}
-          onClick={() => setTab("invitations")}
-        >
-          Invitations
-          {invitationsCount > 0 && <span className="tab-count">{invitationsCount}</span>}
-        </button>
-        <button
-          className={tab === "confirmed" ? "tab active" : "tab"}
-          onClick={() => setTab("confirmed")}
-        >
-          Work history
-          {confirmedCount > 0 && <span className="tab-count">{confirmedCount}</span>}
-        </button>
+      <div className="myjobs-tabs" role="tablist" aria-label="My shifts">
+        {tabs.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === t.id}
+            className={tab === t.id ? "tab active" : "tab"}
+            onClick={() => setTab(t.id)}
+          >
+            {t.label}
+            {t.count > 0 && <span className="tab-count tabular">{t.count}</span>}
+          </button>
+        ))}
       </div>
 
-      {loading ? (
-        <LoadingSpinner />
-      ) : error ? (
-        <p className="error-message">{error}</p>
-      ) : tab === "interests" ? (
-        <>
-          {interests.length === 0 ? (
-            <p className="empty-state">
-              No interests yet — <Link to="/jobs">browse jobs</Link>
-            </p>
-          ) : (
-            <div className="myjobs-list">
-              {interests.map((item) => (
-                <div key={item.interest_id} className="myjob-row">
-                  <div className="myjob-row-info">
-                    <Link to={`/jobs/${item.job.id}`} className="myjob-title">
-                      {item.job.position_type.name}
-                    </Link>
-                    <span className="myjob-business">{item.job.business.business_name}</span>
-                    <span className="myjob-date">
-                      {new Date(item.job.start_time).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="myjob-row-actions">
-                    {/* mutual interest with open job — show negotiation button or in-progress label */}
-                    {item.mutual && item.job.status === "open" &&
-                      (hasActiveNeg ? (
-                        <Link to="/negotiations/me" className="btn-secondary btn-sm">
-                          Negotiation in progress
-                        </Link>
-                      ) : (
-                        <button
-                          className="btn-primary btn-sm"
-                          onClick={() => handleStartNegotiation(item.interest_id)}
-                          disabled={negotiationLoading === item.interest_id}
-                        >
-                          {negotiationLoading === item.interest_id
-                            ? "Starting..."
-                            : "Start negotiation"}
-                        </button>
-                      ))}
-                    {/* job filled after successful negotiation */}
-                    {item.mutual && item.job.status === "filled" && (
-                      <span className="myjob-status-confirmed">Job confirmed</span>
-                    )}
-                    {!item.mutual && item.job.status === "open" && (
-                      <span className="myjob-status-pending">Pending business response</span>
-                    )}
-                    <span className={`status-dot status-${item.job.status}`}>
-                      {item.job.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          <Pagination
-            page={interestsPage}
-            totalPages={interestsTotalPages}
-            onPageChange={setInterestsPage}
-          />
-        </>
-      ) : tab === "invitations" ? (
-        <>
-          {invitations.length === 0 ? (
-            <p className="empty-state">No invitations yet</p>
-          ) : (
-            <div className="myjobs-list">
-              {invitations.map((job) => (
-                <div key={job.id} className="myjob-row">
-                  <div className="myjob-row-info">
-                    <Link to={`/jobs/${job.id}`} className="myjob-title">
-                      {job.position_type.name}
-                    </Link>
-                    <span className="myjob-business">{job.business.business_name}</span>
-                    <span className="myjob-date">
-                      {new Date(job.start_time).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="myjob-row-actions">
-                    {/* invitation: user hasn't responded yet — express interest on job detail */}
-                    <Link to={`/jobs/${job.id}`} className="btn-secondary btn-sm">
-                      View &amp; respond
-                    </Link>
-                    <span className={`status-dot status-${job.status}`}>{job.status}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          <Pagination
-            page={invitationsPage}
-            totalPages={invitationsTotalPages}
-            onPageChange={setInvitationsPage}
-          />
-        </>
-      ) : (
-        <>
-          {confirmed.length === 0 ? (
-            <p className="empty-state">No past or confirmed work yet.</p>
-          ) : (
-            <div className="myjobs-list">
-              {confirmed.map((item) => (
-                <div key={item.interest_id} className="myjob-row">
-                  <div className="myjob-row-info">
-                    <Link to={`/jobs/${item.job.id}`} className="myjob-title">
-                      {item.job.position_type.name}
-                    </Link>
-                    <span className="myjob-business">{item.job.business.business_name}</span>
-                    <span className="myjob-date">
-                      {new Date(item.job.start_time).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="myjob-row-actions">
-                    <span className={`status-dot status-${item.job.status}`}>
-                      {item.job.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          <Pagination
-            page={confirmedPage}
-            totalPages={confirmedTotalPages}
-            onPageChange={setConfirmedPage}
-          />
-        </>
-      )}
+      <div role="tabpanel" aria-label={tabs.find((t) => t.id === tab)?.label}>
+        {body}
+      </div>
     </div>
   );
 }

@@ -1,132 +1,239 @@
+/* one candidate: profile sections on the left, the invite card on the right */
+
 .BusinessCandidateDetail {
-  max-width: 680px;
-}
-
-.BusinessCandidateDetail > .back-link {
-  display: inline-block;
-  margin-bottom: 16px;
-}
-
-.bcd-card {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
-/* header: avatar + name */
+.bcd-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--space-12);
+  align-items: start;
+}
+
+.bcd-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .bcd-header {
   display: flex;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-.bcd-avatar-wrap {
-  flex-shrink: 0;
+  align-items: center;
+  gap: var(--space-5);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .bcd-avatar {
   width: 72px;
   height: 72px;
+  flex-shrink: 0;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--border-light);
 }
 
-.bcd-avatar-placeholder {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: var(--accent-subtle);
-  color: var(--accent);
-  display: flex;
+.bcd-avatar-initials {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 700;
+  background: var(--color-ink);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.bcd-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
 }
 
 .bcd-identity h1 {
-  font-size: 1.375rem;
-  margin: 0 0 4px;
+  overflow-wrap: anywhere;
 }
 
-.bcd-contact {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  margin: 2px 0;
+/* sections split by hairlines */
+.bcd-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-block: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
 }
 
-/* biography */
+.bcd-section:last-child {
+  border-bottom: 0;
+}
+
+.bcd-section h2 {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
 .bcd-bio {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.bcd-bio p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--text-body);
+  max-width: 65ch;
+  font-size: var(--text-base);
   line-height: 1.6;
+  color: var(--color-ink);
 }
 
-/* resume + qualification */
-.bcd-resume,
-.bcd-qual {
+.bcd-muted {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+/* read-only document lines */
+.bcd-docs {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-2);
+  max-width: 520px;
+}
+
+.bcd-doc {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+}
+
+.bcd-doc-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+}
+
+.bcd-doc-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.bcd-doc-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
 .bcd-doc-link {
-  font-size: 0.875rem;
-  color: var(--accent);
+  align-self: flex-start;
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .bcd-doc-link:hover {
-  opacity: 0.8;
+  color: var(--color-ink);
+  text-decoration-thickness: 2px;
 }
 
-.bcd-no-doc {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  font-style: italic;
+.bcd-doc-empty {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
 }
 
 .bcd-qual-note {
-  font-size: 0.875rem;
-  color: var(--text-body);
-  margin: 4px 0 0;
+  max-width: 65ch;
+  font-size: var(--text-sm);
+  color: var(--color-ink);
 }
 
-/* job info grid */
-.bcd-job-info {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 4px 16px;
-  align-items: center;
-  padding: 12px;
-  background: var(--bg-surface);
-  border-radius: 8px;
-  font-size: 0.875rem;
+.bcd-note-label {
+  color: var(--color-text-secondary);
 }
 
-.bcd-job-info span:nth-child(even) {
-  color: var(--text-strong);
-}
-
-/* invite actions */
-.bcd-invite-actions {
-  padding-top: 4px;
-  border-top: 1px solid var(--border-light);
-}
-
-.bcd-invite-row {
+/* sticky invite card */
+.bcd-card {
+  position: sticky;
+  top: calc(var(--topbar-height) + var(--space-6));
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-tier);
+  background: var(--color-surface);
+}
+
+.bcd-card-job {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.bcd-card-role {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.bcd-card-when {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.bcd-invite {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-3);
+}
+
+.bcd-invite .StatusBadge {
+  align-self: center;
+}
+
+.bcd-invite-btn {
+  width: 100%;
+  min-height: 48px;
+  font-size: var(--text-base);
+}
+
+.bcd-hint {
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.bcd-error {
+  font-size: var(--text-sm);
+  color: var(--color-danger);
+}
+
+@media (max-width: 1000px) {
+  .bcd-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  .bcd-card {
+    position: static;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .bcd-header {
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .bcd-avatar {
+    width: 56px;
+    height: 56px;
+  }
 }

@@ -1,0 +1,126 @@
+{
+  "title": "Choose the visual world for Visus",
+  "question": "The roll assigned Lens Carton. Keep it, take my pick or the category standard, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "kind": "assigned",
+      "label": "Lens Carton",
+      "kicker": "THE ROLL",
+      "lineage": "contact lens and optical retail packaging",
+      "thesis": "Every shift is printed like a lens carton: one colour band, one big number, one ruled spec block.",
+      "palette": ["#f6f6f2", "#4a2bd4", "#d4f23a", "#121212"],
+      "materials": ["printed carton board", "die-cut tear tab", "foil blister seal"],
+      "viewport": "The landing is one carton face: violet band with the Visus mark, a huge 15:00 as the box's power figure, and three tear tabs that log you straight into the demo as professional, clinic or admin.",
+      "risk": "Tips into gimmick if every element gets a perforation, and drifts clinical if the inks are printed timidly.",
+      "raised": [
+        {"from": "challenger-riso", "raise": "Strict ink budget: two spot inks plus black, overprinted where bands meet; no other colour anywhere."},
+        {"from": "challenger-nixie", "raise": "Quantities own fixed digit positions: rates, counts and the 15:00 countdown change digit by digit, never by reflow."},
+        {"from": "challenger-noir", "raise": "Every carton ends in a tight ruled spec block, the shift's billing lines locked to its foot."},
+        {"from": "challenger-brine", "raise": "The band states the stage: open, negotiating and filled read from the band before any text."},
+        {"from": "challenger-cartoon", "raise": "One hub per screen: the big number is where the eye lands, everything else is subordinate."},
+        {"from": "challenger-multiplane", "raise": "Controls are their own printed layer (the tear tab) sitting above the panel, never inked into it."}
+      ],
+      "html": ".impeccable/mocks/decision/assigned.html"
+    },
+    {
+      "id": "model-pick",
+      "kind": "pick",
+      "label": "Rx Pad",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "optometrist prescription pads and lab order envelopes",
+      "thesis": "Every shift is written up like a prescription: ruled form fields, ballpoint blue entries, a rubber-stamp verification.",
+      "palette": ["#eaf2ee", "#1f3aa6", "#c8323a", "#1a1d1c"],
+      "materials": ["carbonless form paper", "ballpoint ink", "rubber stamp"],
+      "viewport": "A single tall Rx sheet: the Visus letterhead, today's open shifts filled into the ruled order lines, and a red VERIFIED stamp over the credential field.",
+      "risk": "The most familiar direction for anything medical; paper-form skeuomorphism can read like a patient portal.",
+      "html": ".impeccable/mocks/decision/model-pick.html"
+    },
+    {
+      "id": "challenger-riso", "kind": "challenger", "catalogId": "risograph-web-system",
+      "label": "Risograph Web System", "verdict": "declined",
+      "lineage": "risograph zine printing",
+      "thesis": "Shifts as two-ink riso prints, misregistered on toothy paper.",
+      "palette": ["#f2ece0", "#ff48b0", "#0078bf", "#ffe800"],
+      "materials": ["spot ink", "halftone grain"],
+      "viewport": "Fluoro pink and blue blocks overprinting a clinic map.",
+      "case": "Fuses loosely: recruiters and clinic staff do not see themselves in zine culture, and misregistration fights the legibility of rates and times.",
+      "risk": "Reads indie-art-school, not staffing.",
+      "kept": "Its strict spot-ink budget, overprinting where colours meet."
+    },
+    {
+      "id": "challenger-nixie", "kind": "challenger", "catalogId": "signals-instruments-nixie-laboratory-counter",
+      "label": "Nixie Laboratory Counter", "verdict": "declined",
+      "lineage": "nixie-tube lab counters",
+      "thesis": "The 15-minute window as glowing tube digits.",
+      "palette": ["#141414", "#ff7a1a", "#8a8f94"],
+      "materials": ["glass envelope", "blackened steel"],
+      "viewport": "A tube bank counting down over a steel panel.",
+      "case": "Fuses on the countdown only, and its dark techy ground is exactly what you ruled out.",
+      "risk": "Dark developer-tool look.",
+      "kept": "Quantities own fixed digit positions and change digit by digit."
+    },
+    {
+      "id": "challenger-cartoon", "kind": "challenger", "catalogId": "pop-culture-shelf-saturday-title-card",
+      "label": "Saturday Title Card", "verdict": "declined",
+      "lineage": "saturday-morning cartoon title cards",
+      "thesis": "Each shift slams in as a starburst title card.",
+      "palette": ["#ffd21f", "#2ec5f0", "#111111", "#e8322e"],
+      "materials": ["cel paint", "VHS bleed"],
+      "viewport": "A starburst with Visus bowed across it.",
+      "case": "Fuses poorly: too playful, which you ruled out, and it undercuts trust in credentials.",
+      "risk": "Consumer-toy energy.",
+      "kept": "One hub per screen where the eye lands."
+    },
+    {
+      "id": "challenger-noir", "kind": "challenger", "catalogId": "posters-covers-sleeves-noir-one-sheet-duotone",
+      "label": "Noir One-Sheet", "verdict": "declined",
+      "lineage": "postwar crime film posters",
+      "thesis": "The negotiation as a two-ink film poster.",
+      "palette": ["#141210", "#d99a2b", "#efe6d2"],
+      "materials": ["duotone ink", "cast shadow"],
+      "viewport": "A small figure, a huge shadow, a ruled billing block.",
+      "case": "Fuses poorly: dramatic and moody where a staffing product needs plain clarity.",
+      "risk": "Theatrical, near the dark look you ruled out.",
+      "kept": "The tight ruled billing block locked to the foot."
+    },
+    {
+      "id": "challenger-multiplane", "kind": "challenger", "catalogId": "cinema-cinematography-editing-multiplane-cel-dawn",
+      "label": "Multiplane Cel Dawn", "verdict": "declined",
+      "lineage": "multiplane cel animation",
+      "thesis": "Scroll as a camera sinking through painted planes.",
+      "palette": ["#2f4a35", "#9fb3b8", "#3a2a1e", "#f2b544"],
+      "materials": ["gouache planes", "mist"],
+      "viewport": "Painted forest layers parting toward a lit window.",
+      "case": "Fuses poorly: nothing in optometry staffing lives in a painted forest.",
+      "risk": "Storybook mood with no product in it.",
+      "kept": "Controls live on their own layer above the surface."
+    },
+    {
+      "id": "challenger-brine", "kind": "challenger", "catalogId": "food-fermentation-culinary-theater-pickling-brine-calendar",
+      "label": "Pickling Brine Calendar", "verdict": "declined",
+      "lineage": "seasonal pickling jar shelves",
+      "thesis": "Shifts as jars maturing on a shelf.",
+      "palette": ["#e9efe8", "#f07a62", "#9e1f45", "#6f9a3c"],
+      "materials": ["jar glass", "kraft labels"],
+      "viewport": "Jars ranked on shelf lines with day counts.",
+      "case": "Fuses loosely: the stage-on-the-label idea maps to shift status, but jars mean nothing to the audience.",
+      "risk": "Food-blog whimsy.",
+      "kept": "The label band states the stage before any text."
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code"},
+  "canon": true,
+  "canonCard": {
+    "kind": "canon",
+    "label": "The category standard",
+    "thesis": "A clean staffing marketplace, executed impeccably.",
+    "palette": ["#ffffff", "#0f172a", "#2563eb", "#e2e8f0"],
+    "materials": ["clean grid", "product screenshots"],
+    "viewport": "Headline and shift search on the left, a product screenshot on the right, logos and feature cards below.",
+    "risk": "Indistinguishable from every staffing startup by design.",
+    "html": ".impeccable/mocks/decision/canon.html"
+  },
+  "steer": true
+}

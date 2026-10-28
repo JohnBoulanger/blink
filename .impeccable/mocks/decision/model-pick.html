@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Rx Pad</title>
+<style>
+  :root { --paper:#eaf2ee; --blue:#1f3aa6; --red:#c8323a; --ink:#1a1d1c; }
+  * { box-sizing:border-box; margin:0; }
+  body { width:1440px; height:900px; background:#cfd8d3; font-family:Georgia,"Times New Roman",serif; color:var(--ink); overflow:hidden; display:flex; justify-content:center; }
+  .sheet { width:1040px; margin-top:36px; background:var(--paper); padding:44px 64px; position:relative; }
+  .head { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:3px double var(--ink); padding-bottom:16px; }
+  .head .name { font-size:46px; font-weight:700; letter-spacing:1px; }
+  .head .addr { font-family:Arial,sans-serif; font-size:13px; text-align:right; line-height:1.5; text-transform:uppercase; letter-spacing:1px; }
+  .rx { font-size:96px; font-style:italic; font-weight:700; margin:18px 0 0; line-height:1; }
+  h1 { font-family:Arial,sans-serif; font-size:44px; font-weight:800; letter-spacing:-1px; margin:8px 0 22px; max-width:760px; }
+  .line { display:grid; grid-template-columns:160px 1fr 140px; border-bottom:1.5px solid var(--ink); padding:12px 0; font-family:Arial,sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:1px; align-items:end; }
+  .line i { font-family:"Segoe Print","Bradley Hand",cursive; font-style:normal; text-transform:none; letter-spacing:0; color:var(--blue); font-size:24px; }
+  .stamp { position:absolute; right:90px; top:300px; border:5px solid var(--red); color:var(--red); font-family:Arial,sans-serif; font-weight:900; font-size:34px; padding:8px 20px; transform:rotate(-9deg); letter-spacing:3px; opacity:.85; }
+  .sig { display:flex; gap:20px; margin-top:28px; }
+  .btn { font-family:Arial,sans-serif; font-weight:800; font-size:17px; padding:16px 26px; border:2px solid var(--ink); }
+  .btn.p { background:var(--blue); color:var(--paper); border-color:var(--blue); }
+</style></head>
+<body>
+<div class="sheet">
+  <div class="head"><span class="name">Visus</span><span class="addr">Optometry staffing<br>Toronto, Ontario</span></div>
+  <div class="rx">Rx</div>
+  <h1>Fill tomorrow's shift with a verified optometric assistant.</h1>
+  <div class="line"><span>Position</span><i>Optometric Assistant, Level 2</i><span>Qty 1</span></div>
+  <div class="line"><span>Clinic</span><i>Spadina Vision Centre</i><span>$27–37/hr</span></div>
+  <div class="line"><span>Shift</span><i>Thu 30 Oct, 9:00 – 17:00</i><span>8 hrs</span></div>
+  <div class="line"><span>Credential</span><i>OCT, visual fields</i><span>Reviewed</span></div>
+  <div class="stamp">VERIFIED</div>
+  <div class="sig"><span class="btn p">Try the demo as a clinic</span><span class="btn">Browse clinics</span></div>
+</div>
+</body></html>

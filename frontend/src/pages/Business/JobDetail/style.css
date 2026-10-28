@@ -1,142 +1,213 @@
+/* a clinic's job: title with actions, section tabs, then hairline sections */
+
 .BusinessJobDetail {
-  max-width: 720px;
-}
-
-.bjd-nav {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.bjd-sub-links {
-  display: flex;
-  gap: 8px;
-}
-
-.bjd-card {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  padding: 24px;
+  flex-direction: column;
+  max-width: 880px;
 }
 
 .bjd-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 24px;
+  gap: var(--space-4) var(--space-6);
+  margin-bottom: var(--space-6);
 }
 
-.bjd-header h1 {
-  font-size: 1.5rem;
-  margin: 0 0 4px;
+.bjd-heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.bjd-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+.bjd-meta {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+}
+
+.bjd-id {
+  color: var(--color-text-secondary);
+}
+
+.bjd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.bjd-actions .btn-secondary,
+.bjd-actions .btn-ghost,
+.bjd-actions .btn-danger {
+  min-height: 44px;
+}
+
+.bjd-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+/* sections split by hairlines */
+.bjd-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.bjd-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-block: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.bjd-section:first-child {
+  padding-top: 0;
+}
+
+.bjd-section:last-child {
+  border-bottom: 0;
+}
+
+.bjd-section h2 {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.bjd-text {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
 }
 
 .bjd-worker {
-  font-size: 0.875rem;
-  color: var(--success);
+  color: var(--color-ink);
   font-weight: 500;
 }
 
-/* details grid */
-.bjd-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.bjd-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.bjd-item span:last-child {
-  font-size: 0.9375rem;
-  color: var(--text-strong);
-}
-
 .bjd-note {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px;
-  background: var(--bg-surface);
-  border-radius: 8px;
-  margin-bottom: 16px;
+  max-width: 65ch;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-ink);
+  white-space: pre-line;
 }
 
-.bjd-note p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--text-body);
-  line-height: 1.5;
+.bjd-rate {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+}
+
+.bjd-rate strong {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+
+/* start and end in one box, as on the shift page */
+.bjd-when {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 420px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+}
+
+.bjd-when > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+}
+
+.bjd-when > div + div {
+  border-left: 1px solid var(--color-border-strong);
+}
+
+.bjd-when-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.bjd-when-time {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.bjd-when-day {
+  color: var(--color-text-secondary);
 }
 
 /* inline edit form */
 .bjd-edit-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 16px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  margin-bottom: 16px;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.bjd-edit-form h2 {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.bjd-edit-form .error-message {
+  margin-bottom: 0;
+}
+
+.bjd-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-4);
+}
+
+.bjd-edit-wide {
+  grid-column: 1 / -1;
 }
 
 .bjd-edit-actions {
   display: flex;
-  gap: 8px;
+  justify-content: flex-end;
+  gap: var(--space-2);
 }
 
-/* action row */
-.bjd-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border-light);
-}
-
-.bjd-confirm-delete {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.875rem;
-  color: var(--error);
-}
-
-/* active negotiation banner */
-.bjd-neg-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 16px;
-  padding: 12px 16px;
-  background: var(--accent-subtle);
-  border: 1px solid var(--accent);
-  border-radius: 8px;
-  font-size: 0.875rem;
-  color: var(--accent);
-}
-
-/* keep datetime inputs inside the screen on narrow viewports */
-.bjd-edit-form .form-field {
-  min-width: 0;
-}
-
-.bjd-edit-form input {
-  max-width: 100%;
+.bjd-edit-actions button {
+  min-height: 44px;
 }
 
 @media (max-width: 600px) {
-  .bjd-edit-form .form-row:has(input[type="datetime-local"]) {
-    flex-direction: column;
+  .bjd-edit-form {
+    padding: var(--space-4);
+  }
+
+  .bjd-edit-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bjd-edit-actions button {
+    flex: 1;
   }
 }

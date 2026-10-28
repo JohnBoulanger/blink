@@ -1,0 +1,100 @@
+.Hero {
+  --lid-progress: 0;
+  /* depth of the curved lower edge, open and closed */
+  --lid-curve: 220px;
+  --lid-flat: 24px;
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--space-16) var(--space-12);
+}
+
+/* the eyelid: a pale band, wider than the viewport, that always covers the hero content */
+.hero-lid {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: -20%;
+  width: 140%;
+  height: 100%;
+  background: var(--color-pine-band);
+  border-radius: 0 0 50% 50% / 0 0 var(--lid-curve) var(--lid-curve);
+}
+
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  text-align: center;
+}
+
+.Hero h1 {
+  max-width: 20em;
+  font-size: clamp(2.375rem, 1.2rem + 3.6vw, var(--text-display));
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: var(--tracking-display);
+}
+
+.hero-line {
+  display: block;
+}
+
+.hero-subcopy {
+  margin-top: calc(var(--space-2) * -1);
+  margin-bottom: var(--space-2);
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+
+/* scroll flattens the curved edge like a lid closing; the band keeps its size */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .hero-lid {
+      animation: hero-lid-close linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 300px;
+    }
+  }
+
+  .Hero[data-lid="js"] .hero-lid {
+    --lid-depth: calc(
+      var(--lid-curve) - var(--lid-progress) * (var(--lid-curve) - var(--lid-flat))
+    );
+    border-radius: 0 0 50% 50% / 0 0 var(--lid-depth) var(--lid-depth);
+  }
+}
+
+@keyframes hero-lid-close {
+  to {
+    border-radius: 0 0 50% 50% / 0 0 var(--lid-flat) var(--lid-flat);
+  }
+}
+
+@media (max-width: 768px) {
+  .Hero {
+    --lid-curve: 96px;
+    --lid-flat: 12px;
+    padding-block: var(--space-10) var(--space-10);
+  }
+
+  .hero-lid {
+    left: -40%;
+    width: 180%;
+  }
+
+  .hero-line {
+    display: inline;
+  }
+
+  .Hero h1 {
+    max-width: 12em;
+    letter-spacing: -0.03em;
+  }
+
+  .hero-subcopy {
+    font-size: var(--text-base);
+    max-width: 30ch;
+  }
+}

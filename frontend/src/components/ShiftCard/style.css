@@ -1,0 +1,73 @@
+/* the card bleeds 8px past its cell so the hover shadow has room */
+.ShiftCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: calc(100% + 16px);
+  margin: -8px;
+  padding: 8px;
+  border-radius: calc(var(--radius-card) + 6px);
+  color: var(--color-ink);
+  text-decoration: none;
+  transition:
+    box-shadow 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+}
+
+.ShiftCard:hover,
+.ShiftCard.active {
+  color: var(--color-ink);
+  box-shadow: var(--shadow-tier);
+  transform: translateY(-2px);
+}
+
+.ShiftCard[aria-busy="true"] {
+  opacity: 0.7;
+}
+
+.shift-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-inline: 2px;
+}
+
+.shift-card-clinic {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+
+.shift-card-meta {
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  color: var(--color-text-secondary);
+}
+
+.shift-card-rate {
+  margin-top: 4px;
+  font-size: 0.9375rem;
+  color: var(--color-ink);
+}
+
+.shift-card-rate strong {
+  font-weight: 600;
+}
+
+.shift-card-opening {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-inline: 2px;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+@media (hover: none) {
+  .ShiftCard:hover {
+    box-shadow: none;
+    transform: none;
+  }
+}

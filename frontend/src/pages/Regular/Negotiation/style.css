@@ -1,197 +1,116 @@
-/* negotiation page */
+/* negotiation room: chat on the left, the deal card on the right */
 
 .Negotiation {
-  max-width: 680px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--space-6);
 }
 
-/* header */
 .neg-header {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.neg-header h1 {
-  margin-bottom: 2px;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
 .neg-subtitle {
-  font-size: 0.9375rem;
-  color: var(--text-muted);
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
 }
 
-/* status badge */
-.neg-status {
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 4px 12px;
-  border-radius: 20px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.neg-status-active {
-  background: var(--accent-subtle);
-  color: var(--accent);
-}
-.neg-status-success {
-  background: var(--status-green-bg);
-  color: var(--success);
-}
-.neg-status-failed {
-  background: var(--error-bg);
-  color: var(--error);
-}
-
-/* job summary line */
-.neg-job-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  flex-wrap: wrap;
-}
-
-/* countdown timer */
-.neg-countdown {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-light);
-}
-
-.neg-countdown-urgent {
-  background: var(--error-bg);
-  border-color: var(--error);
-}
-
-.neg-countdown-label {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-
-.neg-countdown-value {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--text-strong);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-}
-
-.neg-countdown-urgent .neg-countdown-value {
-  color: var(--error);
-}
-
-/* outcome banners */
-.neg-outcome {
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 0.9375rem;
-  font-weight: 500;
-}
-
-.neg-outcome.success {
-  background: var(--success-bg);
-  color: var(--success);
-  border: 1px solid var(--success);
-}
-
-.neg-outcome.failed {
-  background: var(--error-bg);
-  color: var(--error);
-  border: 1px solid var(--error);
-}
-
-/* decisions */
-.neg-decisions {
+.neg-room {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-8);
+  align-items: start;
 }
 
-.neg-decision {
-  padding: 14px 16px;
-  border-radius: 8px;
-  border: 1px solid var(--border-light);
-  background: var(--bg-elevated);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.neg-decision-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-}
-
-.neg-decision-value {
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--text-strong);
-  text-transform: capitalize;
-}
-
-.decision-accept .neg-decision-value {
-  color: var(--success);
-}
-.decision-decline .neg-decision-value {
-  color: var(--error);
-}
-.decision-pending .neg-decision-value {
-  color: var(--text-muted);
-}
-
-/* accept/decline buttons */
-.neg-actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-/* chat area */
+/* chat */
 .neg-chat {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
   overflow: hidden;
-  flex: 1;
+}
+
+.neg-chat-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.neg-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  color: #ffffff;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.neg-chat-who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.neg-chat-who strong {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
 .neg-messages {
-  min-height: 280px;
-  max-height: 420px;
-  overflow-y: auto;
-  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  background: var(--bg-elevated);
+  gap: var(--space-4);
+  height: clamp(320px, calc(100vh - 380px), 560px);
+  padding: var(--space-5);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.neg-system {
+  align-self: center;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
 }
 
 .neg-no-messages {
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  text-align: center;
   margin: auto;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
 }
 
-/* message bubbles */
+.neg-message-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.neg-message-list:empty {
+  display: none;
+}
+
 .neg-message {
   display: flex;
   flex-direction: column;
-  max-width: 70%;
+  gap: 4px;
+  max-width: 80%;
+}
+
+.neg-message.theirs {
+  align-self: flex-start;
 }
 
 .neg-message.mine {
@@ -199,58 +118,263 @@
   align-items: flex-end;
 }
 
-.neg-message.theirs {
-  align-self: flex-start;
-  align-items: flex-start;
-}
-
 .msg-text {
   padding: 10px 14px;
-  border-radius: 14px;
-  font-size: 0.9375rem;
-  line-height: 1.45;
-  word-break: break-word;
-}
-
-.mine .msg-text {
-  background: var(--accent);
-  color: #fff;
-  border-bottom-right-radius: 4px;
+  border-radius: var(--radius-bubble);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .theirs .msg-text {
-  background: var(--bg-surface);
-  color: var(--text-strong);
+  background: var(--color-surface-muted);
+  color: var(--color-ink);
   border-bottom-left-radius: 4px;
 }
 
+.mine .msg-text {
+  background: var(--color-ink);
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+
 .msg-time {
-  font-size: 0.6875rem;
-  color: var(--text-muted);
-  margin-top: 3px;
-  padding: 0 4px;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
 }
 
-/* message input */
-.neg-input-row {
+/* composer: a pill input with a round send button */
+.neg-composer {
   display: flex;
-  gap: 8px;
-  padding: 12px;
-  border-top: 1px solid var(--border-light);
-  background: var(--bg-elevated);
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border-soft);
 }
 
-.neg-input-row input {
+.neg-composer input {
   flex: 1;
+  min-width: 0;
+  border-radius: var(--radius-full);
+  padding-inline: 18px;
 }
 
-.neg-input-row button {
+.neg-send {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  color: #ffffff;
   flex-shrink: 0;
 }
 
-.empty-state {
-  color: var(--text-muted);
-  padding: 40px 0;
+.neg-send:hover:not(:disabled) {
+  background: #000000;
+}
+
+.neg-send:disabled {
+  background: var(--color-surface-muted);
+  color: var(--color-text-secondary);
+}
+
+.neg-composer-closed {
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-border-soft);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+/* deal card */
+.neg-deal {
+  position: sticky;
+  top: calc(var(--topbar-height) + var(--space-6));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.neg-deal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.neg-rate {
+  font-size: var(--text-lg);
+  color: var(--color-ink);
+}
+
+.neg-rate strong {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.neg-when {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.neg-timer {
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+}
+
+.neg-parties {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.neg-party {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.neg-party dt {
+  min-width: 0;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.neg-you {
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.neg-actions-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-soft);
+}
+
+.neg-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--space-3);
+}
+
+.neg-actions .btn-primary,
+.neg-actions .btn-secondary {
+  min-height: 48px;
+  font-size: var(--text-base);
+}
+
+.neg-error {
+  font-size: var(--text-sm);
+  color: var(--color-danger);
+}
+
+.neg-waiting {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-soft);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.neg-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-soft);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.neg-confirmed {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.neg-result-title {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+
+.neg-result-link {
+  min-height: 44px;
+}
+
+/* empty */
+.neg-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-16) var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
   text-align: center;
-  font-size: 0.9375rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.neg-empty p {
+  max-width: 48ch;
+}
+
+.neg-empty-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.neg-empty .btn-secondary {
+  margin-top: var(--space-3);
+  min-height: 44px;
+}
+
+@media (max-width: 960px) {
+  .neg-room {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+
+  /* the decision comes first on narrow screens */
+  .neg-deal {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .neg-messages {
+    height: clamp(280px, 55vh, 480px);
+    padding: var(--space-4);
+  }
+
+  .neg-message {
+    max-width: 88%;
+  }
+
+  .neg-deal {
+    padding: var(--space-5);
+  }
+
+  .neg-composer {
+    padding: var(--space-3);
+  }
 }

@@ -1,0 +1,53 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/canon.html"
+        ],
+        "createdAt": "2026-10-28T03:57:13.164Z",
+        "reason": "Claude: decision-page sketch of the category standard, not shipping UI"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-10-28T03:59:47.099Z",
+        "reason": "Claude: unchosen decision-page sketch, not shipping UI"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-10-28T03:59:47.429Z",
+        "reason": "Claude: unchosen decision-page sketch, not shipping UI"
+      },
+      {
+        "rule": "skipped-heading",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-10-28T03:59:47.799Z",
+        "reason": "Claude: unchosen decision-page sketch, not shipping UI"
+      },
+      {
+        "rule": "overused-font",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/model-pick.html"
+        ],
+        "createdAt": "2026-10-28T03:59:48.173Z",
+        "reason": "Claude: unchosen decision-page sketch, not shipping UI"
+      }
+    ]
+  }
+}

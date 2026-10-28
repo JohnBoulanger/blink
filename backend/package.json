@@ -1,7 +1,7 @@
 {
-  "name": "visus-backend",
+  "name": "blink-backend",
   "version": "0.1.0",
-  "description": "Visus — optometry staffing platform backend (Express + Prisma + Socket.IO)",
+  "description": "Blink — optometry staffing platform backend (Express + Prisma + Socket.IO)",
   "main": "server.js",
   "scripts": {
     "start": "node src/server.js ${PORT:-3000}",

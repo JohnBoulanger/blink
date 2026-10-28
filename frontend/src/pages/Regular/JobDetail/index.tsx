@@ -1,9 +1,22 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
 import { useNegotiation } from "../../../contexts/NegotiationContext/NegotiationContext";
+import { getClinicDirectory, hasLocation, type ClinicSummary } from "../../../utils/clinics";
+import {
+  formatDay,
+  formatDuration,
+  formatLongDay,
+  formatRate,
+  formatTimeRange,
+} from "../../../utils/format";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import BackLink from "../../../components/BackLink";
+import ClinicPhoto from "../../../components/ClinicPhoto";
+import MapEmbed from "../../../components/MapEmbed";
+import StatusBadge from "../../../components/StatusBadge";
+import { JOB_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
 
 interface JobDetail {
@@ -19,17 +32,11 @@ interface JobDetail {
   worker: { id: number } | null;
 }
 
-// status badge colours
-const STATUS_CLASS: Record<string, string> = {
-  open: "status-open",
-  filled: "status-filled",
-  expired: "status-expired",
-  cancelled: "status-cancelled",
-  completed: "status-completed",
-};
+const timeFormat = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" });
 
 export default function JobDetail() {
   const { jobId } = useParams();
+  const location = useLocation();
   const { hasActiveNeg } = useNegotiation();
   const [job, setJob] = useState<JobDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -38,6 +45,10 @@ export default function JobDetail() {
   const [interested, setInterested] = useState<boolean | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState("");
+  const [clinic, setClinic] = useState<ClinicSummary | undefined>(undefined);
+
+  // the search page passes the card's photo so the header matches it
+  const photoIndex = (location.state as { photoIndex?: number } | null)?.photoIndex;
 
   // fetch job and seed interest state from server in parallel
   useEffect(() => {
@@ -75,6 +86,21 @@ export default function JobDetail() {
     fetchData();
   }, [jobId]);
 
+  // address and map come from the public clinic list; both are optional
+  const businessId = job?.business.id;
+  useEffect(() => {
+    if (businessId === undefined) return;
+    let cancelled = false;
+    getClinicDirectory()
+      .then((map) => {
+        if (!cancelled) setClinic(map.get(businessId));
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [businessId]);
+
   // toggle interest — drive state from server response
   async function handleInterest(value: boolean) {
     setActionLoading(true);
@@ -103,106 +129,173 @@ export default function JobDetail() {
   if (error) {
     return (
       <div className="JobDetail page-enter">
+        <BackLink to="/jobs">Back to shifts</BackLink>
         <p className="error-message">{error}</p>
-        <Link to="/jobs" className="back-link">
-          ← Back to jobs
-        </Link>
       </div>
     );
   }
   if (!job) return null;
 
   const isOpen = job.status === "open";
+  const status = getStatus(JOB_STATUS, job.status);
+  const rate = formatRate(job.salary_min, job.salary_max);
+  const duration = formatDuration(job.start_time, job.end_time);
+  const located = hasLocation(clinic) ? clinic : null;
+
+  // the interest action, shared by the side card and the phone bottom bar
+  const action = isOpen ? (
+    <>
+      {interested === null && (
+        <button
+          className="btn-primary jd-action"
+          onClick={() => handleInterest(true)}
+          disabled={actionLoading}
+        >
+          {actionLoading && <span className="btn-spinner" aria-hidden="true" />}
+          {actionLoading ? "Submitting…" : "I'm interested"}
+        </button>
+      )}
+      {interested === true && (
+        <button
+          className="btn-secondary jd-action"
+          onClick={() => handleInterest(false)}
+          disabled={actionLoading}
+        >
+          {actionLoading && <span className="btn-spinner" aria-hidden="true" />}
+          {actionLoading ? "Withdrawing…" : "Withdraw interest"}
+        </button>
+      )}
+    </>
+  ) : null;
+
+  const interestStatus = !isOpen ? (
+    <StatusBadge tone={status.tone}>{status.label}</StatusBadge>
+  ) : interested === true ? (
+    <StatusBadge tone="success">Interest submitted</StatusBadge>
+  ) : interested === false ? (
+    <StatusBadge tone="ended">Interest withdrawn</StatusBadge>
+  ) : null;
+
+  const errorLine = actionError ? (
+    <p className="jd-error" role="alert">
+      {actionError}
+    </p>
+  ) : null;
+
+  const negotiationLink = hasActiveNeg ? (
+    <Link to="/negotiations/me" className="btn-ghost jd-neg-link">
+      View active negotiation
+    </Link>
+  ) : null;
 
   return (
-    <div className="JobDetail page-enter">
-      <Link to="/jobs" className="back-link">
-        ← Back to jobs
-      </Link>
+    <div className={`JobDetail page-enter${isOpen ? " jd-has-bar" : ""}`}>
+      <BackLink to="/jobs">Back to shifts</BackLink>
 
-      <div className="job-detail-card">
-        {/* header */}
-        <div className="job-detail-header">
-          <div>
-            <h1>{job.position_type.name}</h1>
-            <Link to={`/businesses/${job.business.id}`} className="job-detail-business">
-              {job.business.business_name}
-            </Link>
-          </div>
-          <span className={`status-badge ${STATUS_CLASS[job.status]}`}>{job.status}</span>
+      <ClinicPhoto businessId={job.business.id} photoIndex={photoIndex} className="jd-photo" />
+
+      <div className="jd-layout">
+        <div className="jd-main">
+          <header className="jd-header">
+            <div className="jd-title-row">
+              <h1>{job.position_type.name}</h1>
+              {!isOpen && <StatusBadge tone={status.tone}>{status.label}</StatusBadge>}
+            </div>
+            <p className="jd-clinic">
+              <Link to={`/businesses/${job.business.id}`} className="jd-clinic-link">
+                {job.business.business_name}
+              </Link>
+              {clinic?.postal_address && (
+                <span className="jd-address">{clinic.postal_address}</span>
+              )}
+            </p>
+          </header>
+
+          <section className="jd-section" aria-labelledby="jd-shift-title">
+            <h2 id="jd-shift-title">One shift on {formatLongDay(job.start_time)}</h2>
+            <p className="jd-meta tabular">
+              {formatTimeRange(job.start_time, job.end_time)}
+              {duration && ` · ${duration}`}
+            </p>
+          </section>
+
+          <section className="jd-section" aria-labelledby="jd-req-title">
+            <h2 id="jd-req-title">Requirements</h2>
+            <p className="jd-meta">
+              An approved qualification for {job.position_type.name}. Yours is approved.
+            </p>
+          </section>
+
+          {job.note && (
+            <section className="jd-section" aria-labelledby="jd-note-title">
+              <h2 id="jd-note-title">Notes from the clinic</h2>
+              <p className="jd-note">{job.note}</p>
+            </section>
+          )}
+
+          {located && (
+            <section className="jd-section jd-map" aria-labelledby="jd-map-title">
+              <h2 id="jd-map-title">Where you will work</h2>
+              <p className="jd-meta">{located.postal_address}</p>
+              <MapEmbed lat={located.location.lat} lon={located.location.lon} zoom={15} />
+            </section>
+          )}
         </div>
 
-        {/* details grid */}
-        <div className="job-detail-grid">
-          <div className="job-detail-item">
-            <span className="detail-label">Salary</span>
-            <span className="detail-value">
-              ${job.salary_min.toLocaleString()}–${job.salary_max.toLocaleString()} / hr
-            </span>
+        {/* desktop: sticky booking card */}
+        <aside className="jd-card" aria-label="Rate and interest">
+          <p className="jd-rate tabular">
+            <strong>{rate}</strong> /hr
+          </p>
+          <div className="jd-when">
+            <div>
+              <span className="jd-when-label">Start</span>
+              <span className="jd-when-time tabular">
+                {timeFormat.format(new Date(job.start_time))}
+              </span>
+              <span className="jd-when-day tabular">{formatDay(job.start_time)}</span>
+            </div>
+            <div>
+              <span className="jd-when-label">End</span>
+              <span className="jd-when-time tabular">
+                {timeFormat.format(new Date(job.end_time))}
+              </span>
+              <span className="jd-when-day tabular">{formatDay(job.end_time)}</span>
+            </div>
           </div>
-          <div className="job-detail-item">
-            <span className="detail-label">Start</span>
-            <span className="detail-value">{new Date(job.start_time).toLocaleString()}</span>
-          </div>
-          <div className="job-detail-item">
-            <span className="detail-label">End</span>
-            <span className="detail-value">{new Date(job.end_time).toLocaleString()}</span>
-          </div>
-          <div className="job-detail-item">
-            <span className="detail-label">Position</span>
-            <span className="detail-value">{job.position_type.name}</span>
-          </div>
-        </div>
-
-        {/* job notes */}
-        {job.note && (
-          <div className="job-detail-note">
-            <span className="detail-label">Notes</span>
-            <p>{job.note}</p>
-          </div>
-        )}
-
-        {/* interest action — only shown for open jobs */}
-        {isOpen && (
-          <div className="job-interest-actions">
-            {actionError && <p className="error-message">{actionError}</p>}
-
-            {interested === null && (
-              <button
-                className="btn-primary"
-                onClick={() => handleInterest(true)}
-                disabled={actionLoading}
-              >
-                {actionLoading ? "Submitting..." : "Express interest"}
-              </button>
-            )}
-
-            {interested === true && (
-              <div className="interest-confirmed">
-                <span className="interest-badge">Interest submitted</span>
-                <button
-                  className="btn-secondary"
-                  onClick={() => handleInterest(false)}
-                  disabled={actionLoading}
-                >
-                  {actionLoading ? "Withdrawing..." : "Withdraw interest"}
-                </button>
-              </div>
-            )}
-
-            {interested === false && <p className="interest-withdrawn">Interest withdrawn.</p>}
-          </div>
-        )}
-
-        {/* active negotiation shortcut — only when there's a live negotiation */}
-        {hasActiveNeg && (
-          <div className="job-detail-footer">
-            <Link to="/negotiations/me" className="btn-secondary">
-              View active negotiation
-            </Link>
-          </div>
-        )}
+          {errorLine}
+          {action}
+          {interestStatus && <div className="jd-status">{interestStatus}</div>}
+          {isOpen && interested === null && (
+            <p className="jd-hint">
+              If the clinic is also interested, either side can start a 15-minute live negotiation.
+            </p>
+          )}
+          {negotiationLink}
+        </aside>
       </div>
+
+      {/* phones: the card becomes a bottom bar */}
+      {isOpen && (
+        <div className="jd-bar" aria-label="Rate and interest" role="region">
+          {errorLine}
+          <div className="jd-bar-row">
+            <div className="jd-bar-info">
+              <p className="jd-bar-rate tabular">
+                <strong>{rate}</strong> /hr
+              </p>
+              {interestStatus ?? (
+                <p className="jd-bar-when tabular">
+                  {formatDay(job.start_time)}
+                  {duration && ` · ${duration}`}
+                </p>
+              )}
+            </div>
+            {action}
+          </div>
+          {negotiationLink}
+        </div>
+      )}
     </div>
   );
 }

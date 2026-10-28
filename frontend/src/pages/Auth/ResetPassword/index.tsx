@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
+import AuthCard from "../../../components/AuthCard";
 import PasswordInput from "../../../components/PasswordInput";
-import "../RegisterUser/style.css";
 import "./style.css";
 
 // password must match backend validation
@@ -16,18 +16,23 @@ export default function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState("");
+  // client-side checks point at the field they belong to
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmError, setConfirmError] = useState("");
 
   async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
     setError("");
+    setPasswordError("");
+    setConfirmError("");
 
     // client-side validation
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setConfirmError("Passwords do not match.");
       return;
     }
     if (!PASSWORD_REGEX.test(password)) {
-      setError(
+      setPasswordError(
         "Password must be 8–20 characters with uppercase, lowercase, digit, and special character."
       );
       return;
@@ -54,61 +59,90 @@ export default function ResetPassword() {
 
   if (status === "success") {
     return (
-      <div className="ResetPassword page-enter">
-        <div className="auth-card">
-          <div className="auth-success">
-            <h2>Password reset</h2>
-            <p>Your password has been updated successfully.</p>
-            <Link to="/login">Sign in</Link>
-          </div>
+      <AuthCard className="ResetPassword" title="Password updated">
+        <div className="auth-success" role="status">
+          <p>Your password has been updated. Sign in with the new one.</p>
+          <Link to="/login" className="btn-primary">
+            Sign in
+          </Link>
         </div>
-      </div>
+      </AuthCard>
     );
   }
 
   return (
-    <div className="ResetPassword page-enter">
-      <div className="auth-card">
-        <h1>Reset password</h1>
-        <p className="auth-subtitle">Choose a new password</p>
+    <AuthCard
+      className="ResetPassword"
+      title="Choose a new password"
+      subtitle="Confirm your email, then set the new password."
+      footer={<Link to="/forgot-password">Request a new link</Link>}
+    >
+      <form onSubmit={handleSubmit} className="auth-form">
+        {error && (
+          <p className="error-message" role="alert">
+            {error}
+          </p>
+        )}
 
-        <form onSubmit={handleSubmit}>
-          {error && <p className="error-message">{error}</p>}
-
+        <div className="form-field">
+          <label htmlFor="reset-email">Email</label>
           <input
+            id="reset-email"
             type="email"
-            placeholder="Your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
             required
           />
+        </div>
 
+        <div className="form-field">
+          <label htmlFor="reset-password">New password</label>
           <PasswordInput
-            placeholder="New password"
+            id="reset-password"
+            placeholder=""
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password"
+            invalid={Boolean(passwordError)}
+            describedBy={passwordError ? "reset-password-error" : "reset-password-hint"}
             required
           />
-          <p className="hint">
-            8–20 characters, uppercase, lowercase, digit, and special character
-          </p>
+          {passwordError ? (
+            <p className="field-error" id="reset-password-error">
+              {passwordError}
+            </p>
+          ) : (
+            <p className="field-hint" id="reset-password-hint">
+              8–20 characters with an uppercase letter, a lowercase letter, a digit and a symbol.
+            </p>
+          )}
+        </div>
 
+        <div className="form-field">
+          <label htmlFor="reset-confirm">Confirm new password</label>
           <PasswordInput
-            placeholder="Confirm password"
+            id="reset-confirm"
+            placeholder=""
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            autoComplete="new-password"
+            invalid={Boolean(confirmError)}
+            describedBy={confirmError ? "reset-confirm-error" : undefined}
             required
           />
+          {confirmError && (
+            <p className="field-error" id="reset-confirm-error">
+              {confirmError}
+            </p>
+          )}
+        </div>
 
-          <button type="submit" className="btn-primary" disabled={status === "loading"}>
-            {status === "loading" ? "Resetting..." : "Reset password"}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          <Link to="/forgot-password">Request a new link</Link>
-        </p>
-      </div>
-    </div>
+        <button type="submit" className="btn-primary auth-submit" disabled={status === "loading"}>
+          {status === "loading" && <span className="btn-spinner" aria-hidden="true" />}
+          {status === "loading" ? "Saving…" : "Save new password"}
+        </button>
+      </form>
+    </AuthCard>
   );
 }

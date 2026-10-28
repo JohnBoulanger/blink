@@ -2,32 +2,45 @@ import { useState } from "react";
 import "./style.css";
 
 interface PasswordInputProps {
+  id?: string;
   name?: string;
   placeholder?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
+  autoComplete?: string;
+  invalid?: boolean;
+  // id of the hint or error line under the field
+  describedBy?: string;
 }
 
 // password field with toggle visibility button
 export default function PasswordInput({
+  id,
   name,
   placeholder = "Password",
   value,
   onChange,
   required,
+  autoComplete,
+  invalid = false,
+  describedBy,
 }: PasswordInputProps) {
   const [visible, setVisible] = useState(false);
 
   return (
     <div className="password-input-wrapper">
       <input
+        id={id}
         name={name}
         type={visible ? "text" : "password"}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         required={required}
+        autoComplete={autoComplete}
+        aria-invalid={invalid || undefined}
+        aria-describedby={describedBy}
       />
       <button
         type="button"

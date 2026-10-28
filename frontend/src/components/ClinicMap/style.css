@@ -1,0 +1,109 @@
+.ClinicMap {
+  position: relative;
+  /* keeps leaflet's pane z-indexes below the sticky top bar */
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-subtle);
+}
+
+.clinic-map-canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  font-family: var(--font-body);
+}
+
+/* the marker element is zero-sized; the pill centres on the clinic */
+.clinic-map-marker {
+  background: none;
+  border: 0;
+}
+
+.clinic-map-pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-tier);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--color-ink);
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s var(--ease-out);
+}
+
+.clinic-map-marker:hover .clinic-map-pin {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.clinic-map-pin.active {
+  background: var(--color-pine);
+  color: var(--color-on-primary);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+/* plain pin: the tip sits on the clinic */
+.clinic-map-drop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 24px;
+  height: 34px;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25));
+  transform: translate(-50%, -100%);
+  transform-origin: 50% 100%;
+  transition: transform 0.15s var(--ease-out);
+}
+
+/* the marker box is zero-sized, so the svg must not shrink to it */
+.clinic-map-drop svg {
+  max-width: none;
+}
+
+.clinic-map-marker:hover .clinic-map-drop,
+.clinic-map-drop.active {
+  transform: translate(-50%, -100%) scale(1.15);
+}
+
+.clinic-map-marker:focus-visible {
+  outline: none;
+}
+
+.clinic-map-marker:focus-visible .clinic-map-pin,
+.clinic-map-marker:focus-visible .clinic-map-drop {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.clinic-map-tooltip {
+  padding: 4px 10px;
+  border: 0;
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-tier);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.clinic-map-tooltip::before {
+  display: none;
+}
+
+.ClinicMap .leaflet-control-attribution {
+  font-size: 11px;
+}

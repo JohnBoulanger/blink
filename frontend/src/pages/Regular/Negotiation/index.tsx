@@ -6,6 +6,10 @@ import api from "../../../utils/api";
 import { useAuth } from "../../../contexts/AuthContext/AuthContext";
 import { useNegotiation } from "../../../contexts/NegotiationContext/NegotiationContext";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import CountdownTimer from "../../../components/CountdownTimer";
+import StatusBadge from "../../../components/StatusBadge";
+import Logo from "../../../components/Logo";
+import { formatRate, formatShiftWhen } from "../../../utils/format";
 import "./style.css";
 
 // role-appropriate fallback links
@@ -35,14 +39,6 @@ interface ChatMessage {
   sender: { role: string; id: number };
   text: string;
   createdAt: string;
-}
-
-// format seconds remaining as mm:ss
-function formatCountdown(seconds: number): string {
-  if (seconds <= 0) return "00:00";
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
 export default function Negotiation() {
@@ -208,7 +204,7 @@ export default function Negotiation() {
 
   // auto-scroll to bottom when messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages]);
 
   // send a chat message via socket
@@ -253,10 +249,16 @@ export default function Negotiation() {
     return (
       <div className="Negotiation page-enter">
         <h1>Negotiation</h1>
-        <p className="empty-state">
-          No active negotiation. <Link to={jobsTo}>Go to jobs</Link> to start one when you have a
-          mutual interest.
-        </p>
+        <div className="neg-empty">
+          <p className="neg-empty-title">No active negotiation</p>
+          <p>
+            When you and the other side are both interested in a shift, either of you can open a
+            15-minute negotiation. It appears here.
+          </p>
+          <Link to={jobsTo} className="btn-secondary">
+            {role === "business" ? "Go to your jobs" : "Go to my shifts"}
+          </Link>
+        </div>
       </div>
     );
   }
@@ -269,136 +271,228 @@ export default function Negotiation() {
   const myDecision = iAmCandidate
     ? negotiation.decisions.candidate
     : negotiation.decisions.business;
-  const theirDecision = iAmCandidate
-    ? negotiation.decisions.business
-    : negotiation.decisions.candidate;
 
   const isActive = negotiation.status === "active";
   const isSuccess = negotiation.status === "success";
   const isFailed = negotiation.status === "failed";
 
-  // warn when less than 2 minutes remain
-  const urgentCountdown = secondsLeft !== null && secondsLeft <= 120;
+  // the business name is omitted when the viewer is the business itself
+  const ownBusinessName = (user as Record<string, unknown> | null)?.business_name as
+    | string
+    | undefined;
+  const clinicName = negotiation.job.business?.business_name ?? ownBusinessName ?? "The clinic";
+  const proName = `${negotiation.user.first_name} ${negotiation.user.last_name}`;
+  const otherName = iAmCandidate ? clinicName : proName;
+  const theirShortName = iAmCandidate ? "the clinic" : negotiation.user.first_name;
+
+  function decisionBadge(decision: string | null) {
+    if (decision === "accept") return <StatusBadge tone="success">Accepted</StatusBadge>;
+    if (decision === "decline") return <StatusBadge tone="ended">Declined</StatusBadge>;
+    return isActive ? (
+      <StatusBadge tone="pending">Deciding</StatusBadge>
+    ) : (
+      <StatusBadge tone="ended">No decision</StatusBadge>
+    );
+  }
+
+  const clinicDecision = negotiation.decisions.business;
+  const proDecision = negotiation.decisions.candidate;
+  const doneLink = iAmCandidate ? "/my-jobs" : "/business/jobs";
 
   return (
     <div className="Negotiation page-enter">
-      {/* negotiation header */}
-      <div className="neg-header">
-        <div>
-          <h1>Negotiation</h1>
-          <p className="neg-subtitle">
-            {negotiation.job.position_type.name}
-            {negotiation.job.business && ` · ${negotiation.job.business.business_name}`}
-          </p>
-        </div>
-        <span className={`neg-status neg-status-${negotiation.status}`}>{negotiation.status}</span>
-      </div>
+      <header className="neg-header">
+        <h1>Negotiation</h1>
+        <p className="neg-subtitle">
+          {negotiation.job.position_type.name} · {clinicName}
+        </p>
+      </header>
 
-      {/* job summary */}
-      <div className="neg-job-info">
-        <span>
-          ${negotiation.job.salary_min}–${negotiation.job.salary_max}/hr
-        </span>
-        <span>·</span>
-        <span>{new Date(negotiation.job.start_time).toLocaleString()}</span>
-        <span>→</span>
-        <span>{new Date(negotiation.job.end_time).toLocaleString()}</span>
-      </div>
+      <div className="neg-room">
+        {/* chat */}
+        <section className="neg-chat" aria-label="Chat">
+          <header className="neg-chat-head">
+            <span className="neg-avatar" aria-hidden="true">
+              {otherName.charAt(0).toUpperCase()}
+            </span>
+            <span className="neg-chat-who">
+              <strong>{otherName}</strong>
+              <span>{negotiation.job.position_type.name}</span>
+            </span>
+          </header>
 
-      {/* countdown timer — shown while active */}
-      {isActive && secondsLeft !== null && (
-        <div className={`neg-countdown ${urgentCountdown ? "neg-countdown-urgent" : ""}`}>
-          <span className="neg-countdown-label">Time remaining</span>
-          <span className="neg-countdown-value">{formatCountdown(secondsLeft)}</span>
-        </div>
-      )}
+          <div className="neg-messages">
+            <p className="neg-system">Negotiation opened. Both sides were interested.</p>
+            {messages.length === 0 && (
+              <p className="neg-no-messages">No messages yet. Say hello to start.</p>
+            )}
+            <ol className="neg-message-list" aria-label="Messages">
+              {messages.map((msg, i) => {
+                const isMine = myId !== undefined && msg.sender.id === myId;
+                // stable key: use timestamp + sender id + fallback index
+                const key = `${msg.negotiation_id}-${msg.sender.id}-${msg.createdAt}-${i}`;
+                return (
+                  <li key={key} className={`neg-message ${isMine ? "mine" : "theirs"}`}>
+                    <span className="visually-hidden">{isMine ? "You" : otherName}:</span>
+                    <p className="msg-text">{msg.text}</p>
+                    <time className="msg-time tabular" dateTime={msg.createdAt}>
+                      {new Date(msg.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </time>
+                  </li>
+                );
+              })}
+            </ol>
+            <div ref={messagesEndRef} />
+          </div>
 
-      {/* outcome banners */}
-      {isSuccess && (
-        <div className="neg-outcome success">Both parties accepted — job confirmed!</div>
-      )}
-      {isFailed && (
-        <div className="neg-outcome failed">
-          Negotiation ended.{" "}
-          <Link to={BROWSE_LINK[role ?? "regular"] ?? "/jobs"}>Browse more jobs</Link>
-        </div>
-      )}
+          {/* message input — only when active */}
+          {isActive ? (
+            <form onSubmit={handleSend} className="neg-composer">
+              <label htmlFor="neg-input" className="visually-hidden">
+                Message
+              </label>
+              <input
+                id="neg-input"
+                type="text"
+                placeholder="Write a message…"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                autoComplete="off"
+              />
+              <button
+                type="submit"
+                className="neg-send"
+                disabled={!input.trim()}
+                aria-label="Send message"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path
+                    d="M5 12h14M13 6l6 6-6 6"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </form>
+          ) : (
+            <p className="neg-composer-closed">The chat is closed.</p>
+          )}
+        </section>
 
-      {/* decisions */}
-      <div className="neg-decisions">
-        <div
-          className={`neg-decision ${myDecision ? `decision-${myDecision}` : "decision-pending"}`}
-        >
-          <span className="neg-decision-label">Your decision</span>
-          <span className="neg-decision-value">{myDecision ?? "Pending"}</span>
-        </div>
-        <div
-          className={`neg-decision ${theirDecision ? `decision-${theirDecision}` : "decision-pending"}`}
-        >
-          <span className="neg-decision-label">Their decision</span>
-          <span className="neg-decision-value">{theirDecision ?? "Pending"}</span>
-        </div>
-      </div>
+        {/* deal card */}
+        <section className="neg-deal" aria-label="Shift terms and decision">
+          <div className="neg-deal-head">
+            <div>
+              <p className="neg-rate tabular">
+                <strong>
+                  {formatRate(negotiation.job.salary_min, negotiation.job.salary_max)}
+                </strong>{" "}
+                /hr
+              </p>
+              <p className="neg-when tabular">
+                {formatShiftWhen(negotiation.job.start_time, negotiation.job.end_time)}
+              </p>
+            </div>
+            {isActive && <StatusBadge tone="live">Live</StatusBadge>}
+            {isSuccess && <StatusBadge tone="success">Confirmed</StatusBadge>}
+            {isFailed && <StatusBadge tone="ended">Ended</StatusBadge>}
+          </div>
 
-      {/* accept / decline — only shown when active and undecided */}
-      {isActive && !myDecision && (
-        <div className="neg-actions">
-          {decisionError && <p className="error-message">{decisionError}</p>}
-          <button
-            className="btn-primary"
-            onClick={() => handleDecision("accept")}
-            disabled={decisionLoading}
-          >
-            Accept
-          </button>
-          <button
-            className="btn-secondary"
-            onClick={() => handleDecision("decline")}
-            disabled={decisionLoading}
-          >
-            Decline
-          </button>
-        </div>
-      )}
+          {/* countdown timer — shown while active */}
+          {isActive && secondsLeft !== null && (
+            <div className="neg-timer">
+              <CountdownTimer seconds={secondsLeft} label="Time remaining" size="lg" />
+            </div>
+          )}
 
-      {/* chat */}
-      <div className="neg-chat">
-        <div className="neg-messages">
-          {messages.length === 0 && <p className="neg-no-messages">No messages yet — say hello!</p>}
-          {messages.map((msg, i) => {
-            const isMine = myId !== undefined && msg.sender.id === myId;
-            // stable key: use timestamp + sender id + fallback index
-            const key = `${msg.negotiation_id}-${msg.sender.id}-${msg.createdAt}-${i}`;
-            return (
-              <div key={key} className={`neg-message ${isMine ? "mine" : "theirs"}`}>
-                <p className="msg-text">{msg.text}</p>
-                <span className="msg-time">
-                  {new Date(msg.createdAt).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
+          <dl className="neg-parties">
+            <div className="neg-party">
+              <dt>
+                {clinicName}
+                {!iAmCandidate && <span className="neg-you"> (you)</span>}
+              </dt>
+              <dd>{decisionBadge(clinicDecision)}</dd>
+            </div>
+            <div className="neg-party">
+              <dt>
+                {proName}
+                {iAmCandidate && <span className="neg-you"> (you)</span>}
+              </dt>
+              <dd>{decisionBadge(proDecision)}</dd>
+            </div>
+          </dl>
+
+          {/* accept / decline — only shown when active and undecided */}
+          {isActive && !myDecision && (
+            <div className="neg-actions-wrap">
+              {decisionError && (
+                <p className="neg-error" role="alert">
+                  {decisionError}
+                </p>
+              )}
+              <div className="neg-actions">
+                <button
+                  className="btn-secondary"
+                  onClick={() => handleDecision("decline")}
+                  disabled={decisionLoading}
+                >
+                  Decline
+                </button>
+                <button
+                  className="btn-primary"
+                  onClick={() => handleDecision("accept")}
+                  disabled={decisionLoading}
+                >
+                  {decisionLoading && <span className="btn-spinner" aria-hidden="true" />}
+                  Accept shift
+                </button>
               </div>
-            );
-          })}
-          <div ref={messagesEndRef} />
-        </div>
+            </div>
+          )}
 
-        {/* message input — only when active */}
-        {isActive && (
-          <form onSubmit={handleSend} className="neg-input-row">
-            <input
-              type="text"
-              placeholder="Type a message…"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              autoComplete="off"
-            />
-            <button type="submit" className="btn-primary" disabled={!input.trim()}>
-              Send
-            </button>
-          </form>
-        )}
+          {isActive && myDecision && (
+            <p className="neg-waiting" role="status">
+              {myDecision === "accept"
+                ? `You accepted. Waiting for ${theirShortName}.`
+                : "You declined."}
+            </p>
+          )}
+
+          {/* outcome */}
+          {isSuccess && (
+            <div className="neg-result" role="status">
+              <div className="neg-confirmed">
+                <Logo blink="once" blinkKey={1} size={40} wordmark={false} />
+                <div>
+                  <p className="neg-result-title">Shift confirmed</p>
+                  <p>Both sides accepted. The shift is filled.</p>
+                </div>
+              </div>
+              <Link to={doneLink} className="btn-secondary neg-result-link">
+                {iAmCandidate ? "View my shifts" : "View your jobs"}
+              </Link>
+            </div>
+          )}
+          {isFailed && (
+            <div className="neg-result" role="status">
+              <div>
+                <p className="neg-result-title">Negotiation ended</p>
+                <p>No match this time. The chat and decisions are closed.</p>
+              </div>
+              <Link
+                to={BROWSE_LINK[role ?? "regular"] ?? "/jobs"}
+                className="btn-secondary neg-result-link"
+              >
+                {iAmCandidate ? "Browse more jobs" : "Back to your jobs"}
+              </Link>
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );

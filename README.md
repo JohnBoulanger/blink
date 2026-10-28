@@ -1,8 +1,8 @@
-# Visus
+# Blink
 
 A real-time optometry staffing platform connecting qualified eye care professionals with clinics that need them. Built with React, Express.js, Prisma, and Socket.IO.
 
-<img width="1115" height="888" alt="image" src="https://github.com/user-attachments/assets/b2fa3f7f-b333-439e-baa8-1b4e9eae08b8" />
+![Blink landing page with the shift search and open shifts](docs/screenshots/blink-landing.png)
 
 ## Demo accounts
 
@@ -10,9 +10,9 @@ The seed script (`npx prisma db seed`) creates these accounts. All accounts use 
 
 | Role | Email |
 |------|-------|
-| Optometry professional | `regular1@visus.dev` through `regular20@visus.dev` |
-| Optometry clinic | `business1@visus.dev` through `business15@visus.dev` |
-| Platform admin | `admin1@visus.dev` |
+| Optometry professional | `regular1@blink.dev` through `regular20@blink.dev` |
+| Optometry clinic | `business1@blink.dev` through `business15@blink.dev` |
+| Platform admin | `admin1@blink.dev` |
 
 ## Features
 
@@ -22,9 +22,9 @@ The seed script (`npx prisma db seed`) creates these accounts. All accounts use 
 - Express interest in jobs and receive invitations from clinics
 - Real-time negotiation chat with 15-minute time-boxed windows
 
-<img width="1147" height="844" alt="image" src="https://github.com/user-attachments/assets/467c4470-a55c-44fc-8bc8-94b6dd53e2fb" />
+![Shift search with photo cards and a map of rates](docs/screenshots/blink-shift-search.png)
 
-<img width="1114" height="514" alt="image" src="https://github.com/user-attachments/assets/e27bd172-00cf-4521-8fa2-14a7dbfcf4f2" />
+![Shift detail with the rate card and the interest action](docs/screenshots/blink-shift-detail.png)
 
 
 ### For optometry clinics
@@ -33,7 +33,9 @@ The seed script (`npx prisma db seed`) creates these accounts. All accounts use 
 - Invite candidates and track mutual interest
 - Negotiate terms in real time and confirm hires
 
-<img width="1137" height="872" alt="image" src="https://github.com/user-attachments/assets/315e5b6b-d2cd-47c5-b6fe-c2feed98e46a" />
+![A clinic's job list with status filters](docs/screenshots/blink-clinic-jobs.png)
+
+![A confirmed negotiation from the clinic side](docs/screenshots/blink-negotiation-confirmed.png)
 
 ### For platform administrators
 - Manage users (suspend/unsuspend) and businesses (verify/unverify)
@@ -41,24 +43,18 @@ The seed script (`npx prisma db seed`) creates these accounts. All accounts use 
 - Configure system settings: negotiation window, reset cooldown, job start window, availability timeout
 - Manage position types
 
-<img width="1144" height="841" alt="Screenshot 2026-07-19 211052" src="https://github.com/user-attachments/assets/e6bba49a-52de-4379-a0d5-c4e7f145a1c9" />
-<img width="1138" height="899" alt="Screenshot 2026-07-19 211045" src="https://github.com/user-attachments/assets/d5e345e8-b82d-4dbb-a838-f45a9553d819" />
+![Admin credential review with one request open](docs/screenshots/blink-credential-review.png)
 
 
 ### Public pages
 - Browse verified optometry clinics with search and sorting
 - View clinic profiles with location map, contact info, and open positions
 
-<img width="1161" height="861" alt="Screenshot 2026-07-19 211138" src="https://github.com/user-attachments/assets/98daf952-1a18-46d7-a5ce-60dc7a3eb49c" />
-
 ### Authentication
 - JWT-based auth with role-dependent dashboards
 - Account activation via email token
 - Password reset flow
 - Registration for both professionals and clinics
-
-<img width="1163" height="769" alt="Screenshot 2026-07-19 211150" src="https://github.com/user-attachments/assets/f0ba3018-174b-4727-acd6-79f30d787d73" />
-<img width="1130" height="587" alt="Screenshot 2026-07-19 211145" src="https://github.com/user-attachments/assets/2d860cfd-4ff4-48c3-8819-490895ecf6f0" />
 
 
 ## Tech stack
@@ -70,6 +66,7 @@ The seed script (`npx prisma db seed`) creates these accounts. All accounts use 
 | Real-time | Socket.IO (WebSocket) |
 | Auth | JWT (JSON Web Tokens) |
 | Maps | Leaflet + OpenStreetMap |
+| Fonts | Schibsted Grotesk and Inter, self-hosted with Fontsource |
 | Security | Helmet, express-rate-limit, Zod validation |
 
 ## Getting started
@@ -167,6 +164,23 @@ Open http://localhost:5173.
 - Helmet security headers
 - File upload size limits
 - Socket.IO per-connection message rate limiting
+
+## Photo credits
+
+The clinic photos in `frontend/public/photos/` are illustrative stock photos from [Unsplash](https://unsplash.com), used under the [Unsplash License](https://unsplash.com/license). They do not show the seeded clinics.
+
+| File | Photographer | Source |
+|------|--------------|--------|
+| `clinic-01.jpg` | Donald Teel | [Unsplash](https://unsplash.com/photos/wall-display-of-sunglasses-in-an-optical-shop--G2kzjBx3Ps) |
+| `clinic-02.jpg` | Scott Van Daalen | [Unsplash](https://unsplash.com/photos/arranged-assorted-color-eyeglasses-on-rack-UsALNdok2m4) |
+| `clinic-03.jpg` | nrd | [Unsplash](https://unsplash.com/photos/white-eye-testing-machine-aMmDIsdnUro) |
+| `clinic-04.jpg` | Viktor Talashuk | [Unsplash](https://unsplash.com/photos/close-up-photo-of-eyeglasses-rack-5hC2YalkXHw) |
+| `clinic-05.jpg` | Sabhyata Sahu | [Unsplash](https://unsplash.com/photos/eyeglasses-displayed-on-optical-store-shelves-xGsOQcGFA9g) |
+| `clinic-06.jpg` | CHUTTERSNAP | [Unsplash](https://unsplash.com/photos/eyeglasses-lot-G8ioIHUDfNc) |
+| `clinic-07.jpg` | Judy Beth Morris | [Unsplash](https://unsplash.com/photos/Y0D5L-qKUcw) |
+| `clinic-08.jpg` | mdreza jalali | [Unsplash](https://unsplash.com/photos/collection-of-vintage-eyeglasses-displayed-in-a-shop-JA21BnjBtvo) |
+| `clinic-09.jpg` | Sabhyata Sahu | [Unsplash](https://unsplash.com/photos/eyeglasses-displayed-on-store-shelves-3yBmSWXbwyw) |
+| `clinic-10.jpg` | atelierbyvineeth | [Unsplash](https://unsplash.com/photos/a-person-looking-at-glasses-in-a-store-display-Mk3Bp2G5I5M) |
 
 ## License
 

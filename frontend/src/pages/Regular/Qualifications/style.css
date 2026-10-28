@@ -1,129 +1,184 @@
-/* qualifications management page */
+/* qualifications: one hairline row per position with its document and status */
 
 .Qualifications {
-  max-width: 680px;
+  max-width: 880px;
 }
 
-.quals-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-
-/* create form */
-.qual-create-form {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 24px;
-}
-
-.qual-create-form form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* qualification cards */
-.quals-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.qual-card {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 18px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.qual-card-header {
+.myquals-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
 }
 
-.qual-card-header h3 {
-  font-size: 1rem;
-  margin-bottom: 2px;
+.myquals-heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 }
 
-.qual-note {
-  font-size: 0.875rem;
-  color: var(--text-muted);
+.myquals-subtitle {
+  max-width: 60ch;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
 }
 
-/* status badges */
-.qual-status {
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 3px 10px;
-  border-radius: 20px;
-  white-space: nowrap;
+.myquals-header > button {
   flex-shrink: 0;
+  min-height: 44px;
 }
 
-.qual-status-created {
-  background: var(--bg-surface);
-  color: var(--text-muted);
-}
-.qual-status-submitted {
-  background: var(--accent-subtle);
-  color: var(--accent);
-}
-.qual-status-approved {
-  background: var(--status-green-bg);
-  color: var(--success);
-}
-.qual-status-rejected {
-  background: var(--error-bg);
-  color: var(--error);
-}
-.qual-status-revised {
-  background: var(--accent-subtle);
-  color: var(--accent);
+/* create form */
+.myqual-create-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
 }
 
-/* actions row */
-.qual-card-actions {
+.myqual-create-form .error-message,
+.myqual-create-actions {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+
+.myqual-create-form textarea {
+  min-height: var(--control-height);
+}
+
+/* rows */
+.myquals-list {
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.myqual-row {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.myqual-row-head {
+  display: flex;
   flex-wrap: wrap;
-}
-
-.qual-doc {
-  display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
 }
 
-.qual-doc-link {
-  font-size: 0.8125rem;
-  color: var(--accent);
+.myqual-row-head h2 {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.qual-doc-missing {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  font-style: italic;
+.myqual-note-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
 }
 
-.qual-updated {
-  font-size: 0.75rem;
-  color: var(--text-muted);
+.myqual-note {
+  max-width: 65ch;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
 }
 
-.empty-state {
-  color: var(--text-muted);
-  padding: 40px 0;
+.myqual-note-button {
+  min-height: 32px;
+  padding-inline: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.myqual-note-edit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 560px;
+}
+
+.myqual-note-edit-btns {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.myqual-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.myqual-row-actions .FileUpload {
+  flex: 1;
+  min-width: 260px;
+  max-width: 520px;
+}
+
+.myqual-submit {
+  min-height: 44px;
+}
+
+.myqual-updated {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+}
+
+/* empty */
+.myquals-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-16) var(--space-6);
+  border-top: 1px solid var(--color-border);
   text-align: center;
-  font-size: 0.9375rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.myquals-empty-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.myquals-empty .btn-secondary {
+  margin-top: var(--space-3);
+  min-height: 44px;
+}
+
+@media (max-width: 768px) {
+  .myquals-header {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .myqual-create-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .myqual-row-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .myqual-row-actions .FileUpload {
+    min-width: 0;
+    max-width: none;
+  }
+
+  .myqual-note-button,
+  .myqual-note-edit-btns .btn-sm {
+    min-height: 44px;
+  }
 }

@@ -177,10 +177,11 @@ class NegotiationService {
   }
 
   static async getNegotiations(user) {
-    // find the active negotiation involving this user
+    // find the active, unexpired negotiation involving this user
     const negotiation = await prisma.negotiation.findFirst({
       where: {
         status: "active",
+        expiresAt: { gt: new Date() },
         OR: [{ userId: user.id }, { businessId: user.id }],
       },
       include: {

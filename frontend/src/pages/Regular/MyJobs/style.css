@@ -1,90 +1,39 @@
-/* my jobs page — interests + invitations */
+/* my shifts: interests, invitations and work history as hairline rows */
 
 .MyJobs {
-  max-width: 720px;
+  max-width: 880px;
 }
 
 .MyJobs h1 {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-6);
 }
 
-/* active negotiation banner */
-.myjobs-neg-banner {
-  padding: 10px 16px;
-  background: var(--accent-subtle);
-  border: 1px solid var(--accent);
-  border-radius: 8px;
-  font-size: 0.9375rem;
-  color: var(--accent);
-  margin-bottom: 16px;
-}
-
-/* tab switcher */
+/* tab row (.tab lives in index.css) */
 .myjobs-tabs {
   display: flex;
-  gap: 4px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid var(--border-light);
-  padding-bottom: 0;
+  gap: var(--space-6);
+  margin-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-.tab {
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  border-radius: 0;
-  padding: 8px 16px;
-  font-size: 0.9375rem;
-  color: var(--text-muted);
-  cursor: pointer;
-  margin-bottom: -1px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition:
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.tab:hover {
-  color: var(--text-strong);
-}
-
-.tab.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  font-weight: 500;
-}
-
-.tab-count {
-  font-size: 0.75rem;
-  background: var(--accent-subtle);
-  color: var(--accent);
-  padding: 1px 6px;
-  border-radius: 10px;
-}
-
-/* job rows */
+/* rows */
 .myjobs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 24px;
+  list-style: none;
 }
 
 .myjob-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px 190px 180px;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 14px 16px;
-  background: var(--bg-elevated);
+  gap: var(--space-4);
+  min-height: 72px;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border-soft);
 }
 
-.myjob-row-info {
+.myjob-main {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -92,78 +41,115 @@
 }
 
 .myjob-title {
-  font-weight: 500;
-  color: var(--text-strong);
-  font-size: 0.9375rem;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
   text-decoration: none;
+  text-underline-offset: 3px;
 }
 
 .myjob-title:hover {
-  color: var(--accent);
+  color: var(--color-ink);
+  text-decoration: underline;
 }
 
-.myjob-business,
-.myjob-date {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
+.myjob-meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.myjob-row-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-
-.btn-sm {
-  padding: 6px 12px;
-  font-size: 0.8125rem;
-}
-
-.myjob-status-pending {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-.myjob-status-confirmed {
-  font-size: 0.8125rem;
-  color: var(--success);
+.myjob-rate {
+  font-size: var(--text-sm);
   font-weight: 600;
+  color: var(--color-ink);
+  text-align: right;
 }
 
-/* job status dots */
-.status-dot {
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-weight: 500;
+.myjob-rate-unit {
+  font-weight: 400;
+  color: var(--color-text-secondary);
 }
 
-.status-open {
-  background: var(--accent-subtle);
-  color: var(--accent);
-}
-.status-filled {
-  background: var(--status-green-bg);
-  color: var(--success);
-}
-.status-expired {
-  background: var(--bg-surface);
-  color: var(--text-muted);
-}
-.status-cancelled {
-  background: var(--error-bg);
-  color: var(--error);
-}
-.status-completed {
-  background: var(--status-green-bg);
-  color: var(--success);
+.myjob-status {
+  display: flex;
+  min-width: 0;
 }
 
-.empty-state {
-  color: var(--text-muted);
-  padding: 40px 0;
+.myjob-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.myjob-action .btn-sm {
+  min-height: 36px;
+}
+
+/* empty */
+.myjobs-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-16) var(--space-6);
   text-align: center;
-  font-size: 0.9375rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.myjobs-empty p {
+  max-width: 44ch;
+}
+
+.myjobs-empty-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.myjobs-empty .btn-secondary {
+  margin-top: var(--space-3);
+  min-height: 44px;
+}
+
+@media (max-width: 900px) {
+  .myjob-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "main rate"
+      "status action";
+    row-gap: var(--space-2);
+    padding: var(--space-4) 0;
+  }
+
+  .myjob-main {
+    grid-area: main;
+  }
+
+  .myjob-meta {
+    white-space: normal;
+  }
+
+  .myjob-rate {
+    grid-area: rate;
+    align-self: start;
+  }
+
+  .myjob-status {
+    grid-area: status;
+  }
+
+  .myjob-action {
+    grid-area: action;
+  }
+
+  .myjob-action:empty {
+    display: none;
+  }
+
+  .myjob-action .btn-sm {
+    min-height: 44px;
+  }
 }

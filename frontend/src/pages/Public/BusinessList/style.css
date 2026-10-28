@@ -1,118 +1,145 @@
+/* clinic directory: photo cards beside a sticky map */
+
 .BusinessList {
-  flex: 1;
-  padding: 48px 0;
-}
-
-.BusinessList h1 {
-  margin-bottom: 4px;
-}
-
-/* count subtitle below heading */
-.list-subtitle {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  margin-bottom: 24px;
-}
-
-/* search and sort controls */
-.list-controls {
   display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 
-.list-controls select {
-  min-width: 120px;
-}
-
-/* business cards grid */
-.business-grid {
+.bl-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-8);
+  align-items: start;
 }
 
-.business-card {
-  display: block;
-  padding: 20px;
-  border: 1px solid var(--border-light);
-  /* colored left accent for visual interest */
-  border-left: 3px solid var(--accent);
-  border-radius: 8px;
-  background: var(--bg-elevated);
+.bl-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-10) var(--space-6);
+}
+
+/* the card bleeds 8px past its cell so the hover shadow has room */
+.bl-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: calc(100% + 16px);
+  margin: -8px;
+  padding: 8px;
+  border-radius: calc(var(--radius-card) + 6px);
+  color: var(--color-ink);
   text-decoration: none;
-  color: inherit;
   transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
+    box-shadow 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
 }
 
-.business-card:hover {
-  border-color: var(--accent);
-  box-shadow: var(--shadow-md);
-  /* subtle lift on hover */
+.bl-card:hover,
+.bl-card.active {
+  color: var(--color-ink);
+  box-shadow: var(--shadow-tier);
   transform: translateY(-2px);
 }
 
-/* card header with avatar + name/email */
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 14px;
+.bl-card .ClinicPhoto {
+  margin-bottom: var(--space-3);
 }
 
-/* initial-letter avatar circle */
-.card-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--accent-subtle);
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.125rem;
+.bl-card-name {
+  font-size: 0.9375rem;
   font-weight: 600;
-  flex-shrink: 0;
+  line-height: 1.35;
 }
 
-.card-header h3 {
-  margin-bottom: 2px;
-  color: var(--text-strong);
+.bl-card-meta {
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  color: var(--color-text-secondary);
 }
 
-.business-email {
-  font-size: 0.8125rem;
-  color: var(--accent);
+/* loading */
+.bl-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* card body — phone and address */
-.card-body {
-  padding-top: 12px;
-  border-top: 1px solid var(--border-light);
+.bl-skeleton-photo,
+.bl-skeleton-line {
+  display: block;
+  background: var(--color-surface-muted);
 }
 
-.business-detail {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-  line-height: 1.5;
+.bl-skeleton-photo {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
 }
 
-.empty-state {
-  text-align: center;
-  padding: 48px 0;
-  color: var(--text-muted);
+.bl-skeleton-line {
+  width: 70%;
+  height: 12px;
+  border-radius: var(--radius-full);
 }
 
-@media (max-width: 768px) {
-  .list-controls {
-    flex-direction: column;
+.bl-skeleton-line-short {
+  width: 45%;
+}
+
+/* map */
+.bl-map {
+  position: sticky;
+  top: calc(var(--topbar-height) + var(--space-6));
+}
+
+.bl-map-frame {
+  height: min(640px, calc(100vh - var(--topbar-height) - var(--space-12)));
+  min-height: 420px;
+}
+
+@media (hover: none) {
+  .bl-card:hover {
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .bl-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
   }
 
-  .business-grid {
-    grid-template-columns: 1fr;
+  .bl-map {
+    position: static;
+    order: -1;
+  }
+
+  .bl-map-frame {
+    height: 300px;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .bl-grid {
+    gap: var(--space-6) var(--space-3);
+  }
+
+  .bl-card {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .bl-card:hover,
+  .bl-card.active {
+    box-shadow: none;
+    transform: none;
+  }
+
+  .bl-card-name,
+  .bl-card-meta {
+    font-size: var(--text-sm);
   }
 }

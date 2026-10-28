@@ -1,23 +1,5 @@
-/* register business specific overrides if needed */
+/* clinic registration: the layout comes from AuthCard */
 
-.geo-address-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  width: 100%;
-}
-
-.geo-address-row input {
-  flex: 1;
-}
-
-.geo-lookup-btn {
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-.geo-error {
-  font-size: 0.8125rem;
-  color: var(--error);
-  margin: -8px 0 0;
+.rb-coords-hint {
+  margin-top: calc(var(--space-2) * -1);
 }

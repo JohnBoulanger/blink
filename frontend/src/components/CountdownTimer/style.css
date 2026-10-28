@@ -1,0 +1,63 @@
+.CountdownTimer {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.countdown-label {
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.countdown-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.countdown-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+.countdown-dot-left,
+.countdown-dot-current {
+  background: var(--color-pine);
+}
+
+.countdown-dot-current {
+  animation: status-pulse 1.6s ease-in-out infinite;
+}
+
+.CountdownTimer-stopped .countdown-dot-current {
+  animation: none;
+}
+
+.CountdownTimer-lg .countdown-dots {
+  gap: 6px;
+}
+
+.CountdownTimer-lg .countdown-dot {
+  width: 10px;
+  height: 10px;
+}
+
+.countdown-value {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.CountdownTimer-urgent .countdown-dot-left,
+.CountdownTimer-urgent .countdown-dot-current {
+  background: var(--color-warning);
+}
+
+.CountdownTimer-urgent .countdown-value {
+  color: var(--color-warning);
+}

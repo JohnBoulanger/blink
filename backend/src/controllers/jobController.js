@@ -13,10 +13,17 @@ async function getJobs(req, res) {
         .json({ error: "Cannot sort by distance or ETA without providing lat and lon" });
     }
     if (error.type === "forbidden") {
-      return res
-        .status(403)
-        .json({ error: "Businesses cannot provide location parameters" });
+      return res.status(403).json({ error: "Businesses cannot provide location parameters" });
     }
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+async function getPublicJobs(req, res) {
+  try {
+    const jobs = await JobService.getPublicJobs();
+    return res.status(200).json(jobs);
+  } catch (error) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 }
@@ -223,7 +230,9 @@ async function getInterests(req, res) {
       return res.status(404).json({ error: "Job not found" });
     }
     if (error.type === "conflict") {
-      return res.status(409).json({ error: "This job is no longer available for expressing interest" });
+      return res
+        .status(409)
+        .json({ error: "This job is no longer available for expressing interest" });
     }
     return res.status(500).json({ error: "Internal Server Error" });
   }
@@ -238,4 +247,5 @@ module.exports = {
   getUserCandidates,
   updateInterestInCandidate,
   getInterests,
+  getPublicJobs,
 };

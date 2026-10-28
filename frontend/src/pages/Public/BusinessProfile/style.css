@@ -1,119 +1,171 @@
-.BusinessProfile {
-  flex: 1;
-  padding: 48px 0;
-  max-width: 640px;
+/* public clinic profile: wide photo, details on the left, contact card on the right */
+
+.PublicBusinessProfile {
+  display: flex;
+  flex-direction: column;
 }
 
-.back-link {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  display: inline-block;
-  margin-bottom: 24px;
+.pbp-photo {
+  aspect-ratio: 21 / 8;
+  max-height: 380px;
 }
 
-.back-link:hover {
-  color: var(--accent);
+.pbp-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: var(--space-16);
+  align-items: start;
+  margin-top: var(--space-8);
 }
 
-/* header with avatar */
-.profile-header {
+.pbp-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pbp-header {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin-bottom: 32px;
+  gap: var(--space-4);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
 }
 
-.profile-avatar {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
+.pbp-avatar {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: var(--radius-card);
   object-fit: cover;
-  border: 1px solid var(--border);
 }
 
-/* initials placeholder shown when no avatar is uploaded */
-.profile-avatar-placeholder {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: var(--accent-subtle);
-  border: 1px solid var(--border);
+.pbp-heading {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--accent);
-  flex-shrink: 0;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
 }
 
-.map-link {
-  color: var(--accent);
-  font-size: 0.9375rem;
-  text-decoration: none;
+.pbp-address {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
 }
 
-.map-link:hover {
-  text-decoration: underline;
-}
-
-.profile-header h1 {
-  margin: 0;
-  font-size: 1.75rem;
-}
-
-.profile-email {
-  color: var(--accent);
-  font-size: 0.9375rem;
-  margin-top: 2px;
-}
-
-/* details — clean card layout without horizontal rules between rows */
-.profile-details {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-  padding: 20px 24px;
-}
-
-.detail-row {
+/* sections split by hairlines */
+.pbp-section {
   display: flex;
-  gap: 16px;
-  padding: 12px 0;
-  font-size: 0.9375rem;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-block: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
 }
 
-/* only add dividers between rows, not after the last one */
-.detail-row + .detail-row {
-  border-top: 1px solid var(--border-light);
+.pbp-section:last-child {
+  border-bottom: 0;
 }
 
-.detail-label {
-  color: var(--text-muted);
-  min-width: 80px;
-  flex-shrink: 0;
+.pbp-section h2 {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-/* embedded map — no top border, it follows the details card naturally */
-.profile-map {
-  margin-top: 24px;
+.pbp-section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.profile-map h3 {
-  margin-bottom: 12px;
+.pbp-section-note,
+.pbp-text {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
 }
 
-/* biography */
-.profile-bio {
-  margin-top: 24px;
-}
-
-.profile-bio h3 {
-  margin-bottom: 8px;
-}
-
-.profile-bio p {
-  font-size: 0.9375rem;
-  color: var(--text);
+.pbp-bio {
+  max-width: 65ch;
+  font-size: var(--text-base);
   line-height: 1.6;
+  color: var(--color-ink);
+}
+
+.pbp-section .error-message {
+  margin-bottom: 0;
+}
+
+.pbp-shifts {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-8) var(--space-6);
+  padding-top: var(--space-2);
+}
+
+/* contact card */
+.pbp-card {
+  position: sticky;
+  top: calc(var(--topbar-height) + var(--space-6));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-tier);
+  background: var(--color-surface);
+}
+
+.pbp-card-title {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.pbp-contact > div {
+  grid-template-columns: 72px minmax(0, 1fr);
+}
+
+.pbp-directions {
+  min-height: 44px;
+  margin-top: var(--space-2);
+}
+
+@media (max-width: 1100px) {
+  .pbp-layout {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: var(--space-10);
+  }
+}
+
+@media (max-width: 900px) {
+  .pbp-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+  }
+
+  .pbp-card {
+    position: static;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .pbp-photo {
+    aspect-ratio: 4 / 3;
+    margin-inline: calc(var(--container-gutter) * -1);
+    border-radius: 0;
+  }
+
+  .pbp-shifts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pbp-contact > div {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: var(--space-4);
+  }
 }

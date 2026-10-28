@@ -1,10 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import api from "../../../utils/api";
 import useDebounce from "../../../hooks/useDebounce";
 import Pagination from "../../../components/Pagination";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../Users/style.css";
+import StatusBadge from "../../../components/StatusBadge";
+import SearchPill from "../../../components/SearchPill";
+import ErrorBanner from "../../../components/ErrorBanner";
+import { QUAL_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
 
 interface QualSummary {
@@ -32,13 +35,28 @@ interface QualDetail {
   updatedAt: string;
 }
 
-const STATUS_CLASS: Record<string, string> = {
-  created: "badge-grey",
-  submitted: "badge-amber",
-  approved: "badge-green",
-  rejected: "badge-red",
-  revised: "badge-amber",
-};
+// status filter chips, in review order
+const STATUS_FILTERS: { value: string; label: string }[] = [
+  { value: "", label: "All" },
+  { value: "submitted", label: "In review" },
+  { value: "revised", label: "Resubmitted" },
+  { value: "approved", label: "Approved" },
+  { value: "rejected", label: "Rejected" },
+  { value: "created", label: "Not submitted" },
+];
+
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+const dateTimeFormat = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+});
 
 // statuses the admin can transition to from a given current status
 function adminActions(status: string): string[] {
@@ -67,6 +85,7 @@ export default function AdminQualifications() {
 
   const limit = 10;
   const debouncedKeyword = useDebounce(keyword, 300);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
 
   // track previous filter values to detect changes and reset page atomically
   const prevFiltersRef = useRef({ debouncedKeyword, statusFilter });
@@ -160,174 +179,247 @@ export default function AdminQualifications() {
 
   const totalPages = Math.ceil(count / limit);
 
+  // the review panel under an expanded row
+  function renderDetail() {
+    if (detailLoading) return <LoadingSpinner />;
+    if (!detail) {
+      return detailError ? (
+        <p className="error-message" role="alert">
+          {detailError}
+        </p>
+      ) : null;
+    }
+    const status = getStatus(QUAL_STATUS, detail.status);
+    const canReview = adminActions(detail.status).length > 0;
+    return (
+      <div className="aq-review">
+        <div className="aq-review-info">
+          <div className="aq-doc">
+            <span className="aq-doc-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M14 3v5h5"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <span className="aq-doc-text">
+              <span className="aq-doc-title">Credential document</span>
+              {detail.document ? (
+                <a
+                  href={`${backendUrl}${detail.document}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="aq-doc-link"
+                >
+                  Open document (PDF)
+                </a>
+              ) : (
+                <span className="aq-doc-empty">No document uploaded</span>
+              )}
+            </span>
+          </div>
+
+          <dl className="detail-list">
+            <div>
+              <dt>Professional</dt>
+              <dd>
+                {detail.user.first_name} {detail.user.last_name}
+                <span className="aq-sub">{detail.user.email}</span>
+              </dd>
+            </div>
+            <div>
+              <dt>Position</dt>
+              <dd>
+                {detail.position_type.name}
+                <span className="aq-sub">{detail.position_type.description}</span>
+              </dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd>
+                <StatusBadge tone={status.tone}>{status.label}</StatusBadge>
+              </dd>
+            </div>
+            <div>
+              <dt>Last updated</dt>
+              <dd className="tabular">{dateTimeFormat.format(new Date(detail.updatedAt))}</dd>
+            </div>
+            {detail.note && (
+              <div>
+                <dt>Note</dt>
+                <dd>{detail.note}</dd>
+              </div>
+            )}
+            {detail.user.biography && (
+              <div>
+                <dt>Biography</dt>
+                <dd className="aq-bio">{detail.user.biography}</dd>
+              </div>
+            )}
+          </dl>
+        </div>
+
+        {/* approve/reject actions */}
+        {canReview ? (
+          <div className="aq-decision">
+            {detailError && (
+              <p className="error-message" role="alert">
+                {detailError}
+              </p>
+            )}
+            <div className="form-field">
+              <label htmlFor={`aq-note-${detail.id}`}>
+                Note to the professional <span className="aq-optional">(optional)</span>
+              </label>
+              <textarea
+                id={`aq-note-${detail.id}`}
+                value={actionNote}
+                onChange={(e) => setActionNote(e.target.value)}
+                rows={3}
+              />
+            </div>
+            <div className="aq-decision-btns">
+              <button
+                type="button"
+                className="btn-secondary"
+                disabled={actionPending}
+                onClick={() => handleAction(detail.id, "rejected")}
+              >
+                Reject
+              </button>
+              <button
+                type="button"
+                className="btn-primary"
+                disabled={actionPending}
+                onClick={() => handleAction(detail.id, "approved")}
+              >
+                {actionPending && <span className="btn-spinner" aria-hidden="true" />}
+                Approve
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="aq-decided">
+            {detail.status === "created"
+              ? "The professional has not submitted this request yet."
+              : "This request has been reviewed. A new review opens when the professional resubmits."}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="AdminQualifications page-enter">
-      <div className="admin-page-header">
-        <div>
-          <h1>Qualifications</h1>
-          <p className="admin-subtitle">
-            {count} qualification request{count !== 1 ? "s" : ""}
+      <header className="page-header">
+        <div className="page-header-text">
+          <h1>Credential review</h1>
+          <p className="page-subtitle" aria-live="polite">
+            {loading
+              ? "Loading requests…"
+              : `${count} qualification request${count !== 1 ? "s" : ""}`}
           </p>
+        </div>
+      </header>
+
+      <div className="aq-controls">
+        <SearchPill
+          value={keyword}
+          onChange={setKeyword}
+          label="Search qualifications"
+          placeholder="Search by name or email"
+        />
+        <div className="aq-status-filters" role="group" aria-label="Filter by status">
+          {STATUS_FILTERS.map((f) => (
+            <button
+              key={f.value || "all"}
+              type="button"
+              className="chip"
+              aria-pressed={statusFilter === f.value}
+              onClick={() => setStatusFilter(f.value)}
+            >
+              {f.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="admin-controls">
-        <input
-          className="admin-search"
-          type="text"
-          placeholder="Search by user name or email…"
-          aria-label="Search qualifications"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <select
-          aria-label="Filter by status"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="">Status</option>
-          <option value="created">Created</option>
-          <option value="submitted">Submitted</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-          <option value="revised">Revised</option>
-        </select>
-      </div>
-
-      {error && (
-        <p className="error-message admin-error-dismissible">
-          {error}
-          <button
-            className="admin-error-dismiss"
-            onClick={() => setError("")}
-            aria-label="Dismiss error"
-          >
-            ✕
-          </button>
-        </p>
-      )}
+      {error && <ErrorBanner message={error} onDismiss={() => setError("")} />}
 
       {loading ? (
         <LoadingSpinner />
       ) : quals.length === 0 ? (
-        <p className="empty-state">No qualifications match your filters.</p>
+        <div className="empty-state">
+          <p className="empty-state-title">No requests match these filters</p>
+          <p>When a professional submits a credential, it appears here for review.</p>
+        </div>
       ) : (
         <>
-          <div className="qual-list">
-            {quals.map((q) => (
-              <div key={q.id} className="qual-item">
-                {/* summary row — click to expand */}
-                <button
-                  className={`qual-row ${expandedId === q.id ? "qual-row-open" : ""}`}
-                  onClick={() => toggleExpand(q.id)}
-                  aria-expanded={expandedId === q.id}
-                >
-                  <span className="qual-user">
-                    {q.user.first_name} {q.user.last_name}
-                  </span>
-                  <span className="qual-position">{q.position_type.name}</span>
-                  <span className={`admin-badge ${STATUS_CLASS[q.status] ?? "badge-grey"}`}>
-                    {q.status}
-                  </span>
-                  <span className="qual-date">{new Date(q.updatedAt).toLocaleDateString()}</span>
-                  <span className="qual-chevron">{expandedId === q.id ? "▲" : "▼"}</span>
-                </button>
-
-                {/* expanded detail panel */}
-                {expandedId === q.id && (
-                  <div className="qual-detail">
-                    {detailLoading ? (
-                      <LoadingSpinner />
-                    ) : detailError ? (
-                      <p className="error-message">{detailError}</p>
-                    ) : detail ? (
-                      <>
-                        <div className="qual-detail-grid">
-                          <div>
-                            <p className="detail-label">User</p>
-                            <p>
-                              {detail.user.first_name} {detail.user.last_name}
-                            </p>
-                            <p className="admin-td-email">{detail.user.email}</p>
-                          </div>
-                          <div>
-                            <p className="detail-label">Position type</p>
-                            <p>{detail.position_type.name}</p>
-                            <p className="admin-muted">{detail.position_type.description}</p>
-                          </div>
-                          <div>
-                            <p className="detail-label">Status</p>
-                            <span
-                              className={`admin-badge ${STATUS_CLASS[detail.status] ?? "badge-grey"}`}
-                            >
-                              {detail.status}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="detail-label">Last updated</p>
-                            <p>{new Date(detail.updatedAt).toLocaleString()}</p>
-                          </div>
-                          {detail.note && (
-                            <div className="qual-detail-full">
-                              <p className="detail-label">Note</p>
-                              <p>{detail.note}</p>
-                            </div>
-                          )}
-                          {detail.document && (
-                            <div className="qual-detail-full">
-                              <p className="detail-label">Document</p>
-                              <a
-                                href={detail.document}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="admin-link"
-                              >
-                                View document ↗
-                              </a>
-                            </div>
-                          )}
-                          {detail.user.biography && (
-                            <div className="qual-detail-full">
-                              <p className="detail-label">Biography</p>
-                              <p className="admin-muted">{detail.user.biography}</p>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* approve/reject actions */}
-                        {adminActions(detail.status).length > 0 && (
-                          <div className="qual-actions">
-                            <textarea
-                              className="qual-note-input"
-                              placeholder="Optional note to the user…"
-                              value={actionNote}
-                              onChange={(e) => setActionNote(e.target.value)}
-                              rows={2}
-                            />
-                            <div className="qual-action-btns">
-                              <button
-                                className="btn-primary btn-sm"
-                                disabled={actionPending}
-                                onClick={() => handleAction(detail.id, "approved")}
-                              >
-                                {actionPending ? "…" : "Approve"}
-                              </button>
-                              <button
-                                className="btn-danger btn-sm"
-                                disabled={actionPending}
-                                onClick={() => handleAction(detail.id, "rejected")}
-                              >
-                                {actionPending ? "…" : "Reject"}
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    ) : null}
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="table-wrap">
+            <table className="table table-stack aq-table">
+              <thead>
+                <tr>
+                  <th scope="col">Professional</th>
+                  <th scope="col">Position</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Updated</th>
+                  <th scope="col">
+                    <span className="visually-hidden">Review</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {quals.map((q) => {
+                  const open = expandedId === q.id;
+                  const status = getStatus(QUAL_STATUS, q.status);
+                  const panelId = `aq-panel-${q.id}`;
+                  return (
+                    <Fragment key={q.id}>
+                      <tr className={open ? "aq-row-open" : undefined}>
+                        <td className="cell-primary">
+                          {q.user.first_name} {q.user.last_name}
+                        </td>
+                        <td data-label="Position">{q.position_type.name}</td>
+                        <td data-label="Status">
+                          <StatusBadge tone={status.tone}>{status.label}</StatusBadge>
+                        </td>
+                        <td className="cell-secondary" data-label="Updated">
+                          {dateFormat.format(new Date(q.updatedAt))}
+                        </td>
+                        <td className="cell-actions">
+                          <button
+                            type="button"
+                            className={`btn-sm aq-toggle ${open ? "btn-secondary" : adminActions(q.status).length ? "btn-primary" : "btn-secondary"}`}
+                            onClick={() => toggleExpand(q.id)}
+                            aria-expanded={open}
+                            aria-controls={open ? panelId : undefined}
+                            aria-label={`${open ? "Close" : adminActions(q.status).length ? "Review" : "View"} ${q.user.first_name} ${q.user.last_name}, ${q.position_type.name}`}
+                          >
+                            {open ? "Close" : adminActions(q.status).length ? "Review" : "View"}
+                          </button>
+                        </td>
+                      </tr>
+                      {open && (
+                        <tr className="aq-detail-row">
+                          <td colSpan={5} id={panelId}>
+                            {renderDetail()}
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
           <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </>

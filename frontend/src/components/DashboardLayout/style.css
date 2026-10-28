@@ -1,121 +1,94 @@
-/* dashboard shell: sidebar + main content */
-
-/* grain texture overlay for depth */
-.dashboard-shell::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.35;
+.DashboardLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .dashboard-shell {
   display: flex;
   flex: 1;
-  gap: 0;
-  min-height: calc(100svh - 57px);
-  position: relative;
 }
 
-/* keep sidebar and main above the fixed grain layer */
-.dashboard-sidebar,
-.dashboard-main {
-  position: relative;
-  z-index: 1;
-}
-
-/* left sidebar */
 .dashboard-sidebar {
-  width: 180px;
+  width: 240px;
   flex-shrink: 0;
-  border-right: 1px solid var(--border-light);
-  padding: 28px 0;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border-soft);
 }
 
 .sidebar-nav {
+  position: sticky;
+  top: var(--topbar-height);
   display: flex;
   flex-direction: column;
   gap: 2px;
-}
-
-/* active negotiation indicator dot */
-.sidebar-neg-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  margin-left: 6px;
-  vertical-align: middle;
-  flex-shrink: 0;
+  padding: var(--space-6) var(--space-4);
 }
 
 .sidebar-link {
   display: flex;
   align-items: center;
-  padding: 8px 16px;
-  font-size: 0.875rem;
-  color: var(--text-muted);
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: var(--radius-control);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary);
   text-decoration: none;
-  border-radius: 6px;
-  transition:
-    color 0.15s ease,
-    background 0.15s ease;
-  margin: 0 8px;
 }
 
 .sidebar-link:hover {
-  color: var(--text-strong);
-  background: var(--bg-surface);
+  background: var(--color-surface-subtle);
+  color: var(--color-ink);
 }
 
 .sidebar-link.active {
-  color: var(--accent);
-  background: var(--accent-subtle);
-  font-weight: 500;
+  background: var(--color-surface-subtle);
+  color: var(--color-ink);
+  font-weight: 600;
 }
 
-/* main area */
+/* live negotiation indicator */
+.sidebar-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.sidebar-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-pine);
+  animation: status-pulse 1.6s ease-in-out infinite;
+}
+
 .dashboard-main {
   flex: 1;
-  padding: 32px 32px 64px;
   min-width: 0;
+  padding: var(--space-10) var(--space-12) var(--space-16);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .dashboard-shell::before {
-    animation: none;
-  }
+.dashboard-content {
+  max-width: 1080px;
 }
 
-/* responsive: collapse sidebar to horizontal tabs on mobile */
+/* pages with a map beside the content use the full width */
+.dashboard-content:has(> .page-wide) {
+  max-width: none;
+}
+
 @media (max-width: 768px) {
-  .dashboard-shell {
-    flex-direction: column;
-  }
-
   .dashboard-sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border-light);
-    padding: 12px 0;
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 4px;
-    padding: 0 8px;
-  }
-
-  .sidebar-link {
-    margin: 0;
+    display: none;
   }
 
   .dashboard-main {
-    padding: 24px 0 48px;
+    padding: var(--space-6) var(--container-gutter) var(--space-12);
   }
 }

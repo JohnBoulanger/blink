@@ -4,6 +4,7 @@ import axios from "axios";
 import api from "../../../utils/api";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import MapEmbed from "../../../components/MapEmbed";
+import StatusBadge from "../../../components/StatusBadge";
 import "./style.css";
 
 interface BusinessProfile {
@@ -20,6 +21,8 @@ interface BusinessProfile {
   activated: boolean;
   createdAt: string;
 }
+
+const memberSince = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
 
 export default function BusinessProfile() {
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
@@ -65,7 +68,12 @@ export default function BusinessProfile() {
   }
 
   if (loading) return <LoadingSpinner />;
-  if (error) return <p className="error-message">{error}</p>;
+  if (error)
+    return (
+      <p className="error-message" role="alert">
+        {error}
+      </p>
+    );
   if (!profile) return null;
 
   // two-letter initials for avatar placeholder
@@ -75,33 +83,57 @@ export default function BusinessProfile() {
     .map((w) => w[0])
     .join("")
     .toUpperCase();
+  const hasLocation = Boolean(
+    profile.location && profile.location.lat !== 0 && profile.location.lon !== 0
+  );
 
   return (
     <div className="BusinessProfile page-enter">
-      {/* header row with edit button */}
-      <div className="biz-profile-header">
-        <h1>Business Profile</h1>
-        <Link to="/business/profile/edit" className="btn-secondary btn-sm">
+      <header className="page-header">
+        <div className="page-header-text">
+          <h1>Clinic profile</h1>
+          <p className="page-subtitle">This is how professionals see your clinic.</p>
+        </div>
+        <Link to="/business/profile/edit" className="btn-secondary">
           Edit profile
         </Link>
-      </div>
+      </header>
 
-      {/* avatar + name block */}
-      <div className="biz-profile-top">
-        <div className="biz-avatar-wrap">
-          {profile.avatar ? (
-            <img
-              src={`${backendUrl}${profile.avatar}`}
-              alt="business avatar"
-              className="biz-avatar"
-            />
-          ) : (
-            <div className="biz-avatar-placeholder">{initials}</div>
-          )}
+      {/* unverified notice: jobs can't be posted until an admin verifies */}
+      {!profile.verified && (
+        <div className="bp-notice" role="status">
+          <StatusBadge tone="pending">Waiting for verification</StatusBadge>
+          <p>
+            An admin reviews every new clinic. You can post shifts once your clinic is verified.
+          </p>
+        </div>
+      )}
+
+      <div className="bp-layout">
+        {/* identity card */}
+        <section className="bp-card" aria-labelledby="bp-name">
+          <div className="bp-identity">
+            {profile.avatar ? (
+              <img src={`${backendUrl}${profile.avatar}`} alt="" className="bp-avatar" />
+            ) : (
+              <span className="bp-avatar bp-avatar-initials" aria-hidden="true">
+                {initials}
+              </span>
+            )}
+            <div className="bp-identity-text">
+              <h2 id="bp-name">{profile.business_name}</h2>
+              {profile.verified ? (
+                <StatusBadge tone="success">Verified clinic</StatusBadge>
+              ) : (
+                <StatusBadge tone="pending">Unverified</StatusBadge>
+              )}
+            </div>
+          </div>
+
           <input
             type="file"
             accept="image/*"
-            style={{ display: "none" }}
+            hidden
             ref={avatarRef}
             onChange={(e) => {
               const file = e.target.files?.[0];
@@ -109,79 +141,63 @@ export default function BusinessProfile() {
             }}
           />
           <button
-            className="avatar-upload-btn"
+            type="button"
+            className="btn-ghost btn-sm bp-photo-button"
             onClick={() => avatarRef.current?.click()}
             disabled={uploadLoading}
           >
-            {uploadLoading ? "Uploading..." : "Change photo"}
+            {uploadLoading ? "Uploading…" : "Change photo"}
           </button>
-          {uploadError && <p className="error-message small">{uploadError}</p>}
-        </div>
+          {uploadError && (
+            <p className="bp-error" role="alert">
+              {uploadError}
+            </p>
+          )}
 
-        <div className="biz-profile-identity">
-          <div className="biz-name-row">
-            <h2>{profile.business_name}</h2>
-            {profile.verified ? (
-              <span className="biz-badge verified">Verified</span>
-            ) : (
-              <span className="biz-badge unverified">Unverified</span>
+          <dl className="detail-list bp-details">
+            <div>
+              <dt>Owner</dt>
+              <dd>{profile.owner_name}</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd>{profile.email}</dd>
+            </div>
+            <div>
+              <dt>Phone</dt>
+              <dd className="tabular">{profile.phone_number || "Not added"}</dd>
+            </div>
+            <div>
+              <dt>Member since</dt>
+              <dd className="tabular">{memberSince.format(new Date(profile.createdAt))}</dd>
+            </div>
+          </dl>
+        </section>
+
+        <div className="bp-main">
+          <section className="bp-section" aria-labelledby="bp-location-title">
+            <h2 id="bp-location-title">Location</h2>
+            <p className="bp-text">{profile.postal_address || "No address added."}</p>
+            {hasLocation && profile.location && (
+              <>
+                <MapEmbed lat={profile.location.lat} lon={profile.location.lon} />
+                <p className="bp-coords tabular">
+                  {profile.location.lat.toFixed(4)}, {profile.location.lon.toFixed(4)}
+                </p>
+              </>
             )}
-          </div>
-          <p className="biz-owner">Owner: {profile.owner_name}</p>
-          <p className="biz-email">{profile.email}</p>
+          </section>
+
+          <section className="bp-section" aria-labelledby="bp-about-title">
+            <h2 id="bp-about-title">About</h2>
+            {profile.biography ? (
+              <p className="bp-bio">{profile.biography}</p>
+            ) : (
+              <p className="bp-text">No description added.</p>
+            )}
+          </section>
         </div>
       </div>
-
-      {/* details grid */}
-      <div className="biz-details-grid">
-        {profile.phone_number && (
-          <div className="biz-detail-item">
-            <span className="detail-label">Phone</span>
-            <span>{profile.phone_number}</span>
-          </div>
-        )}
-        {profile.postal_address && (
-          <div className="biz-detail-item">
-            <span className="detail-label">Address</span>
-            <span>{profile.postal_address}</span>
-          </div>
-        )}
-        {profile.location && (
-          <div className="biz-detail-item">
-            <span className="detail-label">Coordinates</span>
-            <span>
-              {profile.location.lat.toFixed(4)}, {profile.location.lon.toFixed(4)}
-            </span>
-          </div>
-        )}
-        <div className="biz-detail-item">
-          <span className="detail-label">Member since</span>
-          <span>{new Date(profile.createdAt).toLocaleDateString()}</span>
-        </div>
-      </div>
-
-      {/* embedded map when coordinates are available */}
-      {profile.location && (
-        <div className="biz-map">
-          <MapEmbed lat={profile.location.lat} lon={profile.location.lon} />
-        </div>
-      )}
-
-      {/* biography */}
-      {profile.biography && (
-        <div className="biz-bio">
-          <span className="detail-label">About</span>
-          <p>{profile.biography}</p>
-        </div>
-      )}
-
-      {/* unverified warning — jobs can't be posted until admin verifies */}
-      {!profile.verified && (
-        <div className="biz-unverified-notice">
-          Your account is pending verification by an administrator. You can browse the platform but
-          cannot post jobs until verified.
-        </div>
-      )}
     </div>
   );
 }

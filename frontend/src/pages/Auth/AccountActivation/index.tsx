@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
-import "../RegisterUser/style.css";
+import AuthCard from "../../../components/AuthCard";
 import "./style.css";
 
 export default function AccountActivation() {
@@ -36,44 +36,52 @@ export default function AccountActivation() {
 
   if (status === "success") {
     return (
-      <div className="AccountActivation page-enter">
-        <div className="auth-card">
-          <div className="auth-success">
-            <h2>Account activated</h2>
-            <p>Your account is ready to use.</p>
-            <Link to="/login">Sign in</Link>
-          </div>
+      <AuthCard className="AccountActivation" title="Account activated">
+        <div className="auth-success" role="status">
+          <p>Your account is ready to use.</p>
+          <Link to="/login" className="btn-primary">
+            Sign in
+          </Link>
         </div>
-      </div>
+      </AuthCard>
     );
   }
 
   return (
-    <div className="AccountActivation page-enter">
-      <div className="auth-card">
-        <h1>Activate account</h1>
-        <p className="auth-subtitle">Confirm your email to activate</p>
-
-        <form onSubmit={handleSubmit}>
-          {error && <p className="error-message">{error}</p>}
-
-          <input
-            type="email"
-            placeholder="Confirm your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <button type="submit" className="btn-primary" disabled={status === "loading"}>
-            {status === "loading" ? "Activating..." : "Activate"}
-          </button>
-        </form>
-
-        <p className="auth-footer">
+    <AuthCard
+      className="AccountActivation"
+      title="Activate your account"
+      subtitle="Confirm the email you registered with."
+      footer={
+        <p>
           Link expired? <Link to="/forgot-password">Request a new one</Link>
         </p>
-      </div>
-    </div>
+      }
+    >
+      <form onSubmit={handleSubmit} className="auth-form">
+        {error && (
+          <p className="error-message" role="alert">
+            {error}
+          </p>
+        )}
+
+        <div className="form-field">
+          <label htmlFor="activate-email">Email</label>
+          <input
+            id="activate-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn-primary auth-submit" disabled={status === "loading"}>
+          {status === "loading" && <span className="btn-spinner" aria-hidden="true" />}
+          {status === "loading" ? "Activating…" : "Activate account"}
+        </button>
+      </form>
+    </AuthCard>
   );
 }

@@ -1,338 +1,157 @@
-/* grain texture — subtle noise overlay for depth */
-.Landing::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.35;
-}
-
 .Landing {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
-  /* prevent horizontal scroll from full-width bleed sections */
   overflow-x: clip;
 }
 
-/* ensure all direct children sit above the grain layer */
-.Landing > * {
-  position: relative;
-  z-index: 1;
+/* landing buttons run a size up from the app */
+.Landing .btn-primary,
+.Landing .btn-secondary {
+  min-height: 48px;
 }
 
-/* ── hero ── */
-.hero {
-  min-height: 100svh;
-  width: 100%;
+/* section headings below the fold */
+.section-head {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 0 120px;
-  position: relative;
-  /* fade up on load */
-  animation: landingFadeUp 0.6s ease both;
-  animation-delay: 0.05s;
+  gap: var(--space-2);
+  margin-bottom: var(--space-10);
 }
 
-/* radial glow behind hero text for depth */
-.hero::after {
-  content: "";
-  position: absolute;
-  top: 20%;
-  left: -10%;
-  width: 50%;
-  height: 60%;
-  background: radial-gradient(ellipse, var(--accent-subtle) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+.section-head h2 {
+  font-size: var(--text-3xl);
+  letter-spacing: -0.03em;
 }
 
-/* two-column grid: text left, visual right */
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 48px;
-  width: 100%;
-  position: relative;
-  z-index: 1;
+.section-head p {
+  max-width: 60ch;
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
 }
 
-.hero-inner {
-  max-width: 520px;
-}
-
-/* eyebrow uses primary accent for a strong brand tie-in */
-.hero-eyebrow {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--accent);
-  margin-bottom: 20px;
-  font-weight: 500;
-}
-
-/* hero headline — intentionally oversized for impact */
-.hero h1 {
-  font-size: 3.25rem;
-  font-weight: 500;
-  letter-spacing: -0.035em;
-  line-height: 1.15;
-  margin-bottom: 20px;
-  color: var(--text-strong);
-}
-
-/* subtitle reads comfortably under the large heading */
-.hero-subtitle {
-  font-size: 1.0625rem;
-  color: var(--text);
-  line-height: 1.65;
-  max-width: 460px;
-  margin-bottom: 40px;
-}
-
-.hero-actions {
+.section-title-row {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: var(--space-3);
 }
 
-/* override global btn sizing for hero prominence */
-.hero-btn.btn-primary {
-  padding: 12px 28px;
-  font-size: 0.9375rem;
-  border-radius: 10px;
+.demo-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
-.hero-signin {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  transition: color 0.15s ease;
+.section-head-split {
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
 }
 
-.hero-signin:hover {
-  color: var(--accent2);
-}
-
-/* ── getting started ── */
-.how-it-works {
-  width: 100%;
-  padding: 80px 0;
-  border-top: 1px solid var(--border-light);
-  animation: landingFadeUp 0.6s ease both;
-  animation-delay: 0.2s;
-}
-
-.section-label {
-  font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--accent2);
-  margin-bottom: 40px;
-}
-
-.steps {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr;
-  align-items: start;
-  gap: 0;
-}
-
-.step {
-  padding-right: 24px;
-}
-
-/* warm accent on step numbers — slightly larger for visibility */
-.step-num {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--accent-warm);
-  margin-bottom: 14px;
-  letter-spacing: 0.05em;
-  font-weight: 500;
-}
-
-.step h2 {
-  font-size: 1.125rem;
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: var(--text-strong);
-}
-
-.step p {
-  font-size: 0.875rem;
-  color: var(--text);
-  line-height: 1.6;
-}
-
-/* thin vertical divider between steps */
-.step-divider {
-  width: 1px;
-  height: 80px;
-  background: var(--accent2-subtle);
-  margin: 4px 32px 0;
-  align-self: start;
-}
-
-/* ── scrolling ticker — surface bg for visual rhythm ── */
-.ticker-section {
-  width: 100%;
-  padding: 60px 0;
-  border-top: 1px solid var(--border-light);
-  background: var(--bg-surface);
-  border-radius: 12px;
-  animation: landingFadeUp 0.6s ease both;
-  animation-delay: 0.35s;
-}
-
-.ticker-label {
-  font-size: 0.6875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--accent2);
-  margin-bottom: 24px;
-}
-
-/* clip so items slide in/out cleanly */
-.ticker-viewport {
-  overflow: hidden;
-  width: 100%;
-}
-
-/* the track is twice the natural width — first half scrolls off, second fills in */
-.ticker-track {
+.section-head-split > div {
   display: flex;
-  width: max-content;
-  animation: tickerScroll 56s linear infinite;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
-.ticker-item {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--text-muted);
+.section-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
   white-space: nowrap;
-  letter-spacing: 0.03em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.section-link:hover {
+  color: var(--color-ink);
+  text-decoration-thickness: 2px;
+}
+
+/* negotiation */
+.landing-negotiation {
+  padding-block: var(--space-20);
+  border-top: 1px solid var(--color-border-soft);
+}
+
+/* clinics */
+.landing-clinics {
+  padding-block: var(--space-20);
+  border-top: 1px solid var(--color-border-soft);
+}
+
+/* closing band */
+.landing-cta {
+  padding-block: var(--space-20);
+  background: var(--color-pine-band);
+}
+
+.cta-inner {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: var(--space-8);
 }
 
-.ticker-dot {
-  margin: 0 20px;
-  color: var(--accent2);
-  opacity: 0.5;
-  font-size: 1rem;
+.cta-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
-@keyframes tickerScroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    /* scroll exactly half the track width — seamless because items are duplicated */
-    transform: translateX(-50%);
-  }
+.cta-copy h2 {
+  font-size: var(--text-4xl);
+  letter-spacing: -0.035em;
+  margin-bottom: var(--space-2);
 }
 
-/* ── browse cta — dark olive panel for strong visual close ── */
-.browse-cta {
-  padding: 72px 0 80px;
-  width: 100%;
-  text-align: center;
-  background: var(--text-strong);
-  border-radius: 12px;
-  animation: landingFadeUp 0.6s ease both;
-  animation-delay: 0.5s;
+.cta-copy p {
+  color: var(--color-ink);
 }
 
-.browse-cta h2 {
-  margin-bottom: 10px;
-  color: #fff;
+.cta-password {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
-.browse-cta-subtitle {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 32px;
+.cta-copy .cta-signin {
+  font-size: var(--text-sm);
+  color: var(--color-ink);
 }
 
-/* invert the button — white on dark background */
-.browse-cta .btn-primary {
-  display: inline-block;
-  text-decoration: none;
-  background: #fff;
-  color: var(--text-strong);
-  font-weight: 500;
-}
-
-.browse-cta .btn-primary:hover {
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--text-strong);
-}
-
-/* ── shared keyframe ── */
-@keyframes landingFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@media (max-width: 900px) {
+  .landing-negotiation,
+  .landing-clinics,
+  .landing-cta {
+    padding-block: var(--space-16);
   }
 }
 
-/* ── reduce motion for accessibility ── */
-@media (prefers-reduced-motion: reduce) {
-  .hero,
-  .how-it-works,
-  .ticker-section,
-  .platform-stats,
-  .features,
-  .browse-cta {
-    animation: none;
+@media (max-width: 560px) {
+  .section-head h2 {
+    font-size: var(--text-2xl);
   }
 
-  .ticker-track {
-    animation: none;
-  }
-}
-
-/* ── responsive ── */
-@media (max-width: 768px) {
-  .hero-grid {
-    grid-template-columns: 1fr;
-    gap: 0;
+  .cta-copy h2 {
+    font-size: 1.875rem;
   }
 
-  /* hide floating cards on mobile */
-  .hero-grid > :last-child {
-    display: none;
+  .section-head {
+    margin-bottom: var(--space-6);
   }
 
-  .hero h1 {
-    font-size: 1.5rem;
+  .section-head-split {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
   }
-
-  .steps {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-
-  .step-divider {
-    display: none;
-  }
-
-  .ticker-track {
-    animation-duration: 36s;
-  }
-
 }

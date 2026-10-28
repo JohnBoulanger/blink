@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Lens Carton</title>
+<style>
+  :root { --stock:#f6f6f2; --violet:#4a2bd4; --acid:#d4f23a; --ink:#121212; }
+  * { box-sizing:border-box; margin:0; }
+  body { width:1440px; height:900px; background:#e9e9e3; font-family:"Helvetica Neue",Arial,sans-serif; color:var(--ink); overflow:hidden; }
+  .carton { position:absolute; inset:28px 28px 28px 28px; background:var(--stock); display:grid; grid-template-columns: 1fr 420px; box-shadow:0 1px 0 #0001; }
+  .front { position:relative; display:flex; flex-direction:column; }
+  .band { background:var(--violet); color:var(--stock); height:112px; display:flex; align-items:center; justify-content:space-between; padding:0 48px; position:relative; }
+  .band::after { content:""; position:absolute; right:0; top:0; bottom:0; width:220px; background:var(--acid); mix-blend-mode:multiply; }
+  .mark { font-weight:900; font-size:44px; letter-spacing:-1.5px; font-stretch:expanded; }
+  .nav { display:flex; gap:32px; font-size:15px; font-weight:600; position:relative; z-index:1; }
+  .body { flex:1; padding:44px 48px 0; display:grid; grid-template-columns: 1fr auto; gap:24px; }
+  h1 { font-size:66px; line-height:.98; font-weight:900; letter-spacing:-2.5px; max-width:620px; }
+  .sub { margin-top:22px; font-size:20px; line-height:1.4; max-width:520px; }
+  .power { text-align:right; }
+  .power .lbl { font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; }
+  .power .num { font-size:230px; line-height:.8; font-weight:900; letter-spacing:-10px; font-variant-numeric:tabular-nums; color:var(--violet); }
+  .tabs { display:flex; gap:0; margin:0 48px; border-top:2px dashed var(--ink); }
+  .tab { flex:1; padding:22px 24px 26px; border-right:2px dashed var(--ink); background:var(--stock); }
+  .tab:last-child { border-right:none; }
+  .tab:first-child { background:var(--acid); }
+  .tab small { display:block; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; }
+  .tab b { display:block; font-size:28px; font-weight:900; letter-spacing:-.5px; margin-top:6px; }
+  .side { border-left:2px solid var(--ink); padding:40px 36px; display:flex; flex-direction:column; gap:20px; }
+  .side h3 { font-size:13px; letter-spacing:1.5px; text-transform:uppercase; font-weight:800; }
+  .spec { width:100%; border-collapse:collapse; font-size:17px; }
+  .spec td { border-top:1.5px solid var(--ink); padding:12px 0; }
+  .spec td:last-child { text-align:right; font-weight:900; font-variant-numeric:tabular-nums; font-size:26px; }
+  .seal { margin-top:auto; border:2px solid var(--ink); border-radius:999px; padding:14px 20px; display:flex; justify-content:space-between; font-weight:800; font-size:14px; letter-spacing:1px; }
+  .seal span:last-child { background:var(--ink); color:var(--acid); padding:2px 10px; border-radius:999px; }
+  .foot { padding:18px 48px; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; display:flex; gap:28px; border-top:2px solid var(--ink); margin-top:22px; }
+</style></head>
+<body>
+<div class="carton">
+  <section class="front">
+    <div class="band"><span class="mark">Visus</span><nav class="nav"><span>Clinics</span><span>How it works</span><span>Sign in</span></nav></div>
+    <div class="body">
+      <div>
+        <h1>Optometry shifts, filled in fifteen minutes.</h1>
+        <p class="sub">Toronto clinics post a shift. Verified eye care staff negotiate it live, in one time-boxed window, then both sides confirm.</p>
+      </div>
+      <div class="power"><div class="lbl">Negotiation window</div><div class="num">15:00</div></div>
+    </div>
+    <div class="tabs">
+      <div class="tab"><small>Tear to open demo</small><b>As a professional →</b></div>
+      <div class="tab"><small>Tear to open demo</small><b>As a clinic →</b></div>
+      <div class="tab"><small>Tear to open demo</small><b>As an admin →</b></div>
+    </div>
+    <div class="foot"><span>Credential review</span><span>Live chat</span><span>15 Toronto clinics</span><span>12 position types</span></div>
+  </section>
+  <aside class="side">
+    <h3>Contents</h3>
+    <table class="spec">
+      <tr><td>Clinics on platform</td><td>15</td></tr>
+      <tr><td>Position types</td><td>12</td></tr>
+      <tr><td>Open shifts this week</td><td>17</td></tr>
+      <tr><td>Window per negotiation</td><td>15 min</td></tr>
+    </table>
+    <div class="seal"><span>CREDENTIALS VERIFIED</span><span>LOT 0001</span></div>
+  </aside>
+</div>
+</body></html>

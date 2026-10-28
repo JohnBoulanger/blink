@@ -1,0 +1,121 @@
+.ShiftCards {
+  padding-block: var(--space-2) var(--space-20);
+}
+
+.shift-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-6);
+}
+
+.shift-head h2 {
+  font-size: var(--text-2xl);
+  letter-spacing: -0.025em;
+}
+
+.shift-head p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.shift-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-10) var(--space-6);
+}
+
+.shift-error {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--color-danger);
+}
+
+/* loading */
+.shift-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-photo,
+.skeleton-line {
+  display: block;
+  background: var(--color-surface-muted);
+}
+
+.skeleton-photo {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
+}
+
+.skeleton-line {
+  height: 12px;
+  width: 64%;
+  border-radius: var(--radius-full);
+}
+
+.skeleton-line-wide {
+  width: 84%;
+  margin-top: 4px;
+}
+
+.skeleton-line-short {
+  width: 36%;
+}
+
+/* empty and error */
+.shift-empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-10) var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.shift-empty-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+@media (max-width: 1080px) {
+  .shift-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* phones: one row that scrolls sideways and snaps to each card */
+@media (max-width: 640px) {
+  .shift-grid {
+    display: flex;
+    gap: var(--space-4);
+    margin-inline: calc(var(--container-gutter) * -1);
+    padding: 4px var(--container-gutter) var(--space-4);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--container-gutter);
+    overscroll-behavior-x: contain;
+  }
+
+  .shift-grid > li {
+    flex: 0 0 78%;
+    scroll-snap-align: start;
+  }
+
+  .shift-grid .shift-card {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .shift-grid .shift-card:hover {
+    box-shadow: none;
+    transform: none;
+  }
+}

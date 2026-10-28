@@ -4,6 +4,9 @@ import api from "../../../utils/api";
 import useDebounce from "../../../hooks/useDebounce";
 import Pagination from "../../../components/Pagination";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import StatusBadge from "../../../components/StatusBadge";
+import SearchPill from "../../../components/SearchPill";
+import ErrorBanner from "../../../components/ErrorBanner";
 import "./style.css";
 
 interface User {
@@ -101,105 +104,113 @@ export default function AdminUsers() {
 
   return (
     <div className="AdminUsers page-enter">
-      <div className="admin-page-header">
-        <div>
+      <header className="page-header">
+        <div className="page-header-text">
           <h1>Users</h1>
-          <p className="admin-subtitle">
-            {count} registered user{count !== 1 ? "s" : ""}
+          <p className="page-subtitle" aria-live="polite">
+            {loading ? "Loading users…" : `${count} professional${count !== 1 ? "s" : ""}`}
           </p>
         </div>
-      </div>
+      </header>
 
       {/* search + filter controls */}
-      <div className="admin-controls">
-        <input
-          className="admin-search"
-          type="text"
-          placeholder="Search name, email, phone…"
-          aria-label="Search users"
+      <div className="filter-bar" role="group" aria-label="Filter users">
+        <SearchPill
           value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          onChange={setKeyword}
+          label="Search users"
+          placeholder="Search name, email or phone"
         />
-        <select
-          aria-label="Filter by activation"
-          value={activatedFilter}
-          onChange={(e) => setActivatedFilter(e.target.value)}
-        >
-          <option value="">Activation</option>
-          <option value="true">Activated</option>
-          <option value="false">Not activated</option>
-        </select>
-        <select
-          aria-label="Filter by suspension"
-          value={suspendedFilter}
-          onChange={(e) => setSuspendedFilter(e.target.value)}
-        >
-          <option value="">Suspension</option>
-          <option value="false">Active only</option>
-          <option value="true">Suspended only</option>
-        </select>
+        <label className="pill-select">
+          <span className="visually-hidden">Filter by activation</span>
+          <select
+            value={activatedFilter}
+            onChange={(e) => setActivatedFilter(e.target.value)}
+            className={activatedFilter ? "is-set" : ""}
+          >
+            <option value="">Any activation</option>
+            <option value="true">Activated</option>
+            <option value="false">Not activated</option>
+          </select>
+        </label>
+        <label className="pill-select">
+          <span className="visually-hidden">Filter by suspension</span>
+          <select
+            value={suspendedFilter}
+            onChange={(e) => setSuspendedFilter(e.target.value)}
+            className={suspendedFilter ? "is-set" : ""}
+          >
+            <option value="">Any access</option>
+            <option value="false">Active only</option>
+            <option value="true">Suspended only</option>
+          </select>
+        </label>
       </div>
 
-      {error && (
-        <p className="error-message admin-error-dismissible">
-          {error}
-          <button
-            className="admin-error-dismiss"
-            onClick={() => setError("")}
-            aria-label="Dismiss error"
-          >
-            ✕
-          </button>
-        </p>
-      )}
+      {error && <ErrorBanner message={error} onDismiss={() => setError("")} />}
 
       {loading ? (
         <LoadingSpinner />
       ) : users.length === 0 ? (
-        <p className="empty-state">No users match your filters.</p>
+        <div className="empty-state">
+          <p className="empty-state-title">No users match these filters</p>
+          <p>Try a shorter search, or reset the activation and access filters.</p>
+        </div>
       ) : (
         <>
-          <div className="admin-table-wrap">
-            <table className="admin-table">
+          <div className="table-wrap">
+            <table className="table table-stack">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Activated</th>
-                  <th>Status</th>
-                  <th></th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Account</th>
+                  <th scope="col">Access</th>
+                  <th scope="col">
+                    <span className="visually-hidden">Actions</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user.id} className={user.suspended ? "admin-row-suspended" : ""}>
-                    <td className="admin-td-name">
+                  <tr key={user.id}>
+                    <td className="cell-primary">
                       {user.first_name} {user.last_name}
                     </td>
-                    <td className="admin-td-email">{user.email}</td>
-                    <td>{user.phone_number || "—"}</td>
-                    <td>
-                      <span
-                        className={`admin-badge ${user.activated ? "badge-green" : "badge-grey"}`}
-                      >
-                        {user.activated ? "activated" : "pending"}
-                      </span>
+                    <td className="cell-secondary" data-label="Email">
+                      {user.email}
                     </td>
-                    <td>
-                      <span
-                        className={`admin-badge ${user.suspended ? "badge-red" : "badge-green"}`}
-                      >
-                        {user.suspended ? "suspended" : "active"}
-                      </span>
+                    <td className="cell-secondary" data-label="Phone">
+                      {user.phone_number || "Not added"}
                     </td>
-                    <td>
+                    <td data-label="Account">
+                      {user.activated ? (
+                        <StatusBadge tone="success">Activated</StatusBadge>
+                      ) : (
+                        <StatusBadge tone="pending">Not activated</StatusBadge>
+                      )}
+                    </td>
+                    <td data-label="Access">
+                      {user.suspended ? (
+                        <StatusBadge tone="ended">Suspended</StatusBadge>
+                      ) : (
+                        <StatusBadge tone="success">Active</StatusBadge>
+                      )}
+                    </td>
+                    <td className="cell-actions">
                       <button
-                        className={`btn-sm ${user.suspended ? "btn-secondary" : "btn-danger"}`}
+                        type="button"
+                        className={`btn-sm ${user.suspended ? "btn-primary" : "btn-secondary"} au-action`}
                         disabled={pendingId === user.id}
                         onClick={() => toggleSuspend(user)}
+                        aria-label={`${user.suspended ? "Unsuspend" : "Suspend"} ${user.first_name} ${user.last_name}`}
                       >
-                        {pendingId === user.id ? "…" : user.suspended ? "Unsuspend" : "Suspend"}
+                        {pendingId === user.id
+                          ? "Saving…"
+                          : user.suspended
+                            ? "Unsuspend"
+                            : "Suspend"}
                       </button>
                     </td>
                   </tr>

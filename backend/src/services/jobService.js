@@ -123,6 +123,39 @@ class JobService {
     };
   }
 
+  // upcoming open shifts for anonymous visitors, limited to non-sensitive fields
+  static async getPublicJobs() {
+    const jobs = await prisma.job.findMany({
+      where: { status: "open", start_time: { gt: new Date() }, positionType: { hidden: false } },
+      orderBy: { start_time: "asc" },
+      take: 8,
+      include: {
+        business: true,
+        positionType: true,
+      },
+    });
+
+    const results = jobs.map((job) => ({
+      id: job.id,
+      position_type: {
+        id: job.positionType.id,
+        name: job.positionType.name,
+      },
+      business: {
+        id: job.business.accountId,
+        business_name: job.business.business_name,
+        postal_address: job.business.postal_address,
+        verified: job.business.verified,
+      },
+      start_time: job.start_time,
+      end_time: job.end_time,
+      salary_min: job.salary_min,
+      salary_max: job.salary_max,
+    }));
+
+    return { results };
+  }
+
   static async getJob(data, jobId, user) {
     const lat = parseFloat(data.lat);
     const lon = parseFloat(data.lon);

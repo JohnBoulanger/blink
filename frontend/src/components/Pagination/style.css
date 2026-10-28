@@ -2,19 +2,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 24px 0;
+  gap: var(--space-3);
+  padding: var(--space-6) 0;
 }
 
 .page-indicator {
-  font-size: 0.875rem;
-  color: var(--text-muted);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
   font-variant-numeric: tabular-nums;
-  min-width: 60px;
+  min-width: 64px;
   text-align: center;
 }
 
-.Pagination button {
-  padding: 8px 16px;
-  font-size: 0.8125rem;
+@media (max-width: 768px) {
+  .Pagination .btn-secondary {
+    min-height: 44px;
+  }
 }

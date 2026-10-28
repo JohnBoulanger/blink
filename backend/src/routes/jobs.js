@@ -8,12 +8,22 @@ const {
   getUserCandidates,
   updateInterestInCandidate,
   getInterests,
+  getPublicJobs,
 } = require("../controllers/jobController");
 const { jwtAuth } = require("../middleware/auth");
+const { publicLimiter } = require("../middleware/rateLimit");
 const { validate } = require("../middleware/validate");
 const { interestBodySchema } = require("../validators/querySchemas");
 
 const router = express.Router();
+
+// list upcoming open shifts for the public landing page, no auth required
+router
+  .route("/public")
+  .get(publicLimiter, getPublicJobs)
+  .all((req, res) => {
+    res.status(405).json({ error: "Method Not Allowed" });
+  });
 
 // list all discoverable qualified regular users for this job, and whether each has been invited by the business for this job.
 router

@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import api from "../../../utils/api";
 import { useAuth } from "../../../contexts/AuthContext/AuthContext";
 import Pagination from "../../../components/Pagination";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import FileUpload from "../../../components/FileUpload";
+import StatusBadge from "../../../components/StatusBadge";
+import { QUAL_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
 
 interface Qualification {
@@ -50,7 +53,6 @@ export default function Qualifications() {
   // per-qualification action state
   const [actionLoading, setActionLoading] = useState<number | null>(null);
   const [actionError, setActionError] = useState<Record<number, string>>({});
-  const fileRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   // inline note editing state
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
@@ -136,9 +138,7 @@ export default function Qualifications() {
     setActionError((prev) => ({ ...prev, [qualId]: "" }));
     try {
       const res = await api.patch(`/qualifications/${qualId}`, { note: editNoteValue });
-      setQuals((prev) =>
-        prev.map((q) => (q.id === qualId ? { ...q, note: res.data.note } : q))
-      );
+      setQuals((prev) => prev.map((q) => (q.id === qualId ? { ...q, note: res.data.note } : q)));
       setEditingNoteId(null);
     } catch (err) {
       const msg = axios.isAxiosError(err)
@@ -177,19 +177,31 @@ export default function Qualifications() {
 
   return (
     <div className="Qualifications page-enter">
-      <div className="quals-header">
-        <h1>Qualifications</h1>
-        <button className="btn-primary btn-sm" onClick={() => setShowCreate(!showCreate)}>
-          {showCreate ? "Cancel" : "+ Add qualification"}
+      <div className="myquals-header">
+        <div className="myquals-heading">
+          <h1>Qualifications</h1>
+          <p className="myquals-subtitle">
+            Upload a PDF for each position and submit it for review. Once an admin approves it, you
+            can open and apply to that position's shifts.
+          </p>
+        </div>
+        <button
+          className={showCreate ? "btn-secondary" : "btn-primary"}
+          onClick={() => setShowCreate(!showCreate)}
+          aria-expanded={showCreate}
+        >
+          {showCreate ? "Cancel" : "Add qualification"}
         </button>
       </div>
 
       {/* create form */}
       {showCreate && (
-        <div className="qual-create-form">
-          <form onSubmit={handleCreate}>
-            {createError && <p className="error-message">{createError}</p>}
+        <form onSubmit={handleCreate} className="myqual-create-form">
+          {createError && <p className="error-message">{createError}</p>}
+          <div className="form-field">
+            <label htmlFor="myqual-position">Position type</label>
             <select
+              id="myqual-position"
               value={newPositionId}
               onChange={(e) => setNewPositionId(e.target.value)}
               required
@@ -201,122 +213,118 @@ export default function Qualifications() {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="form-field">
+            <label htmlFor="myqual-note">Note for the reviewer (optional)</label>
             <textarea
+              id="myqual-note"
               placeholder="Notes (optional)"
               value={newNote}
               onChange={(e) => setNewNote(e.target.value)}
               rows={3}
             />
+          </div>
+          <div className="myqual-create-actions">
             <button type="submit" className="btn-primary" disabled={createLoading}>
-              {createLoading ? "Creating..." : "Create qualification"}
+              {createLoading ? "Creating…" : "Create qualification"}
             </button>
-          </form>
-        </div>
+          </div>
+        </form>
       )}
 
       {loading ? (
         <LoadingSpinner />
       ) : quals.length === 0 ? (
-        <p className="empty-state">No qualifications yet — add one to get started</p>
+        <div className="myquals-empty">
+          <p className="myquals-empty-title">No qualifications yet</p>
+          <p>Add one for each position you want to work. An admin reviews your document.</p>
+          {!showCreate && (
+            <button className="btn-secondary" onClick={() => setShowCreate(true)}>
+              Add qualification
+            </button>
+          )}
+        </div>
       ) : (
-        <div className="quals-list">
+        <ul className="myquals-list">
           {quals.map((q) => {
             const nextStatus = ALLOWED_SUBMIT[q.status];
+            const status = getStatus(QUAL_STATUS, q.status);
             return (
-              <div key={q.id} className="qual-card">
-                <div className="qual-card-header">
-                  <div>
-                    <h3>{q.position_type.name}</h3>
-                    {/* inline note editing */}
-                    {editingNoteId === q.id ? (
-                      <div className="qual-note-edit">
-                        <textarea
-                          value={editNoteValue}
-                          onChange={(e) => setEditNoteValue(e.target.value)}
-                          rows={2}
-                          placeholder="Add a note..."
-                        />
-                        <div className="qual-note-edit-btns">
-                          <button
-                            className="btn-primary btn-sm"
-                            onClick={() => handleNoteSave(q.id)}
-                            disabled={actionLoading === q.id}
-                          >
-                            {actionLoading === q.id ? "Saving..." : "Save"}
-                          </button>
-                          <button
-                            className="btn-secondary btn-sm"
-                            onClick={() => setEditingNoteId(null)}
-                          >
-                            Cancel
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="qual-note-row">
-                        {q.note && <p className="qual-note">{q.note}</p>}
-                        <button
-                          className="btn-secondary btn-sm"
-                          onClick={() => {
-                            setEditingNoteId(q.id);
-                            setEditNoteValue(q.note || "");
-                          }}
-                        >
-                          {q.note ? "Edit note" : "Add note"}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  <span className={`qual-status qual-status-${q.status}`}>{q.status}</span>
+              <li key={q.id} className="myqual-row">
+                <div className="myqual-row-head">
+                  <h2>{q.position_type.name}</h2>
+                  <StatusBadge tone={status.tone}>{status.label}</StatusBadge>
                 </div>
+
+                {/* inline note editing */}
+                {editingNoteId === q.id ? (
+                  <div className="myqual-note-edit">
+                    <label className="visually-hidden" htmlFor={`myqual-note-${q.id}`}>
+                      Note
+                    </label>
+                    <textarea
+                      id={`myqual-note-${q.id}`}
+                      value={editNoteValue}
+                      onChange={(e) => setEditNoteValue(e.target.value)}
+                      rows={2}
+                      placeholder="Add a note..."
+                    />
+                    <div className="myqual-note-edit-btns">
+                      <button
+                        className="btn-primary btn-sm"
+                        onClick={() => handleNoteSave(q.id)}
+                        disabled={actionLoading === q.id}
+                      >
+                        {actionLoading === q.id ? "Saving…" : "Save"}
+                      </button>
+                      <button
+                        className="btn-secondary btn-sm"
+                        onClick={() => setEditingNoteId(null)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="myqual-note-row">
+                    {q.note && <p className="myqual-note">{q.note}</p>}
+                    <button
+                      className="btn-ghost btn-sm myqual-note-button"
+                      onClick={() => {
+                        setEditingNoteId(q.id);
+                        setEditNoteValue(q.note || "");
+                      }}
+                    >
+                      {q.note ? "Edit note" : "Add note"}
+                    </button>
+                  </div>
+                )}
 
                 {actionError[q.id] && <p className="error-message">{actionError[q.id]}</p>}
 
-                <div className="qual-card-actions">
+                <div className="myqual-row-actions">
                   {/* document upload */}
-                  <div className="qual-doc">
-                    {q.document ? (
-                      <a
-                        href={`${backendUrl}${q.document}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="qual-doc-link"
-                      >
-                        View document
-                      </a>
-                    ) : (
-                      <span className="qual-doc-missing">No document</span>
-                    )}
-                    <input
-                      type="file"
-                      accept="application/pdf"
-                      style={{ display: "none" }}
-                      ref={(el) => {
-                        fileRefs.current[q.id] = el;
-                      }}
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleDocUpload(q.id, file);
-                      }}
-                    />
-                    <button
-                      className="btn-secondary btn-sm"
-                      onClick={() => fileRefs.current[q.id]?.click()}
-                      disabled={actionLoading === q.id}
-                    >
-                      {q.document ? "Replace PDF" : "Upload PDF"}
-                    </button>
-                  </div>
+                  <FileUpload
+                    title="Document"
+                    accept="application/pdf"
+                    fileUrl={q.document ? `${backendUrl}${q.document}` : null}
+                    fileLabel="View document (PDF)"
+                    emptyLabel="No document yet"
+                    replaceLabel="Replace PDF"
+                    uploadLabel="Upload PDF"
+                    disabled={actionLoading === q.id}
+                    onSelect={(file) => handleDocUpload(q.id, file)}
+                  />
 
                   {/* status transition */}
                   {nextStatus && (
                     <button
-                      className="btn-primary btn-sm"
+                      className={`${q.status === "approved" ? "btn-secondary" : "btn-primary"} myqual-submit`}
                       onClick={() => handleStatusChange(q.id, nextStatus)}
                       disabled={actionLoading === q.id}
                     >
                       {actionLoading === q.id
-                        ? "Saving..."
+                        ? "Saving…"
                         : nextStatus === "submitted"
                           ? "Submit for review"
                           : "Mark as revised"}
@@ -324,13 +332,13 @@ export default function Qualifications() {
                   )}
                 </div>
 
-                <span className="qual-updated">
+                <span className="myqual-updated tabular">
                   Updated {new Date(q.updatedAt).toLocaleDateString()}
                 </span>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
       <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>

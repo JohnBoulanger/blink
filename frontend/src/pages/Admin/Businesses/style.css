@@ -1,3 +1,16 @@
-.AdminBusinesses {
-  padding: 32px 0 60px;
+/* admin clinics: a dense table; shared table rules live in index.css */
+
+.ab-link {
+  color: var(--color-ink);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.ab-link:hover {
+  color: var(--color-ink);
+  text-decoration: underline;
+}
+
+.ab-action {
+  min-width: 88px;
 }

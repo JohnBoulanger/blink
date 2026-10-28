@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
+import { useAuth } from "../../../contexts/AuthContext/AuthContext";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import MapEmbed from "../../../components/MapEmbed";
+import BackLink from "../../../components/BackLink";
+import ClinicPhoto from "../../../components/ClinicPhoto";
+import ShiftCard from "../../../components/ShiftCard";
+import useDemoLogin from "../Landing/useDemoLogin";
+import type { PublicShift } from "../Landing/types";
 import "./style.css";
 
 interface BusinessData {
@@ -19,9 +25,14 @@ interface BusinessData {
 
 export default function PublicBusinessProfile() {
   const { businessId } = useParams();
+  const { isAuthenticated, role } = useAuth();
+  const demo = useDemoLogin();
   const [business, setBusiness] = useState<BusinessData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  // upcoming open shifts from the public list, filtered to this clinic
+  const [shifts, setShifts] = useState<PublicShift[]>([]);
+  const [openingId, setOpeningId] = useState<number | null>(null);
 
   useEffect(() => {
     async function fetchBusiness() {
@@ -42,82 +53,155 @@ export default function PublicBusinessProfile() {
     fetchBusiness();
   }, [businessId]);
 
+  // the shift list is optional, so a failure leaves the section out
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .get("/jobs/public")
+      .then((res) => {
+        if (cancelled) return;
+        const all = res.data.results as PublicShift[];
+        setShifts(all.filter((s) => s.business.id === Number(businessId)));
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [businessId]);
+
+  // opening a shift signs in as the demo professional, as on the landing page
+  function openShift(e: React.MouseEvent, id: number) {
+    e.preventDefault();
+    setOpeningId(id);
+    demo.enter("regular", `/jobs/${id}`);
+  }
+
   if (loading) return <LoadingSpinner />;
 
   if (error || !business) {
     return (
-      <div className="BusinessProfile page-enter">
-        <p className="error-message">{error || "Business not found"}</p>
-        <Link to="/businesses">&larr; Back to clinics</Link>
+      <div className="PublicBusinessProfile page-enter">
+        <BackLink to="/businesses">All clinics</BackLink>
+        <p className="error-message" role="alert">
+          {error || "Business not found"}
+        </p>
       </div>
     );
   }
 
   // build avatar url from backend
   const avatarUrl = business.avatar
-    ? `${import.meta.env.VITE_BACKEND_URL}${business.avatar}`
+    ? `${import.meta.env.VITE_BACKEND_URL ?? ""}${business.avatar}`
     : null;
+  const located =
+    business.location && business.location.lat !== 0 && business.location.lon !== 0
+      ? business.location
+      : null;
+  const signsInAsDemo = !isAuthenticated || role !== "regular";
 
   return (
-    <div className="BusinessProfile page-enter">
-      <Link to="/businesses" className="back-link">
-        &larr; All clinics
-      </Link>
+    <div className="PublicBusinessProfile page-enter">
+      <BackLink to="/businesses">All clinics</BackLink>
 
-      <div className="profile-header">
-        {/* avatar or initials placeholder */}
-        {avatarUrl ? (
-          <img src={avatarUrl} alt={business.business_name} className="profile-avatar" />
-        ) : (
-          <div className="profile-avatar-placeholder" aria-hidden="true">
-            {business.business_name.charAt(0).toUpperCase()}
-          </div>
-        )}
-        <div>
-          <h1>{business.business_name}</h1>
-          <p className="profile-email">{business.email}</p>
-        </div>
-      </div>
+      <ClinicPhoto businessId={business.id} className="pbp-photo" />
 
-      <div className="profile-details">
-        <div className="detail-row">
-          <span className="detail-label">Phone</span>
-          <span>{business.phone_number}</span>
+      <div className="pbp-layout">
+        <div className="pbp-main">
+          <header className="pbp-header">
+            {avatarUrl && <img src={avatarUrl} alt="" className="pbp-avatar" />}
+            <div className="pbp-heading">
+              <h1>{business.business_name}</h1>
+              <p className="pbp-address">{business.postal_address}</p>
+            </div>
+          </header>
+
+          {business.biography && (
+            <section className="pbp-section" aria-labelledby="pbp-about-title">
+              <h2 id="pbp-about-title">About</h2>
+              <p className="pbp-bio">{business.biography}</p>
+            </section>
+          )}
+
+          {shifts.length > 0 && (
+            <section className="pbp-section" aria-labelledby="pbp-shifts-title">
+              <div className="pbp-section-head">
+                <h2 id="pbp-shifts-title">Upcoming open shifts</h2>
+                {signsInAsDemo && (
+                  <p className="pbp-section-note">
+                    Opening a shift signs you in as Alice, a demo professional.
+                  </p>
+                )}
+              </div>
+              {demo.error && (
+                <p className="error-message" role="alert">
+                  {demo.error}
+                </p>
+              )}
+              <ul className="pbp-shifts">
+                {shifts.map((shift, i) => (
+                  <li key={shift.id}>
+                    <ShiftCard
+                      shift={shift}
+                      to={`/jobs/${shift.id}`}
+                      photoIndex={i}
+                      onClick={(e) => openShift(e, shift.id)}
+                      opening={demo.pending !== null && openingId === shift.id}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {located && (
+            <section className="pbp-section" aria-labelledby="pbp-map-title">
+              <h2 id="pbp-map-title">Where the clinic is</h2>
+              <p className="pbp-text">{business.postal_address}</p>
+              <MapEmbed lat={located.lat} lon={located.lon} />
+            </section>
+          )}
         </div>
-        <div className="detail-row">
-          <span className="detail-label">Address</span>
-          <span>{business.postal_address}</span>
-        </div>
-        {business.location && (
-          <div className="detail-row">
-            <span className="detail-label">Location</span>
-            {/* secondary link to google maps for directions */}
+
+        {/* contact card */}
+        <aside className="pbp-card" aria-label="Contact">
+          <h2 className="pbp-card-title">Contact</h2>
+          <dl className="detail-list pbp-contact">
+            <div>
+              <dt>Phone</dt>
+              <dd className="tabular">{business.phone_number}</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd>{business.email}</dd>
+            </div>
+            <div>
+              <dt>Address</dt>
+              <dd>{business.postal_address}</dd>
+            </div>
+          </dl>
+          {business.location && (
+            // secondary link to google maps for directions
             <a
               href={`https://www.google.com/maps?q=${business.location.lat},${business.location.lon}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="map-link"
+              className="btn-secondary pbp-directions"
             >
-              Get directions ↗
+              Get directions
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M7 17L17 7M9 7h8v8"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <span className="visually-hidden"> (opens Google Maps in a new tab)</span>
             </a>
-          </div>
-        )}
+          )}
+        </aside>
       </div>
-
-      {/* embedded interactive map when coordinates are available */}
-      {business.location && (
-        <div className="profile-map">
-          <h3>Location</h3>
-          <MapEmbed lat={business.location.lat} lon={business.location.lon} />
-        </div>
-      )}
-
-      {business.biography && (
-        <div className="profile-bio">
-          <h3>About</h3>
-          <p>{business.biography}</p>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import api from "../../../utils/api";
 import useDebounce from "../../../hooks/useDebounce";
 import Pagination from "../../../components/Pagination";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../Users/style.css";
+import StatusBadge from "../../../components/StatusBadge";
+import SearchPill from "../../../components/SearchPill";
+import ErrorBanner from "../../../components/ErrorBanner";
 import "./style.css";
 
 interface PositionType {
@@ -150,7 +152,8 @@ export default function AdminPositionTypes() {
     } catch (err) {
       // 409 = qualified users or jobs exist — can't delete
       const msg = axios.isAxiosError(err)
-        ? err.response?.data?.error || "Delete failed. This position type may have linked jobs or qualifications."
+        ? err.response?.data?.error ||
+          "Delete failed. This position type may have linked jobs or qualifications."
         : "Delete failed.";
       setError(msg);
       setConfirmDeleteId(null);
@@ -193,193 +196,269 @@ export default function AdminPositionTypes() {
 
   return (
     <div className="AdminPositionTypes page-enter">
-      <div className="admin-page-header">
-        <div>
-          <h1>Position Types</h1>
-          <p className="admin-subtitle">
-            {count} type{count !== 1 ? "s" : ""}
+      <header className="page-header">
+        <div className="page-header-text">
+          <h1>Positions</h1>
+          <p className="page-subtitle" aria-live="polite">
+            {loading ? "Loading positions…" : `${count} position type${count !== 1 ? "s" : ""}`}
           </p>
         </div>
-        <button className="btn-primary btn-sm" onClick={() => setShowCreate((v) => !v)}>
-          {showCreate ? "Cancel" : "+ New type"}
+        <button
+          type="button"
+          className={showCreate ? "btn-secondary" : "btn-primary"}
+          onClick={() => setShowCreate((v) => !v)}
+          aria-expanded={showCreate}
+        >
+          {showCreate ? "Cancel" : "New position"}
         </button>
-      </div>
+      </header>
 
       {/* create form */}
       {showCreate && (
-        <form className="pt-create-form" onSubmit={handleCreate}>
-          {createError && <p className="error-message">{createError}</p>}
-          <input
-            type="text"
-            placeholder="Name"
-            value={createForm.name}
-            onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-            required
-          />
-          <textarea
-            placeholder="Description"
-            value={createForm.description}
-            onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
-            rows={2}
-            required
-          />
-          <label className="pt-toggle-label">
-            <input
-              type="checkbox"
-              checked={createForm.hidden}
-              onChange={(e) => setCreateForm({ ...createForm, hidden: e.target.checked })}
-            />
-            Hidden (not visible to users)
-          </label>
-          <button type="submit" className="btn-primary btn-sm" disabled={createPending}>
-            {createPending ? "Creating…" : "Create"}
-          </button>
+        <form className="apt-create" onSubmit={handleCreate} aria-labelledby="apt-create-title">
+          <h2 id="apt-create-title">New position type</h2>
+          {createError && (
+            <p className="error-message" role="alert">
+              {createError}
+            </p>
+          )}
+          <div className="apt-create-grid">
+            <div className="form-field">
+              <label htmlFor="apt-create-name">Name</label>
+              <input
+                id="apt-create-name"
+                type="text"
+                value={createForm.name}
+                onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-field apt-create-wide">
+              <label htmlFor="apt-create-desc">Description</label>
+              <textarea
+                id="apt-create-desc"
+                value={createForm.description}
+                onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
+                rows={2}
+                required
+              />
+            </div>
+          </div>
+          <div className="apt-form-foot">
+            <label className="apt-check">
+              <input
+                type="checkbox"
+                checked={createForm.hidden}
+                onChange={(e) => setCreateForm({ ...createForm, hidden: e.target.checked })}
+              />
+              Hidden from professionals
+            </label>
+            <button type="submit" className="btn-primary" disabled={createPending}>
+              {createPending ? "Creating…" : "Create position"}
+            </button>
+          </div>
         </form>
       )}
 
-      <div className="admin-controls">
-        <input
-          className="admin-search"
-          type="text"
-          placeholder="Search name or description…"
-          aria-label="Search position types"
+      <div className="filter-bar" role="group" aria-label="Filter and sort positions">
+        <SearchPill
           value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          onChange={setKeyword}
+          label="Search position types"
+          placeholder="Search name or description"
         />
-        <select
-          aria-label="Filter by visibility"
-          value={hiddenFilter}
-          onChange={(e) => setHiddenFilter(e.target.value)}
-        >
-          <option value="">Visibility</option>
-          <option value="false">Visible</option>
-          <option value="true">Hidden</option>
-        </select>
-        <select
-          aria-label="Sort field"
-          value={sortField}
-          onChange={(e) => {
-            setSortField(e.target.value);
-            setSortOrder("asc");
-          }}
-        >
-          <option value="name">Sort: name</option>
-          <option value="num_qualified">Sort: qualified users</option>
-        </select>
-        <select
-          aria-label="Sort order"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
-          <option value="asc">Asc</option>
-          <option value="desc">Desc</option>
-        </select>
+        <label className="pill-select">
+          <span className="visually-hidden">Filter by visibility</span>
+          <select
+            value={hiddenFilter}
+            onChange={(e) => setHiddenFilter(e.target.value)}
+            className={hiddenFilter ? "is-set" : ""}
+          >
+            <option value="">Any visibility</option>
+            <option value="false">Visible</option>
+            <option value="true">Hidden</option>
+          </select>
+        </label>
+        <label className="pill-select">
+          <span className="visually-hidden">Sort field</span>
+          <select
+            value={sortField}
+            onChange={(e) => {
+              setSortField(e.target.value);
+              setSortOrder("asc");
+            }}
+          >
+            <option value="name">Sort by name</option>
+            <option value="num_qualified">Sort by qualified</option>
+          </select>
+        </label>
+        <label className="pill-select">
+          <span className="visually-hidden">Sort order</span>
+          <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </label>
       </div>
 
-      {error && (
-        <p className="error-message admin-error-dismissible">
-          {error}
-          <button
-            className="admin-error-dismiss"
-            onClick={() => setError("")}
-            aria-label="Dismiss error"
-          >
-            ✕
-          </button>
-        </p>
-      )}
+      {error && <ErrorBanner message={error} onDismiss={() => setError("")} />}
 
       {loading ? (
         <LoadingSpinner />
       ) : posTypes.length === 0 ? (
-        <p className="empty-state">No position types found.</p>
+        <div className="empty-state">
+          <p className="empty-state-title">No position types found</p>
+          <p>Try a shorter search, or add a new position.</p>
+        </div>
       ) : (
         <>
-          <div className="pt-list">
-            {posTypes.map((pt) => (
-              <div key={pt.id} className={`pt-item ${pt.hidden ? "pt-item-hidden" : ""}`}>
-                {editingId === pt.id ? (
-                  /* inline edit form */
-                  <div className="pt-edit-form">
-                    {editError && <p className="error-message">{editError}</p>}
-                    <input
-                      type="text"
-                      value={editForm.name}
-                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                      placeholder="Name"
-                    />
-                    <textarea
-                      value={editForm.description}
-                      onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                      rows={2}
-                      placeholder="Description"
-                    />
-                    <label className="pt-toggle-label">
-                      <input
-                        type="checkbox"
-                        checked={editForm.hidden}
-                        onChange={(e) => setEditForm({ ...editForm, hidden: e.target.checked })}
-                      />
-                      Hidden
-                    </label>
-                    <div className="pt-edit-btns">
-                      <button
-                        className="btn-primary btn-sm"
-                        disabled={editPending}
-                        onClick={() => saveEdit(pt.id)}
-                      >
-                        {editPending ? "Saving…" : "Save"}
-                      </button>
-                      <button className="btn-secondary btn-sm" onClick={cancelEdit}>
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  /* normal display row */
-                  <div className="pt-row">
-                    <div className="pt-row-info">
-                      <span className="pt-name">{pt.name}</span>
-                      {pt.hidden && <span className="admin-badge badge-grey">hidden</span>}
-                      <span className="pt-desc">{pt.description}</span>
-                    </div>
-                    <div className="pt-row-meta">
-                      <span className="pt-qualified">{pt.num_qualified} qualified</span>
-                    </div>
-                    <div className="pt-row-actions">
-                      <button className="btn-secondary btn-sm" onClick={() => startEdit(pt)}>
-                        Edit
-                      </button>
-                      {confirmDeleteId === pt.id ? (
-                        <>
-                          <span className="pt-delete-confirm">Delete?</span>
-                          <button
-                            className="btn-danger btn-sm"
-                            disabled={deletePending}
-                            onClick={() => handleDelete(pt.id)}
-                          >
-                            {deletePending ? "…" : "Yes"}
-                          </button>
-                          <button
-                            className="btn-secondary btn-sm"
-                            onClick={() => setConfirmDeleteId(null)}
-                          >
-                            No
-                          </button>
-                        </>
-                      ) : (
-                        <button
-                          className="btn-danger btn-sm"
-                          onClick={() => setConfirmDeleteId(pt.id)}
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="table-wrap">
+            <table className="table table-stack apt-table">
+              <thead>
+                <tr>
+                  <th scope="col">Position</th>
+                  <th scope="col">Visibility</th>
+                  <th scope="col" className="cell-num">
+                    Qualified
+                  </th>
+                  <th scope="col">
+                    <span className="visually-hidden">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {posTypes.map((pt) => (
+                  <Fragment key={pt.id}>
+                    {editingId === pt.id ? (
+                      /* inline edit form */
+                      <tr className="apt-edit-row">
+                        <td colSpan={4}>
+                          <div className="apt-edit">
+                            {editError && (
+                              <p className="error-message" role="alert">
+                                {editError}
+                              </p>
+                            )}
+                            <div className="apt-create-grid">
+                              <div className="form-field">
+                                <label htmlFor={`apt-edit-name-${pt.id}`}>Name</label>
+                                <input
+                                  id={`apt-edit-name-${pt.id}`}
+                                  type="text"
+                                  value={editForm.name}
+                                  onChange={(e) =>
+                                    setEditForm({ ...editForm, name: e.target.value })
+                                  }
+                                />
+                              </div>
+                              <div className="form-field apt-create-wide">
+                                <label htmlFor={`apt-edit-desc-${pt.id}`}>Description</label>
+                                <textarea
+                                  id={`apt-edit-desc-${pt.id}`}
+                                  value={editForm.description}
+                                  onChange={(e) =>
+                                    setEditForm({ ...editForm, description: e.target.value })
+                                  }
+                                  rows={2}
+                                />
+                              </div>
+                            </div>
+                            <div className="apt-form-foot">
+                              <label className="apt-check">
+                                <input
+                                  type="checkbox"
+                                  checked={editForm.hidden}
+                                  onChange={(e) =>
+                                    setEditForm({ ...editForm, hidden: e.target.checked })
+                                  }
+                                />
+                                Hidden from professionals
+                              </label>
+                              <div className="apt-edit-btns">
+                                <button
+                                  type="button"
+                                  className="btn-secondary"
+                                  onClick={cancelEdit}
+                                >
+                                  Cancel
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn-primary"
+                                  disabled={editPending}
+                                  onClick={() => saveEdit(pt.id)}
+                                >
+                                  {editPending ? "Saving…" : "Save"}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      /* normal display row */
+                      <tr>
+                        <td className="cell-primary apt-name-cell">
+                          {pt.name}
+                          <span className="cell-sub apt-desc">{pt.description}</span>
+                        </td>
+                        <td data-label="Visibility">
+                          {pt.hidden ? (
+                            <StatusBadge tone="ended">Hidden</StatusBadge>
+                          ) : (
+                            <StatusBadge tone="success">Visible</StatusBadge>
+                          )}
+                        </td>
+                        <td className="cell-num" data-label="Qualified">
+                          {pt.num_qualified}
+                        </td>
+                        <td className="cell-actions">
+                          {confirmDeleteId === pt.id ? (
+                            <span className="cell-actions-inner apt-confirm">
+                              <span>Delete this position?</span>
+                              <button
+                                type="button"
+                                className="btn-secondary btn-sm"
+                                onClick={() => setConfirmDeleteId(null)}
+                              >
+                                Keep
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-danger btn-sm"
+                                disabled={deletePending}
+                                onClick={() => handleDelete(pt.id)}
+                              >
+                                {deletePending ? "Deleting…" : "Delete"}
+                              </button>
+                            </span>
+                          ) : (
+                            <span className="cell-actions-inner">
+                              <button
+                                type="button"
+                                className="btn-secondary btn-sm"
+                                onClick={() => startEdit(pt)}
+                                aria-label={`Edit ${pt.name}`}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-ghost btn-sm"
+                                onClick={() => setConfirmDeleteId(pt.id)}
+                                aria-label={`Delete ${pt.name}`}
+                              >
+                                Delete
+                              </button>
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
+                ))}
+              </tbody>
+            </table>
           </div>
           <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
         </>

@@ -7,16 +7,19 @@ const {
 } = require("../controllers/positionTypeController");
 const { jwtAuth, optionalAuth } = require("../middleware/auth");
 const { validate } = require("../middleware/validate");
-const { createPositionTypeSchema, updatePositionTypeSchema } = require("../validators/positionTypeSchemas");
+const {
+  createPositionTypeSchema,
+  updatePositionTypeSchema,
+} = require("../validators/positionTypeSchemas");
 
 const router = express.Router();
 
 // create a new position type
-// retrieve a list of position types
+// retrieve a list of position types (anonymous callers see visible types only)
 router
   .route("/")
   .post(jwtAuth, validate(createPositionTypeSchema), createPositionType)
-  .get(jwtAuth, getPositionTypes)
+  .get(optionalAuth, getPositionTypes)
   .all((req, res) => {
     res.status(405).json({ error: "Method Not Allowed" });
   });

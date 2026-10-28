@@ -1,5 +1,5 @@
 /*
- * Seed script — populates the database with demo data for Visus.
+ * Seed script — populates the database with demo data for Blink.
  * Usage: npm run seed (or npx prisma db seed)
  * Re-runs whenever changes are committed in environments that auto-seed.
  */
@@ -101,14 +101,14 @@ async function main() {
   // --- Admin ---
   const adminAccount = await prisma.account.create({
     data: {
-      email: 'admin1@visus.dev',
+      email: 'admin1@blink.dev',
       password: hashedPassword,
       role: 'admin',
       activated: true,
       administrator: { create: {} },
     },
   });
-  console.log(`Created admin: admin1@visus.dev (id: ${adminAccount.id})`);
+  console.log(`Created admin: admin1@blink.dev (id: ${adminAccount.id})`);
 
   // --- Businesses ---
   const businessIds = [];
@@ -116,7 +116,7 @@ async function main() {
     const b = BUSINESS_DATA[i];
     const account = await prisma.account.create({
       data: {
-        email: `business${i + 1}@visus.dev`,
+        email: `business${i + 1}@blink.dev`,
         password: hashedPassword,
         role: 'business',
         activated: true,
@@ -135,7 +135,7 @@ async function main() {
       },
     });
     businessIds.push(account.id);
-    console.log(`Created business: business${i + 1}@visus.dev (id: ${account.id})`);
+    console.log(`Created business: business${i + 1}@blink.dev (id: ${account.id})`);
   }
 
   // --- Regular Users ---
@@ -143,7 +143,7 @@ async function main() {
   for (let i = 0; i < 20; i++) {
     const account = await prisma.account.create({
       data: {
-        email: `regular${i + 1}@visus.dev`,
+        email: `regular${i + 1}@blink.dev`,
         password: hashedPassword,
         role: 'regular',
         activated: true,
@@ -162,7 +162,7 @@ async function main() {
       },
     });
     regularIds.push(account.id);
-    console.log(`Created regular: regular${i + 1}@visus.dev (id: ${account.id})`);
+    console.log(`Created regular: regular${i + 1}@blink.dev (id: ${account.id})`);
   }
 
   // --- Position Types ---
@@ -265,7 +265,7 @@ async function main() {
         start_time: futureDate(2 + i, 9),
         end_time: futureDate(2 + i, 17),
         status: 'open',
-        note: `Looking for a ${POSITION_TYPES[ptIndex].name} for a ${8}-hour shift.`,
+        note: `Looking for ${/^[AEIOU]/.test(POSITION_TYPES[ptIndex].name) ? 'an' : 'a'} ${POSITION_TYPES[ptIndex].name} for an 8-hour shift.`,
       },
     });
     jobRecords.push(job);

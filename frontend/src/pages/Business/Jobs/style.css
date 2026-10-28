@@ -1,137 +1,183 @@
+/* a clinic's jobs: status chips, sort pills and hairline rows */
+
 .BusinessJobs {
-  max-width: 760px;
+  max-width: 960px;
 }
 
-.bjobs-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-
-.bjobs-header .btn-primary,
-.bjobs-empty .btn-primary {
-  border-radius: 10px;
-}
-
-.bjobs-subtitle {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-/* filter / sort bar */
 .bjobs-controls {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.bjobs-status-filters {
-  display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-6);
+  margin-bottom: var(--space-6);
 }
 
-/* pill-style status toggles */
-.bjobs-status-chip {
-  font-size: 0.8125rem;
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition:
-    background 0.12s ease,
-    color 0.12s ease,
-    border-color 0.12s ease;
-}
-
-.bjobs-status-chip.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-
+.bjobs-status-filters,
 .bjobs-sort-row {
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
-.bjobs-sort-row select,
-.bjobs-filter {
-  font-size: 0.875rem;
+.bjobs-status-filters .chip {
+  min-height: 36px;
 }
 
-/* job rows */
+/* rows */
 .bjobs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-bottom: 20px;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.bjobs-list > li {
+  border-bottom: 1px solid var(--color-border-soft);
 }
 
 .bjob-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px 104px 104px 16px;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
+  gap: var(--space-4);
+  min-height: 72px;
+  padding: var(--space-3) var(--space-2);
+  margin-inline: calc(var(--space-2) * -1);
+  border-radius: var(--radius-control);
+  color: var(--color-ink);
   text-decoration: none;
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease;
-  gap: 12px;
+  transition: background-color 0.15s ease;
 }
 
 .bjob-row:hover {
-  border-color: var(--accent);
-  background: var(--bg-surface);
+  color: var(--color-ink);
+  background: var(--color-surface-subtle);
 }
 
-.bjob-row-left {
+.bjob-main {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
+  min-width: 0;
 }
 
-.bjob-position {
-  font-size: 0.9375rem;
+.bjob-title {
+  font-size: var(--text-base);
   font-weight: 600;
-  color: var(--text-strong);
 }
 
-.bjob-dates {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-
-.bjob-row-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-shrink: 0;
+.bjob-meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
 }
 
 .bjob-worker {
-  font-size: 0.8125rem;
-  color: var(--accent);
-  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-sm);
 }
 
-.bjob-salary {
-  font-size: 0.875rem;
-  color: var(--text-body);
+.bjob-worker-label,
+.bjob-worker-none {
+  color: var(--color-text-secondary);
 }
 
-.bjobs-empty {
+.bjob-rate {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: right;
+}
+
+.bjob-rate-unit {
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.bjob-status {
+  display: flex;
+}
+
+.bjob-chevron {
+  color: var(--color-text-secondary);
+}
+
+/* loading */
+.bjobs-skeleton {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
+  justify-content: center;
+  gap: 10px;
+  min-height: 72px;
+}
+
+.bjobs-skeleton-line {
+  display: block;
+  width: 32%;
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-muted);
+}
+
+.bjobs-skeleton-line-wide {
+  width: 48%;
+}
+
+@media (max-width: 900px) {
+  .bjob-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "main rate"
+      "worker status";
+    row-gap: var(--space-2);
+    padding-block: var(--space-4);
+  }
+
+  .bjob-main {
+    grid-area: main;
+  }
+
+  .bjob-rate {
+    grid-area: rate;
+    align-self: start;
+  }
+
+  .bjob-worker {
+    grid-area: worker;
+  }
+
+  .bjob-status {
+    grid-area: status;
+    justify-content: flex-end;
+  }
+
+  .bjob-chevron {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  /* a grid track keeps the scrolling rows inside the page width */
+  .bjobs-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bjobs-status-filters,
+  .bjobs-sort-row {
+    flex-wrap: nowrap;
+    margin-inline: calc(var(--container-gutter) * -1);
+    padding: 2px var(--container-gutter);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .bjobs-status-filters .chip {
+    min-height: 44px;
+    flex-shrink: 0;
+  }
+
+  .bjobs-sort-row .pill-select {
+    flex-shrink: 0;
+  }
 }

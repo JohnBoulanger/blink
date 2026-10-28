@@ -19,7 +19,7 @@ const authLimiter = rateLimit({
 // public endpoints: moderate (business list, business profile)
 const publicLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 60,
+  max: 300,
   standardHeaders: true,
   legacyHeaders: false,
   handler,

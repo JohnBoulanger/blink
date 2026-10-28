@@ -1,0 +1,32 @@
+/* search field drawn as a pill with a leading icon */
+.search-pill {
+  position: relative;
+  display: inline-flex;
+  flex: 1 1 240px;
+  max-width: 340px;
+}
+
+.search-pill svg {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  color: var(--color-text-secondary);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search-pill input {
+  padding-left: 42px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+}
+
+.search-pill input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .search-pill {
+    max-width: none;
+  }
+}

@@ -4,6 +4,10 @@ import axios from "axios";
 import api from "../../../utils/api";
 import Pagination from "../../../components/Pagination";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import BackLink from "../../../components/BackLink";
+import JobTabs from "../../../components/JobTabs";
+import NegotiationBanner from "../../../components/NegotiationBanner";
+import StatusBadge from "../../../components/StatusBadge";
 import { useNegotiation } from "../../../contexts/NegotiationContext/NegotiationContext";
 import "./style.css";
 
@@ -25,6 +29,7 @@ export default function BusinessJobInterests() {
   const [error, setError] = useState("");
   // job status — needed to block negotiation start on filled/expired/cancelled jobs
   const [jobStatus, setJobStatus] = useState<string | null>(null);
+  const [positionName, setPositionName] = useState("");
 
   // per-row negotiation start loading/error
   const [negLoading, setNegLoading] = useState<number | null>(null);
@@ -36,7 +41,10 @@ export default function BusinessJobInterests() {
   useEffect(() => {
     api
       .get(`/jobs/${jobId}`)
-      .then((res) => setJobStatus(res.data.status))
+      .then((res) => {
+        setJobStatus(res.data.status);
+        setPositionName(res.data.position_type?.name ?? "");
+      })
       .catch(() => {});
   }, [jobId]);
 
@@ -88,85 +96,112 @@ export default function BusinessJobInterests() {
 
   const totalPages = Math.ceil(count / limit);
 
-  return (
-    <div className="BusinessJobInterests page-enter">
-      <div className="bji-header">
-        <div>
-          <Link to={`/business/jobs/${jobId}`} className="back-link">
-            ← Job #{jobId}
-          </Link>
-          <h1>Interests</h1>
-        </div>
-        <p className="bji-count">
-          {count} expression{count !== 1 ? "s" : ""} of interest
-        </p>
+  let body: React.ReactNode;
+  if (loading) {
+    body = <LoadingSpinner />;
+  } else if (error) {
+    body = (
+      <p className="error-message" role="alert">
+        {error}
+      </p>
+    );
+  } else if (interests.length === 0) {
+    body = (
+      <div className="empty-state">
+        <p className="empty-state-title">No one is interested yet</p>
+        <p>Invite available professionals from the candidates list to get things moving.</p>
+        <Link to={`/business/jobs/${jobId}/candidates`} className="btn-secondary">
+          See candidates
+        </Link>
       </div>
-
-      {/* active negotiation notice — block starting another */}
-      {hasActiveNeg && (
-        <div className="bji-neg-notice">
-          You have an active negotiation in progress.{" "}
-          <Link to="/business/negotiations/me">View it</Link> before starting a new one.
-        </div>
-      )}
-
-      {loading ? (
-        <LoadingSpinner />
-      ) : error ? (
-        <p className="error-message">{error}</p>
-      ) : interests.length === 0 ? (
-        <p className="empty-state">No one has expressed interest in this job yet.</p>
-      ) : (
-        <>
-          <div className="bji-list">
-            {interests.map((row) => (
-              <div key={row.interest_id} className="bji-row">
-                <div className="bji-row-left">
-                  <Link
-                    to={`/business/jobs/${jobId}/candidates/${row.user.id}`}
-                    className="bji-user-name"
-                  >
-                    {row.user.first_name} {row.user.last_name}
-                  </Link>
-                  {/* mutual = both parties interested → negotiation can be started */}
-                  {row.mutual ? (
-                    <span className="bji-mutual-badge">Mutual interest</span>
+    );
+  } else {
+    body = (
+      <>
+        <ul className="row-list">
+          {interests.map((row) => {
+            const name = `${row.user.first_name} ${row.user.last_name}`;
+            return (
+              <li key={row.interest_id} className="bji-row">
+                <span className="initials" aria-hidden="true">
+                  {row.user.first_name.charAt(0)}
+                  {row.user.last_name.charAt(0)}
+                </span>
+                <Link
+                  to={`/business/jobs/${jobId}/candidates/${row.user.id}`}
+                  className="row-title-link"
+                >
+                  {name}
+                </Link>
+                <span className="bji-status">
+                  {/* mutual = both parties interested, so a negotiation can start */}
+                  {row.mutual && jobStatus === "filled" ? (
+                    <StatusBadge tone="success">Job filled</StatusBadge>
+                  ) : row.mutual ? (
+                    <StatusBadge tone="success">Both interested</StatusBadge>
                   ) : (
-                    <span className="bji-one-way-badge">Awaiting your invite</span>
+                    <StatusBadge tone="pending">Waiting for your invite</StatusBadge>
                   )}
-                </div>
-
-                <div className="bji-row-right">
-                  {negError[row.interest_id] && (
-                    <span className="error-message small">{negError[row.interest_id]}</span>
-                  )}
-                  {/* only allow starting a negotiation on open jobs */}
-                  {row.mutual && !hasActiveNeg && jobStatus === "open" && (
-                    <button
-                      className="btn-primary btn-sm"
-                      onClick={() => handleStartNeg(row.interest_id)}
-                      disabled={negLoading === row.interest_id}
-                    >
-                      {negLoading === row.interest_id ? "Starting..." : "Start negotiation"}
-                    </button>
-                  )}
-                  {/* job filled after successful negotiation */}
-                  {row.mutual && jobStatus === "filled" && (
-                    <span className="myjob-status-confirmed">Job filled</span>
-                  )}
+                </span>
+                <span className="bji-actions">
                   <Link
                     to={`/business/jobs/${jobId}/candidates/${row.user.id}`}
-                    className="btn-secondary btn-sm"
+                    className="btn-ghost btn-sm bji-profile-link"
                   >
                     View profile
                   </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
-        </>
+                  {/* only allow starting a negotiation on open jobs */}
+                  {row.mutual && !hasActiveNeg && jobStatus === "open" && (
+                    <button
+                      type="button"
+                      className="btn-primary btn-sm"
+                      onClick={() => handleStartNeg(row.interest_id)}
+                      disabled={negLoading === row.interest_id}
+                      aria-label={`Start negotiation with ${name}`}
+                    >
+                      {negLoading === row.interest_id ? "Starting…" : "Start negotiation"}
+                    </button>
+                  )}
+                </span>
+                {negError[row.interest_id] && (
+                  <p className="bji-error" role="alert">
+                    {negError[row.interest_id]}
+                  </p>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      </>
+    );
+  }
+
+  return (
+    <div className="BusinessJobInterests page-enter">
+      <BackLink to="/business/jobs">Your jobs</BackLink>
+      <header className="page-header">
+        <div className="page-header-text">
+          <h1>Interests</h1>
+          <p className="page-subtitle" aria-live="polite">
+            {positionName ? `${positionName} · ` : ""}Job #{jobId}
+            {!loading && !error && ` · ${count} interested`}
+          </p>
+        </div>
+      </header>
+
+      <JobTabs jobId={jobId ?? ""} />
+
+      {/* active negotiation notice — block starting another */}
+      {hasActiveNeg && (
+        <NegotiationBanner
+          to="/business/negotiations/me"
+          text="Finish your live negotiation before you start a new one."
+          action="View negotiation"
+        />
       )}
+
+      {body}
     </div>
   );
 }

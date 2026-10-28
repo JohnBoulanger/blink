@@ -4,6 +4,9 @@ import axios from "axios";
 import api from "../../../utils/api";
 import Pagination from "../../../components/Pagination";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import BackLink from "../../../components/BackLink";
+import JobTabs from "../../../components/JobTabs";
+import StatusBadge from "../../../components/StatusBadge";
 import "./style.css";
 
 interface Candidate {
@@ -71,63 +74,89 @@ export default function BusinessCandidates() {
 
   const totalPages = Math.ceil(count / limit);
 
-  return (
-    <div className="BusinessCandidates page-enter">
-      <div className="cands-header">
-        <div>
-          <Link to={`/business/jobs/${jobId}`} className="back-link">
-            ← Job #{jobId}
-          </Link>
-          <h1>Candidates</h1>
-        </div>
-        <p className="cands-count">
-          {count} discoverable candidate{count !== 1 ? "s" : ""}
+  let body: React.ReactNode;
+  if (loading) {
+    body = <LoadingSpinner />;
+  } else if (error) {
+    body = (
+      <p className="error-message" role="alert">
+        {error}
+      </p>
+    );
+  } else if (candidates.length === 0) {
+    body = (
+      <div className="empty-state">
+        <p className="empty-state-title">No candidates right now</p>
+        <p>
+          Candidates appear here when they hold an approved qualification for this position and have
+          marked themselves available.
         </p>
       </div>
-
-      {loading ? (
-        <LoadingSpinner />
-      ) : error ? (
-        <p className="error-message">{error}</p>
-      ) : candidates.length === 0 ? (
-        <p className="empty-state">
-          No discoverable candidates right now. Candidates need an approved qualification and must
-          be marked available.
-        </p>
-      ) : (
-        <>
-          <div className="cands-list">
-            {candidates.map((c) => (
-              <div key={c.id} className="cand-row">
-                <Link to={`/business/jobs/${jobId}/candidates/${c.id}`} className="cand-name">
-                  {c.first_name} {c.last_name}
+    );
+  } else {
+    body = (
+      <>
+        <ul className="row-list">
+          {candidates.map((c) => (
+            <li key={c.id} className="cand-row">
+              <span className="initials" aria-hidden="true">
+                {c.first_name.charAt(0)}
+                {c.last_name.charAt(0)}
+              </span>
+              <Link to={`/business/jobs/${jobId}/candidates/${c.id}`} className="row-title-link">
+                {c.first_name} {c.last_name}
+              </Link>
+              <span className="cand-status">
+                {c.invited && <StatusBadge tone="success">Invited</StatusBadge>}
+              </span>
+              <span className="cand-actions">
+                <Link
+                  to={`/business/jobs/${jobId}/candidates/${c.id}`}
+                  className="btn-ghost btn-sm cand-profile-link"
+                >
+                  View profile
                 </Link>
+                <button
+                  type="button"
+                  className={c.invited ? "btn-secondary btn-sm" : "btn-primary btn-sm"}
+                  onClick={() => handleInvite(c.id, c.invited)}
+                  disabled={inviteLoading === c.id}
+                  aria-label={`${c.invited ? "Withdraw invitation for" : "Invite"} ${c.first_name} ${c.last_name}`}
+                >
+                  {inviteLoading === c.id ? "Saving…" : c.invited ? "Withdraw" : "Invite"}
+                </button>
+              </span>
+              {inviteError[c.id] && (
+                <p className="cand-error" role="alert">
+                  {inviteError[c.id]}
+                </p>
+              )}
+            </li>
+          ))}
+        </ul>
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      </>
+    );
+  }
 
-                <div className="cand-row-right">
-                  {c.invited && <span className="cand-invited-badge">Invited</span>}
-                  {inviteError[c.id] && (
-                    <span className="error-message small">{inviteError[c.id]}</span>
-                  )}
-                  <button
-                    className={c.invited ? "btn-secondary btn-sm" : "btn-primary btn-sm"}
-                    onClick={() => handleInvite(c.id, c.invited)}
-                    disabled={inviteLoading === c.id}
-                  >
-                    {inviteLoading === c.id ? "..." : c.invited ? "Withdraw" : "Invite"}
-                  </button>
-                  <Link
-                    to={`/business/jobs/${jobId}/candidates/${c.id}`}
-                    className="btn-secondary btn-sm"
-                  >
-                    View profile
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
-        </>
-      )}
+  return (
+    <div className="BusinessCandidates page-enter">
+      <BackLink to="/business/jobs">Your jobs</BackLink>
+      <header className="page-header">
+        <div className="page-header-text">
+          <h1>Candidates</h1>
+          <p className="page-subtitle" aria-live="polite">
+            Job #{jobId}
+            {!loading &&
+              !error &&
+              ` · ${count} available professional${count !== 1 ? "s" : ""} you can invite`}
+          </p>
+        </div>
+      </header>
+
+      <JobTabs jobId={jobId ?? ""} />
+
+      {body}
     </div>
   );
 }

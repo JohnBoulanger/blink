@@ -1,0 +1,93 @@
+.Logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-ink);
+  text-decoration: none;
+  line-height: 1;
+}
+
+a.Logo {
+  min-height: 44px;
+  border-radius: var(--radius-control);
+}
+
+a.Logo:hover {
+  color: var(--color-ink);
+}
+
+.Logo-mark {
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.Logo-wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--color-ink);
+  /* optical alignment with the mark */
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .Logo-loop .Logo-upper {
+    animation: logo-upper-loop 4.5s ease-in-out infinite;
+  }
+
+  .Logo-loop .Logo-lower {
+    animation: logo-lower-loop 4.5s ease-in-out infinite;
+  }
+
+  .Logo-once .Logo-upper {
+    animation: logo-upper-once 0.42s ease-in-out 0.15s both;
+  }
+
+  .Logo-once .Logo-lower {
+    animation: logo-lower-once 0.42s ease-in-out 0.15s both;
+  }
+}
+
+@keyframes logo-upper-loop {
+  0%,
+  86%,
+  100% {
+    transform: translateY(0);
+  }
+  92% {
+    transform: translateY(7px);
+  }
+}
+
+@keyframes logo-lower-loop {
+  0%,
+  86%,
+  100% {
+    transform: translateY(0);
+  }
+  92% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes logo-upper-once {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  45%,
+  55% {
+    transform: translateY(7px);
+  }
+}
+
+@keyframes logo-lower-once {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  45%,
+  55% {
+    transform: translateY(-7px);
+  }
+}

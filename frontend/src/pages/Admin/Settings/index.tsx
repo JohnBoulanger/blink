@@ -1,7 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 import api from "../../../utils/api";
-import "../Users/style.css";
 import "./style.css";
 
 // each system setting — endpoint, label, display unit, and multiplier to convert to native api unit
@@ -105,56 +104,92 @@ export default function AdminSettings() {
 
   return (
     <div className="AdminSettings page-enter">
-      <div className="admin-page-header">
-        <div>
-          <h1>System Settings</h1>
-          <p className="admin-subtitle">Platform-wide configuration values</p>
+      <header className="page-header">
+        <div className="page-header-text">
+          <h1>Settings</h1>
+          <p className="page-subtitle">
+            Platform-wide timing rules. The server does not report current values, so each field
+            starts empty. Enter a new value and save it.
+          </p>
         </div>
-      </div>
+      </header>
 
-      {/* no GET endpoints exist for these settings — inputs start blank intentionally */}
-      <p className="admin-muted settings-notice">
-        Current values cannot be fetched from the server. Enter the desired new value and press Save
-        to update each setting.
-      </p>
-
-      <div className="settings-grid">
+      <ul className="row-list as-list">
         {SETTINGS.map((cfg) => {
           const s = states[cfg.key];
+          const inputId = `as-${cfg.key}`;
+          const errorId = `${inputId}-error`;
           return (
-            <div key={cfg.key} className="settings-card">
-              <div className="settings-card-header">
-                <h3>{cfg.label}</h3>
-                <p className="admin-muted">{cfg.description}</p>
+            <li key={cfg.key} className="as-row">
+              <div className="as-text">
+                <label htmlFor={inputId} className="as-label">
+                  {cfg.label}
+                </label>
+                <p className="as-description" id={`${inputId}-desc`}>
+                  {cfg.description}
+                </p>
               </div>
 
-              <div className="settings-input-row">
-                <input
-                  type="number"
-                  min={cfg.min}
-                  step={1}
-                  placeholder={cfg.unit === "days" ? "e.g. 7" : "e.g. 15"}
-                  value={s.value}
-                  onChange={(e) =>
-                    updateState(cfg.key, { value: e.target.value, error: "", saved: false })
-                  }
-                  className="settings-input"
-                />
-                <span className="settings-unit">{cfg.unit}</span>
+              <div className="as-control">
+                <div className="as-input-wrap">
+                  <input
+                    id={inputId}
+                    type="number"
+                    min={cfg.min}
+                    step={1}
+                    inputMode="numeric"
+                    placeholder={cfg.unit === "days" ? "e.g. 7" : "e.g. 15"}
+                    value={s.value}
+                    onChange={(e) =>
+                      updateState(cfg.key, { value: e.target.value, error: "", saved: false })
+                    }
+                    aria-invalid={s.error ? true : undefined}
+                    aria-describedby={s.error ? errorId : `${inputId}-desc`}
+                    className="as-input"
+                  />
+                  <span className="as-unit">{cfg.unit}</span>
+                </div>
                 <button
-                  className="btn-primary btn-sm"
+                  type="button"
+                  className="btn-primary as-save"
                   disabled={s.saving || !s.value}
                   onClick={() => handleSave(cfg)}
                 >
-                  {s.saving ? "Saving…" : s.saved ? "✓ Saved" : "Save"}
+                  {s.saving ? "Saving…" : "Save"}
                 </button>
+                <span className="as-saved" role="status">
+                  {s.saved && (
+                    <>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M5 12.5l4.5 4.5L19 7.5"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                      Saved
+                    </>
+                  )}
+                </span>
               </div>
 
-              {s.error && <p className="settings-error">{s.error}</p>}
-            </div>
+              {s.error && (
+                <p className="field-error as-error" id={errorId}>
+                  {s.error}
+                </p>
+              )}
+            </li>
           );
         })}
-      </div>
+      </ul>
     </div>
   );
 }

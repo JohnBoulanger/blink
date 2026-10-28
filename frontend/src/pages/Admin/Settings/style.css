@@ -1,62 +1,95 @@
+/* admin settings: one hairline row per setting with its own save */
+
 .AdminSettings {
-  padding: 32px 0 60px;
+  max-width: 880px;
 }
 
-/* 2-column card grid */
-.settings-grid {
+.as-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-8);
+  padding: var(--space-5) 0;
 }
 
-.settings-card {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
+.as-text {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 2px;
+  min-width: 0;
 }
 
-.settings-card-header h3 {
-  margin: 0 0 4px;
-  font-size: 1rem;
+.as-label {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
-.settings-input-row {
+.as-description {
+  max-width: 52ch;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.as-control {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-3);
 }
 
-.settings-input {
-  width: 100px;
-  flex-shrink: 0;
+/* the unit sits inside the field, on the right */
+.as-input-wrap {
+  position: relative;
+  width: 160px;
 }
 
-.settings-unit {
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  white-space: nowrap;
+.as-input {
+  padding-right: 72px;
+  font-variant-numeric: tabular-nums;
 }
 
-.settings-error {
-  font-size: 0.8125rem;
-  color: var(--error);
-  margin: 0;
+.as-unit {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
-.settings-hint {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin: 0;
+.as-save {
+  min-height: 44px;
+  min-width: 80px;
 }
 
-/* reuse admin-muted from Users/style.css */
+.as-saved {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: 64px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-ink);
+}
 
-/* notice shown above settings grid explaining empty inputs */
-.settings-notice {
-  margin-bottom: 20px;
-  font-size: 0.875rem;
+.as-error {
+  grid-column: 1 / -1;
+  justify-self: end;
+}
+
+@media (max-width: 768px) {
+  .as-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+
+  .as-input-wrap {
+    flex: 1;
+    width: auto;
+  }
+
+  .as-error {
+    justify-self: start;
+  }
 }

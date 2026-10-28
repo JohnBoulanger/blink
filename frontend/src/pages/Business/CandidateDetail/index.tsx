@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import BackLink from "../../../components/BackLink";
+import StatusBadge from "../../../components/StatusBadge";
+import { formatLongDay, formatTimeRange } from "../../../utils/format";
 import "./style.css";
 
 interface CandidateDetail {
@@ -31,6 +34,45 @@ interface CandidateDetail {
     start_time: string;
     end_time: string;
   };
+}
+
+// a read-only document line: file icon, title and a link when the file exists
+function DocumentRow({
+  title,
+  href,
+  label,
+  empty,
+}: {
+  title: string;
+  href: string | null;
+  label: string;
+  empty: string;
+}) {
+  return (
+    <div className="bcd-doc">
+      <span className="bcd-doc-icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinejoin="round"
+          />
+          <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+        </svg>
+      </span>
+      <span className="bcd-doc-text">
+        <span className="bcd-doc-title">{title}</span>
+        {href ? (
+          <a href={href} target="_blank" rel="noreferrer" className="bcd-doc-link">
+            {label}
+          </a>
+        ) : (
+          <span className="bcd-doc-empty">{empty}</span>
+        )}
+      </span>
+    </div>
+  );
 }
 
 export default function BusinessCandidateDetail() {
@@ -98,14 +140,16 @@ export default function BusinessCandidateDetail() {
     }
   }
 
+  const backTo = `/business/jobs/${jobId}/candidates`;
+
   if (loading) return <LoadingSpinner />;
   if (error) {
     return (
       <div className="BusinessCandidateDetail page-enter">
-        <p className="error-message">{error}</p>
-        <Link to={`/business/jobs/${jobId}/candidates`} className="back-link">
-          ← Candidates
-        </Link>
+        <BackLink to={backTo}>Candidates</BackLink>
+        <p className="error-message" role="alert">
+          {error}
+        </p>
       </div>
     );
   }
@@ -113,116 +157,138 @@ export default function BusinessCandidateDetail() {
 
   const { user, job } = data;
   const initials = `${user.first_name?.[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase();
+  const fullName = `${user.first_name} ${user.last_name}`;
 
   return (
     <div className="BusinessCandidateDetail page-enter">
-      <Link to={`/business/jobs/${jobId}/candidates`} className="back-link">
-        ← Candidates
-      </Link>
+      <BackLink to={backTo}>Candidates</BackLink>
 
-      <div className="bcd-card">
-        {/* candidate header */}
-        <div className="bcd-header">
-          <div className="bcd-avatar-wrap">
+      <div className="bcd-layout">
+        <div className="bcd-main">
+          {/* candidate header */}
+          <header className="bcd-header">
             {user.avatar ? (
-              <img
-                src={`${backendUrl}${user.avatar}`}
-                alt="candidate avatar"
-                className="bcd-avatar"
+              <img src={`${backendUrl}${user.avatar}`} alt="" className="bcd-avatar" />
+            ) : (
+              <span className="bcd-avatar bcd-avatar-initials" aria-hidden="true">
+                {initials}
+              </span>
+            )}
+            <div className="bcd-identity">
+              <h1>{fullName}</h1>
+              <StatusBadge tone="success">Approved for {job.position_type.name}</StatusBadge>
+            </div>
+          </header>
+
+          {/* contact info only exposed when this person filled the job */}
+          {(user.email || user.phone_number) && (
+            <section className="bcd-section" aria-labelledby="bcd-contact-title">
+              <h2 id="bcd-contact-title">Contact</h2>
+              <dl className="detail-list">
+                {user.email && (
+                  <div>
+                    <dt>Email</dt>
+                    <dd>{user.email}</dd>
+                  </div>
+                )}
+                {user.phone_number && (
+                  <div>
+                    <dt>Phone</dt>
+                    <dd className="tabular">{user.phone_number}</dd>
+                  </div>
+                )}
+              </dl>
+            </section>
+          )}
+
+          <section className="bcd-section" aria-labelledby="bcd-about-title">
+            <h2 id="bcd-about-title">About</h2>
+            {user.biography ? (
+              <p className="bcd-bio">{user.biography}</p>
+            ) : (
+              <p className="bcd-muted">No biography added.</p>
+            )}
+          </section>
+
+          <section className="bcd-section" aria-labelledby="bcd-docs-title">
+            <h2 id="bcd-docs-title">Documents</h2>
+            <div className="bcd-docs">
+              <DocumentRow
+                title="Resume"
+                href={user.resume ? `${backendUrl}${user.resume}` : null}
+                label="View resume (PDF)"
+                empty="No resume uploaded"
               />
-            ) : (
-              <div className="bcd-avatar-placeholder">{initials}</div>
+              <DocumentRow
+                title={`Qualification: ${job.position_type.name}`}
+                href={
+                  user.qualification.document ? `${backendUrl}${user.qualification.document}` : null
+                }
+                label="View qualification document"
+                empty="No document uploaded"
+              />
+            </div>
+            {user.qualification.note && (
+              <p className="bcd-qual-note">
+                <span className="bcd-note-label">Note from the candidate: </span>
+                {user.qualification.note}
+              </p>
             )}
-          </div>
-          <div className="bcd-identity">
-            <h1>
-              {user.first_name} {user.last_name}
-            </h1>
-            {/* contact info only exposed when this person filled the job */}
-            {user.email && <p className="bcd-contact">{user.email}</p>}
-            {user.phone_number && <p className="bcd-contact">{user.phone_number}</p>}
-          </div>
+          </section>
         </div>
 
-        {/* biography */}
-        {user.biography && (
-          <div className="bcd-bio">
-            <span className="detail-label">About</span>
-            <p>{user.biography}</p>
+        {/* job summary and invite action */}
+        <aside className="bcd-card" aria-label="Shift and invitation">
+          <div className="bcd-card-job">
+            <p className="bcd-card-role">{job.position_type.name}</p>
+            <p className="bcd-card-when tabular">
+              {formatLongDay(job.start_time)}
+              <br />
+              {formatTimeRange(job.start_time, job.end_time)}
+            </p>
           </div>
-        )}
 
-        {/* resume link */}
-        <div className="bcd-resume">
-          <span className="detail-label">Resume</span>
-          {user.resume ? (
-            <a
-              href={`${backendUrl}${user.resume}`}
-              target="_blank"
-              rel="noreferrer"
-              className="bcd-doc-link"
-            >
-              View resume (PDF)
-            </a>
+          {job.status === "open" ? (
+            <div className="bcd-invite">
+              {inviteError && (
+                <p className="bcd-error" role="alert">
+                  {inviteError}
+                </p>
+              )}
+              {invited ? (
+                <>
+                  <StatusBadge tone="success">Invitation sent</StatusBadge>
+                  <button
+                    type="button"
+                    className="btn-secondary bcd-invite-btn"
+                    onClick={() => handleInvite(false)}
+                    disabled={inviteLoading}
+                  >
+                    {inviteLoading ? "Withdrawing…" : "Withdraw invite"}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    className="btn-primary bcd-invite-btn"
+                    onClick={() => handleInvite(true)}
+                    disabled={inviteLoading}
+                  >
+                    {inviteLoading && <span className="btn-spinner" aria-hidden="true" />}
+                    {inviteLoading ? "Sending…" : "Send invitation"}
+                  </button>
+                  <p className="bcd-hint">
+                    If {user.first_name} is also interested, either side can open a 15-minute
+                    negotiation.
+                  </p>
+                </>
+              )}
+            </div>
           ) : (
-            <span className="bcd-no-doc">No resume uploaded</span>
+            <p className="bcd-hint">Invitations close once the job is no longer open.</p>
           )}
-        </div>
-
-        {/* qualification for this job's position type */}
-        <div className="bcd-qual">
-          <span className="detail-label">Qualification — {job.position_type.name}</span>
-          {user.qualification.document ? (
-            <a
-              href={`${backendUrl}${user.qualification.document}`}
-              target="_blank"
-              rel="noreferrer"
-              className="bcd-doc-link"
-            >
-              View qualification document
-            </a>
-          ) : (
-            <span className="bcd-no-doc">No document uploaded</span>
-          )}
-          {user.qualification.note && <p className="bcd-qual-note">{user.qualification.note}</p>}
-        </div>
-
-        {/* job summary */}
-        <div className="bcd-job-info">
-          <span className="detail-label">Position</span>
-          <span>{job.position_type.name}</span>
-          <span className="detail-label">Shift</span>
-          <span>
-            {new Date(job.start_time).toLocaleString()} → {new Date(job.end_time).toLocaleString()}
-          </span>
-        </div>
-
-        {/* invite / withdraw action */}
-        {job.status === "open" && (
-          <div className="bcd-invite-actions">
-            {inviteError && <p className="error-message">{inviteError}</p>}
-            {invited ? (
-              <div className="bcd-invite-row">
-                <span className="cand-invited-badge">Invitation sent</span>
-                <button
-                  className="btn-secondary btn-sm"
-                  onClick={() => handleInvite(false)}
-                  disabled={inviteLoading}
-                >
-                  {inviteLoading ? "..." : "Withdraw invite"}
-                </button>
-              </div>
-            ) : (
-              <button
-                className="btn-primary btn-sm"
-                onClick={() => handleInvite(true)}
-                disabled={inviteLoading}
-              >
-                {inviteLoading ? "Sending..." : "Send invitation"}
-              </button>
-            )}
-          </div>
-        )}
+        </aside>
       </div>
     </div>
   );

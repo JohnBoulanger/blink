@@ -1,0 +1,22 @@
+.ErrorBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-right: var(--space-1);
+}
+
+.error-banner-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: var(--radius-control);
+  color: var(--color-danger);
+}
+
+.error-banner-close:hover {
+  background: rgba(193, 53, 21, 0.08);
+}

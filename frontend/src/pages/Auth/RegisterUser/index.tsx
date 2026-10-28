@@ -2,12 +2,15 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
+import AuthCard from "../../../components/AuthCard";
 import PasswordInput from "../../../components/PasswordInput";
 import "./style.css";
 
 export default function RegisterUser() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  // a server error that belongs to the email field, shown under it
+  const [emailError, setEmailError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // form fields matching backend snake_case expectations
@@ -30,6 +33,7 @@ export default function RegisterUser() {
   async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
     setError("");
+    setEmailError("");
     setLoading(true);
     try {
       // only send birthday if the user actually entered one
@@ -42,7 +46,7 @@ export default function RegisterUser() {
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 409) {
-          setError("An account with this email already exists.");
+          setEmailError("An account with this email already exists.");
         } else {
           setError(err.response?.data?.error || "Registration failed");
         }
@@ -55,89 +59,140 @@ export default function RegisterUser() {
   }
 
   return (
-    <div className="RegisterUser page-enter">
-      <div className="auth-card">
-        <h1>Create account</h1>
-        <p className="auth-subtitle">Join as an optometry professional</p>
+    <AuthCard
+      className="RegisterUser"
+      wide
+      title="Join as a professional"
+      subtitle="Create an account to find shifts at optometry clinics."
+      footer={
+        <>
+          <p>
+            Already have an account? <Link to="/login">Sign in</Link>
+          </p>
+          <p>
+            Registering a clinic? <Link to="/register/business">Register as a clinic</Link>
+          </p>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="auth-form">
+        {error && (
+          <p className="error-message" role="alert">
+            {error}
+          </p>
+        )}
 
-        <form onSubmit={handleSubmit}>
-          {error && <p className="error-message">{error}</p>}
-
-          <div className="form-row">
+        <div className="auth-form-row">
+          <div className="form-field">
+            <label htmlFor="reg-first-name">First name</label>
             <input
+              id="reg-first-name"
               name="first_name"
               type="text"
-              placeholder="First name"
               value={form.first_name}
               onChange={handleChange}
-              required
-            />
-            <input
-              name="last_name"
-              type="text"
-              placeholder="Last name"
-              value={form.last_name}
-              onChange={handleChange}
+              autoComplete="given-name"
               required
             />
           </div>
+          <div className="form-field">
+            <label htmlFor="reg-last-name">Last name</label>
+            <input
+              id="reg-last-name"
+              name="last_name"
+              type="text"
+              value={form.last_name}
+              onChange={handleChange}
+              autoComplete="family-name"
+              required
+            />
+          </div>
+        </div>
 
+        <div className="form-field">
+          <label htmlFor="reg-email">Email</label>
           <input
+            id="reg-email"
             name="email"
             type="email"
-            placeholder="Email"
             value={form.email}
             onChange={handleChange}
+            autoComplete="email"
+            aria-invalid={emailError ? true : undefined}
+            aria-describedby={emailError ? "reg-email-error" : undefined}
             required
           />
+          {emailError && (
+            <p className="field-error" id="reg-email-error">
+              {emailError}
+            </p>
+          )}
+        </div>
 
+        <div className="form-field">
+          <label htmlFor="reg-password">Password</label>
           <PasswordInput
+            id="reg-password"
             name="password"
-            placeholder="Password"
+            placeholder=""
             value={form.password}
             onChange={handleChange}
+            autoComplete="new-password"
+            describedBy="reg-password-hint"
             required
           />
-          <p className="hint">
-            8–20 characters, uppercase, lowercase, digit, and special character
+          <p className="field-hint" id="reg-password-hint">
+            8–20 characters with an uppercase letter, a lowercase letter, a digit and a symbol.
           </p>
+        </div>
 
-          <input
-            name="phone_number"
-            type="text"
-            placeholder="Phone number (optional)"
-            value={form.phone_number}
-            onChange={handleChange}
-          />
+        <div className="auth-form-row">
+          <div className="form-field">
+            <label htmlFor="reg-phone">
+              Phone number <span className="label-optional">(optional)</span>
+            </label>
+            <input
+              id="reg-phone"
+              name="phone_number"
+              type="text"
+              value={form.phone_number}
+              onChange={handleChange}
+              autoComplete="tel"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="reg-birthday">
+              Birthday <span className="label-optional">(optional)</span>
+            </label>
+            <input
+              id="reg-birthday"
+              name="birthday"
+              type="date"
+              value={form.birthday}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
 
+        <div className="form-field">
+          <label htmlFor="reg-address">
+            Postal address <span className="label-optional">(optional)</span>
+          </label>
           <input
+            id="reg-address"
             name="postal_address"
             type="text"
-            placeholder="Postal address (optional)"
             value={form.postal_address}
             onChange={handleChange}
+            autoComplete="street-address"
           />
+        </div>
 
-          <input
-            name="birthday"
-            type="date"
-            placeholder="Birthday (optional)"
-            value={form.birthday}
-            onChange={handleChange}
-          />
-
-          <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? "Creating account..." : "Create account"}
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          Already have an account? <Link to="/login">Sign in</Link>
-        </p>
-        <p className="auth-footer">
-          Registering a clinic? <Link to="/register/business">Register as business</Link>
-        </p>
-      </div>
-    </div>
+        <button type="submit" className="btn-primary auth-submit" disabled={loading}>
+          {loading && <span className="btn-spinner" aria-hidden="true" />}
+          {loading ? "Creating account…" : "Create account"}
+        </button>
+      </form>
+    </AuthCard>
   );
 }

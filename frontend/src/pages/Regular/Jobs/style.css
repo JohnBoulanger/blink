@@ -1,108 +1,225 @@
-/* jobs browse page */
+/* shift search: filter pills, photo cards and a sticky map */
 
 .Jobs {
-  max-width: 720px;
+  display: flex;
+  flex-direction: column;
 }
 
 .jobs-header {
-  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-5);
 }
 
 .jobs-subtitle {
-  color: var(--text-muted);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* filter row: native selects drawn as pills (.pill-select lives in index.css) */
+.jobs-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-8);
+}
+
+/* clinic filter passed from the landing search */
+.jobs-clinic-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: var(--control-height);
+  padding: 0 4px 0 18px;
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-full);
+  box-shadow: inset 0 0 0 1px var(--color-ink);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.jobs-clinic-chip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: inherit;
+}
+
+.jobs-clinic-chip button:hover {
+  background: var(--color-surface-subtle);
+}
+
+/* results beside the map */
+.jobs-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 40%);
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.jobs-layout-phone {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.jobs-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-10) var(--space-6);
+}
+
+.jobs-map {
+  position: sticky;
+  top: calc(var(--topbar-height) + var(--space-6));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.jobs-map-frame {
+  height: calc(100vh - var(--topbar-height) - var(--space-12));
+  min-height: 360px;
+}
+
+.jobs-map-note {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+/* loading */
+.jobs-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.jobs-skeleton-photo,
+.jobs-skeleton-line {
+  display: block;
+  background: var(--color-surface-muted);
+}
+
+.jobs-skeleton-photo {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
+}
+
+.jobs-skeleton-line {
+  height: 12px;
+  width: 64%;
+  border-radius: var(--radius-full);
+}
+
+.jobs-skeleton-line-wide {
+  width: 84%;
   margin-top: 4px;
 }
 
-/* filter + sort bar */
-.jobs-controls {
+.jobs-skeleton-line-short {
+  width: 36%;
+}
+
+/* empty */
+.jobs-empty {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.jobs-filter {
-  min-width: 160px;
-}
-
-.jobs-sort {
-  display: flex;
-  gap: 8px;
-}
-
-.jobs-sort select {
-  width: auto;
-}
-
-/* job list rows */
-.jobs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 24px;
-}
-
-.job-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  background: var(--bg-elevated);
-  text-decoration: none;
-  color: inherit;
-  transition: background 0.12s ease;
-  gap: 12px;
-}
-
-.job-row:hover {
-  background: var(--bg-surface);
-}
-
-.job-row-left {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.job-position {
-  font-weight: 500;
-  color: var(--text-strong);
-  font-size: 0.9375rem;
-}
-
-.job-business {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-
-.job-row-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-  flex-shrink: 0;
-}
-
-.job-salary {
-  font-size: 0.875rem;
-  color: var(--accent);
-  font-weight: 500;
-}
-
-.job-date {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-
-.empty-state {
-  color: var(--text-muted);
-  padding: 40px 0;
+  gap: var(--space-2);
+  padding: var(--space-12) var(--space-6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
   text-align: center;
-  font-size: 0.9375rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.jobs-empty-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.jobs-empty .btn-secondary {
+  margin-top: var(--space-2);
+}
+
+/* phones: list or map, switched by a floating pill */
+.jobs-map-toggle {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-6);
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: var(--radius-full);
+  background: var(--color-ink);
+  color: #ffffff;
+  box-shadow: var(--shadow-tier);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transform: translateX(-50%);
+}
+
+.jobs-map-toggle:hover {
+  background: #000000;
+}
+
+.jobs-map-toggle:active:not(:disabled) {
+  transform: translateX(-50%) scale(0.98);
+}
+
+@media (max-width: 1100px) {
+  .jobs-layout {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: var(--space-6);
+  }
+}
+
+@media (max-width: 768px) {
+  .jobs-layout,
+  .jobs-layout-phone {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .jobs-controls {
+    flex-wrap: nowrap;
+    margin-inline: calc(var(--container-gutter) * -1);
+    padding: 2px var(--container-gutter);
+    margin-bottom: var(--space-6);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .pill-select,
+  .jobs-clinic-chip {
+    flex-shrink: 0;
+  }
+
+  .jobs-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+  }
+
+  .jobs-results {
+    padding-bottom: var(--space-16);
+  }
+
+  .jobs-map {
+    position: static;
+  }
+
+  .jobs-map-frame {
+    height: calc(100vh - var(--topbar-height) - 280px);
+    min-height: 320px;
+  }
 }

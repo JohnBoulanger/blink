@@ -1,104 +1,185 @@
-.AdminQualifications {
-  padding: 32px 0 60px;
+/* credential review: a table of requests; a row opens its review panel in place */
+
+.aq-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
-/* expandable row list */
-.qual-list {
+.aq-status-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.aq-toggle {
+  min-width: 76px;
+}
+
+.aq-table tbody tr.aq-row-open td {
+  border-bottom-color: transparent;
+}
+
+/* the open review panel */
+.aq-table td[colspan] {
+  padding: 0 0 var(--space-5);
+}
+
+.aq-review {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(280px, 2fr);
+  gap: var(--space-6) var(--space-8);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-subtle);
+  font-size: var(--text-sm);
+  font-variant-numeric: normal;
+}
+
+.aq-review-info {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 20px;
+  gap: var(--space-4);
+  min-width: 0;
 }
 
-.qual-item {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
+.aq-review .detail-list > div {
+  grid-template-columns: 112px minmax(0, 1fr);
 }
 
-/* summary row button */
-.qual-row {
-  width: 100%;
+.aq-sub {
+  display: block;
+  color: var(--color-text-secondary);
+}
+
+.aq-bio {
+  max-width: 60ch;
+  color: var(--color-text-secondary);
+}
+
+/* the credential document */
+.aq-doc {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 13px 16px;
-  background: var(--bg-elevated);
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.12s;
-  font-size: 0.875rem;
-  color: var(--text-body);
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
 }
 
-.qual-row:hover,
-.qual-row-open {
-  background: var(--bg-hover);
+.aq-doc-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
 }
 
-.qual-user {
-  font-weight: 600;
-  min-width: 140px;
-}
-
-.qual-position {
-  color: var(--text-muted);
-  flex: 1;
-}
-
-.qual-date {
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  white-space: nowrap;
-}
-
-.qual-chevron {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  margin-left: auto;
-}
-
-/* expanded detail panel */
-.qual-detail {
-  padding: 20px;
-  border-top: 1px solid var(--border);
-  background: var(--bg-base);
-}
-
-.qual-detail-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-/* items that span full width */
-.qual-detail-full {
-  grid-column: 1 / -1;
-}
-
-/* approve/reject action area */
-.qual-actions {
+.aq-doc-text {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  border-top: 1px solid var(--border-light);
-  padding-top: 16px;
+  gap: 1px;
+  min-width: 0;
 }
 
-.qual-note-input {
-  width: 100%;
-  resize: vertical;
-  min-height: 60px;
+.aq-doc-title {
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
-.qual-action-btns {
+.aq-doc-link {
+  align-self: flex-start;
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.aq-doc-link:hover {
+  color: var(--color-ink);
+  text-decoration-thickness: 2px;
+}
+
+.aq-doc-empty {
+  color: var(--color-text-secondary);
+}
+
+/* approve or reject */
+.aq-decision {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
-/* note shown when status filter is active (client-side only) */
-.qual-filter-note {
-  margin-bottom: 12px;
+.aq-decision .error-message {
+  margin-bottom: 0;
+}
+
+.aq-optional {
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.aq-decision textarea {
+  min-height: 88px;
+}
+
+.aq-decision-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.aq-decision-btns button {
+  min-height: 44px;
+  min-width: 112px;
+}
+
+.aq-decided {
+  align-self: start;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 1100px) {
+  .aq-review {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .aq-status-filters {
+    flex-wrap: nowrap;
+    margin-inline: calc(var(--container-gutter) * -1);
+    padding: 2px var(--container-gutter);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .aq-status-filters .chip {
+    flex-shrink: 0;
+    min-height: 44px;
+  }
+
+  .table-stack.aq-table tr.aq-detail-row {
+    padding-top: 0;
+  }
+
+  .table-stack.aq-table td[colspan] {
+    display: block;
+    padding: 0;
+    text-align: left;
+  }
+
+  .aq-review {
+    padding: var(--space-4);
+  }
+
+  .aq-review .detail-list > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aq-decision-btns button {
+    flex: 1;
+  }
 }

@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext/AuthContext";
+import AuthCard from "../../../components/AuthCard";
 import PasswordInput from "../../../components/PasswordInput";
-import "../RegisterUser/style.css";
+import useDemoLogin, { DEMO_ACCOUNTS, DEMO_PASSWORD } from "../../Public/Landing/useDemoLogin";
 import "./style.css";
 
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const demo = useDemoLogin();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -37,54 +39,114 @@ export default function Login() {
   }
 
   return (
-    <div className="Login page-enter">
-      <div className="auth-card">
-        <h1>Welcome back</h1>
-        <p className="auth-subtitle">Sign in to your account</p>
+    <AuthCard
+      className="Login"
+      title="Sign in to Blink"
+      subtitle="Use your account, or open a demo account below."
+      footer={
+        <>
+          <p>
+            New to Blink? <Link to="/register">Join as a professional</Link>
+          </p>
+          <p>
+            Run a clinic? <Link to="/register/business">Register your clinic</Link>
+          </p>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="auth-form">
+        {error && (
+          <div className="error-message" role="alert">
+            {error}
+            {notActivated && (
+              <span>
+                {" "}
+                <Link to="/forgot-password">Request activation link</Link>
+              </span>
+            )}
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit}>
-          {error && (
-            <div className="error-message">
-              {error}
-              {notActivated && (
-                <span>
-                  {" "}
-                  <Link to="/forgot-password">Request activation link</Link>
-                </span>
-              )}
-            </div>
-          )}
-
+        <div className="form-field">
+          <label htmlFor="login-email">Email</label>
           <input
+            id="login-email"
             type="email"
-            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
             required
           />
+        </div>
 
+        <div className="form-field">
+          <div className="login-password-label">
+            <label htmlFor="login-password">Password</label>
+            <Link to="/forgot-password" className="login-forgot">
+              Forgot password?
+            </Link>
+          </div>
           <PasswordInput
-            placeholder="Password"
+            id="login-password"
+            placeholder=""
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
             required
           />
+        </div>
 
-          <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? "Signing in..." : "Sign in"}
-          </button>
-        </form>
+        <button type="submit" className="btn-primary auth-submit" disabled={loading}>
+          {loading && <span className="btn-spinner" aria-hidden="true" />}
+          {loading ? "Signing in…" : "Sign in"}
+        </button>
+      </form>
 
-        <p className="auth-footer">
-          <Link to="/forgot-password">Forgot password?</Link>
+      {/* one-click demo accounts, shared with the landing page */}
+      <section className="login-demo" aria-labelledby="login-demo-title">
+        <h2 id="login-demo-title" className="login-demo-title">
+          <span>Demo accounts</span>
+        </h2>
+        <ul className="login-demo-list">
+          {DEMO_ACCOUNTS.map((account) => (
+            <li key={account.role}>
+              <button
+                type="button"
+                className="login-demo-btn"
+                onClick={() => demo.enter(account.role)}
+                disabled={demo.pending !== null}
+                aria-busy={demo.pending === account.role}
+              >
+                <span className="login-demo-role">{account.label}</span>
+                <span className="login-demo-email">
+                  {demo.pending === account.role ? "Signing in…" : account.email}
+                </span>
+                {demo.pending === account.role ? (
+                  <span className="btn-spinner" aria-hidden="true" />
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M9 6l6 6-6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </button>
+            </li>
+          ))}
+        </ul>
+        <p className="login-demo-note">
+          Every demo account uses the password <span className="tabular">{DEMO_PASSWORD}</span>.
         </p>
-
-        <p className="auth-footer">
-          Don&apos;t have an account? <Link to="/register">Register as professional</Link>
-          {" · "}
-          <Link to="/register/business">Register as clinic</Link>
-        </p>
-      </div>
-    </div>
+        {demo.error && (
+          <p className="error-message" role="alert">
+            {demo.error}
+          </p>
+        )}
+      </section>
+    </AuthCard>
   );
 }

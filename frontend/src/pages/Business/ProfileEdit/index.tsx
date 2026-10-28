@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import BackLink from "../../../components/BackLink";
 import "./style.css";
 
 interface ProfileForm {
@@ -24,6 +26,10 @@ export default function BusinessProfileEdit() {
     lon: "",
   });
   const [error, setError] = useState("");
+  // coordinate range errors point at their field
+  const [coordError, setCoordError] = useState<{ field: "lat" | "lon"; message: string } | null>(
+    null
+  );
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -60,17 +66,18 @@ export default function BusinessProfileEdit() {
   async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
     setError("");
+    setCoordError(null);
     setSuccess(false);
 
     // validate coordinates only if filled (optional on edit)
     const lat = parseFloat(form.lat);
     const lon = parseFloat(form.lon);
     if (form.lat && (isNaN(lat) || lat < -90 || lat > 90)) {
-      setError("Latitude must be between -90 and 90.");
+      setCoordError({ field: "lat", message: "Latitude must be between -90 and 90." });
       return;
     }
     if (form.lon && (isNaN(lon) || lon < -180 || lon > 180)) {
-      setError("Longitude must be between -180 and 180.");
+      setCoordError({ field: "lon", message: "Longitude must be between -180 and 180." });
       return;
     }
 
@@ -101,103 +108,139 @@ export default function BusinessProfileEdit() {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="BusinessProfileEdit">
-        <p className="profile-edit-loading">Loading…</p>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner />;
 
   return (
     <div className="BusinessProfileEdit page-enter">
-      <div className="profile-edit-card">
-        <h2>Edit profile</h2>
+      <BackLink to="/business/profile">Clinic profile</BackLink>
+      <header className="page-header">
+        <div className="page-header-text">
+          <h1>Edit profile</h1>
+          <p className="page-subtitle">Fields you leave empty keep their current value.</p>
+        </div>
+      </header>
 
-        <form onSubmit={handleSubmit}>
-          {error && <p className="error-message">{error}</p>}
-          {success && <p className="success-message">Profile updated! Redirecting…</p>}
+      <form onSubmit={handleSubmit} className="bpe-form">
+        {error && (
+          <p className="error-message" role="alert">
+            {error}
+          </p>
+        )}
+        {success && (
+          <p className="success-message" role="status">
+            Profile updated. Taking you back to your profile…
+          </p>
+        )}
 
-          <label className="profile-edit-label">
-            Business name
+        <div className="bpe-grid">
+          <div className="form-field">
+            <label htmlFor="bpe-business-name">Clinic name</label>
             <input
+              id="bpe-business-name"
               name="business_name"
               type="text"
               value={form.business_name}
               onChange={handleChange}
+              autoComplete="organization"
             />
-          </label>
+          </div>
 
-          <label className="profile-edit-label">
-            Owner name
-            <input name="owner_name" type="text" value={form.owner_name} onChange={handleChange} />
-          </label>
-
-          <label className="profile-edit-label">
-            Phone number
+          <div className="form-field">
+            <label htmlFor="bpe-owner-name">Owner name</label>
             <input
+              id="bpe-owner-name"
+              name="owner_name"
+              type="text"
+              value={form.owner_name}
+              onChange={handleChange}
+              autoComplete="name"
+            />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="bpe-phone">Phone number</label>
+            <input
+              id="bpe-phone"
               name="phone_number"
               type="text"
               value={form.phone_number}
               onChange={handleChange}
+              autoComplete="tel"
             />
-          </label>
+          </div>
 
-          <label className="profile-edit-label">
-            Clinic address
+          <div className="form-field bpe-wide">
+            <label htmlFor="bpe-address">Clinic address</label>
             <input
+              id="bpe-address"
               name="postal_address"
               type="text"
-              placeholder="Clinic address"
               value={form.postal_address}
               onChange={handleChange}
+              autoComplete="street-address"
             />
-          </label>
-
-          {/* lat/lon remain editable for manual override after autocomplete fill */}
-          <div className="profile-edit-coords">
-            <label className="profile-edit-label">
-              Latitude
-              <input
-                name="lat"
-                type="number"
-                step="any"
-                placeholder="–"
-                value={form.lat}
-                onChange={handleChange}
-              />
-            </label>
-            <label className="profile-edit-label">
-              Longitude
-              <input
-                name="lon"
-                type="number"
-                step="any"
-                placeholder="–"
-                value={form.lon}
-                onChange={handleChange}
-              />
-            </label>
           </div>
-          <p className="profile-edit-hint">
-            Coordinates are filled automatically when you select an address
+
+          <div className="form-field">
+            <label htmlFor="bpe-lat">Latitude</label>
+            <input
+              id="bpe-lat"
+              name="lat"
+              type="number"
+              step="any"
+              inputMode="decimal"
+              value={form.lat}
+              onChange={handleChange}
+              aria-invalid={coordError?.field === "lat" || undefined}
+              aria-describedby={coordError?.field === "lat" ? "bpe-lat-error" : "bpe-coords-hint"}
+            />
+            {coordError?.field === "lat" && (
+              <p className="field-error" id="bpe-lat-error">
+                {coordError.message}
+              </p>
+            )}
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="bpe-lon">Longitude</label>
+            <input
+              id="bpe-lon"
+              name="lon"
+              type="number"
+              step="any"
+              inputMode="decimal"
+              value={form.lon}
+              onChange={handleChange}
+              aria-invalid={coordError?.field === "lon" || undefined}
+              aria-describedby={coordError?.field === "lon" ? "bpe-lon-error" : "bpe-coords-hint"}
+            />
+            {coordError?.field === "lon" && (
+              <p className="field-error" id="bpe-lon-error">
+                {coordError.message}
+              </p>
+            )}
+          </div>
+
+          <p className="field-hint bpe-wide" id="bpe-coords-hint">
+            Coordinates place your clinic on the map. You can copy them from any online map.
           </p>
+        </div>
 
-          <div className="profile-edit-actions">
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={() => navigate("/business/profile")}
-              disabled={saving}
-            >
-              Cancel
-            </button>
-            <button type="submit" className="btn-primary" disabled={saving}>
-              {saving ? "Saving…" : "Save changes"}
-            </button>
-          </div>
-        </form>
-      </div>
+        <div className="bpe-actions">
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => navigate("/business/profile")}
+            disabled={saving}
+          >
+            Cancel
+          </button>
+          <button type="submit" className="btn-primary" disabled={saving}>
+            {saving && <span className="btn-spinner" aria-hidden="true" />}
+            {saving ? "Saving…" : "Save changes"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

@@ -5,7 +5,9 @@ import api from "../../../utils/api";
 import useDebounce from "../../../hooks/useDebounce";
 import Pagination from "../../../components/Pagination";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../Users/style.css";
+import StatusBadge from "../../../components/StatusBadge";
+import SearchPill from "../../../components/SearchPill";
+import ErrorBanner from "../../../components/ErrorBanner";
 import "./style.css";
 
 interface Business {
@@ -122,123 +124,123 @@ export default function AdminBusinesses() {
 
   return (
     <div className="AdminBusinesses page-enter">
-      <div className="admin-page-header">
-        <div>
-          <h1>Businesses</h1>
-          <p className="admin-subtitle">
-            {count} registered clinic{count !== 1 ? "s" : ""}
+      <header className="page-header">
+        <div className="page-header-text">
+          <h1>Clinics</h1>
+          <p className="page-subtitle" aria-live="polite">
+            {loading ? "Loading clinics…" : `${count} registered clinic${count !== 1 ? "s" : ""}`}
           </p>
         </div>
-      </div>
+      </header>
 
-      <div className="admin-controls">
-        <input
-          className="admin-search"
-          type="text"
-          placeholder="Search name, owner, email, phone…"
-          aria-label="Search businesses"
+      <div className="filter-bar" role="group" aria-label="Filter and sort clinics">
+        <SearchPill
           value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          onChange={setKeyword}
+          label="Search clinics"
+          placeholder="Search name, owner, email or phone"
         />
-        <select
-          aria-label="Filter by activation"
-          value={activatedFilter}
-          onChange={(e) => setActivatedFilter(e.target.value)}
-        >
-          <option value="">Activation</option>
-          <option value="true">Activated</option>
-          <option value="false">Not activated</option>
-        </select>
-        <select
-          aria-label="Filter by verification"
-          value={verifiedFilter}
-          onChange={(e) => setVerifiedFilter(e.target.value)}
-        >
-          <option value="">Verification</option>
-          <option value="true">Verified</option>
-          <option value="false">Unverified</option>
-        </select>
-        <select
-          aria-label="Sort field"
-          value={sortField}
-          onChange={(e) => setSortField(e.target.value)}
-        >
-          <option value="business_name">Sort: name</option>
-          <option value="owner_name">Sort: owner</option>
-          <option value="email">Sort: email</option>
-        </select>
-        <select
-          aria-label="Sort order"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-        >
-          <option value="asc">A → Z</option>
-          <option value="desc">Z → A</option>
-        </select>
+        <label className="pill-select">
+          <span className="visually-hidden">Filter by activation</span>
+          <select
+            value={activatedFilter}
+            onChange={(e) => setActivatedFilter(e.target.value)}
+            className={activatedFilter ? "is-set" : ""}
+          >
+            <option value="">Any activation</option>
+            <option value="true">Activated</option>
+            <option value="false">Not activated</option>
+          </select>
+        </label>
+        <label className="pill-select">
+          <span className="visually-hidden">Filter by verification</span>
+          <select
+            value={verifiedFilter}
+            onChange={(e) => setVerifiedFilter(e.target.value)}
+            className={verifiedFilter ? "is-set" : ""}
+          >
+            <option value="">Any verification</option>
+            <option value="true">Verified</option>
+            <option value="false">Unverified</option>
+          </select>
+        </label>
+        <label className="pill-select">
+          <span className="visually-hidden">Sort field</span>
+          <select value={sortField} onChange={(e) => setSortField(e.target.value)}>
+            <option value="business_name">Sort by name</option>
+            <option value="owner_name">Sort by owner</option>
+            <option value="email">Sort by email</option>
+          </select>
+        </label>
+        <label className="pill-select">
+          <span className="visually-hidden">Sort order</span>
+          <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+            <option value="asc">A to Z</option>
+            <option value="desc">Z to A</option>
+          </select>
+        </label>
       </div>
 
-      {error && (
-        <p className="error-message admin-error-dismissible">
-          {error}
-          <button
-            className="admin-error-dismiss"
-            onClick={() => setError("")}
-            aria-label="Dismiss error"
-          >
-            ✕
-          </button>
-        </p>
-      )}
+      {error && <ErrorBanner message={error} onDismiss={() => setError("")} />}
 
       {loading ? (
         <LoadingSpinner />
       ) : businesses.length === 0 ? (
-        <p className="empty-state">No businesses match your filters.</p>
+        <div className="empty-state">
+          <p className="empty-state-title">No clinics match these filters</p>
+          <p>Try a shorter search, or reset the activation and verification filters.</p>
+        </div>
       ) : (
         <>
-          <div className="admin-table-wrap">
-            <table className="admin-table">
+          <div className="table-wrap">
+            <table className="table table-stack">
               <thead>
                 <tr>
-                  <th>Business</th>
-                  <th>Owner</th>
-                  <th>Email</th>
-                  <th>Activated</th>
-                  <th>Verified</th>
-                  <th></th>
+                  <th scope="col">Clinic</th>
+                  <th scope="col">Owner</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Account</th>
+                  <th scope="col">Verification</th>
+                  <th scope="col">
+                    <span className="visually-hidden">Actions</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {businesses.map((biz) => (
                   <tr key={biz.id}>
-                    <td className="admin-td-name">
-                      <Link to={`/businesses/${biz.id}`} className="admin-link">
+                    <td className="cell-primary">
+                      <Link to={`/businesses/${biz.id}`} className="ab-link">
                         {biz.business_name}
                       </Link>
                     </td>
-                    <td>{biz.owner_name}</td>
-                    <td className="admin-td-email">{biz.email}</td>
-                    <td>
-                      <span
-                        className={`admin-badge ${biz.activated ? "badge-green" : "badge-grey"}`}
-                      >
-                        {biz.activated ? "activated" : "pending"}
-                      </span>
+                    <td data-label="Owner">{biz.owner_name}</td>
+                    <td className="cell-secondary" data-label="Email">
+                      {biz.email}
                     </td>
-                    <td>
-                      <span
-                        className={`admin-badge ${biz.verified ? "badge-green" : "badge-amber"}`}
-                      >
-                        {biz.verified ? "verified" : "unverified"}
-                      </span>
+                    <td data-label="Account">
+                      {biz.activated ? (
+                        <StatusBadge tone="success">Activated</StatusBadge>
+                      ) : (
+                        <StatusBadge tone="pending">Not activated</StatusBadge>
+                      )}
                     </td>
-                    <td>
+                    <td data-label="Verification">
+                      {biz.verified ? (
+                        <StatusBadge tone="success">Verified</StatusBadge>
+                      ) : (
+                        <StatusBadge tone="pending">Unverified</StatusBadge>
+                      )}
+                    </td>
+                    <td className="cell-actions">
                       <button
-                        className={`btn-sm ${biz.verified ? "btn-danger" : "btn-primary"}`}
+                        type="button"
+                        className={`btn-sm ${biz.verified ? "btn-secondary" : "btn-primary"} ab-action`}
                         disabled={pendingId === biz.id}
                         onClick={() => toggleVerify(biz)}
+                        aria-label={`${biz.verified ? "Unverify" : "Verify"} ${biz.business_name}`}
                       >
-                        {pendingId === biz.id ? "…" : biz.verified ? "Unverify" : "Verify"}
+                        {pendingId === biz.id ? "Saving…" : biz.verified ? "Unverify" : "Verify"}
                       </button>
                     </td>
                   </tr>
