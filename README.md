@@ -1,4 +1,4 @@
-# Visus
+# Blink
 
 A real-time optometry staffing platform connecting qualified eye care professionals with clinics that need them. Built with React, Express.js, Prisma, and Socket.IO.
 
