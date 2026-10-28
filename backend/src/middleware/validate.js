@@ -13,7 +13,7 @@ function validate(schema, source = "body") {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const messages = error.errors.map((e) => e.message);
+        const messages = error.issues.map((e) => e.message);
         return res.status(400).json({
           error: "Validation failed",
           details: messages,

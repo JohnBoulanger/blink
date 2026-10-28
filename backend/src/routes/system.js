@@ -16,10 +16,18 @@ const {
 
 const router = express.Router();
 
+// only admins can change system settings
+const requireAdmin = (req, res, next) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ error: "Only administrators can update system settings" });
+  }
+  next();
+};
+
 // update reset cooldown
 router
   .route("/reset-cooldown")
-  .patch(jwtAuth, validate(resetCooldownSchema), (req, res) => {
+  .patch(jwtAuth, requireAdmin, validate(resetCooldownSchema), (req, res) => {
     const reset_cooldown = parseInt(req.body.reset_cooldown);
     if (isNaN(reset_cooldown) || reset_cooldown < 0) {
       return res.status(400).json({ error: "Bad Request" });
@@ -36,7 +44,7 @@ router
 // update negotiation window
 router
   .route("/negotiation-window")
-  .patch(jwtAuth, validate(negotiationWindowSchema), (req, res) => {
+  .patch(jwtAuth, requireAdmin, validate(negotiationWindowSchema), (req, res) => {
     const negotiation_window = parseInt(req.body.negotiation_window);
     if (isNaN(negotiation_window) || negotiation_window <= 0) {
       return res.status(400).json({ error: "Bad Request" });
@@ -53,7 +61,7 @@ router
 // update job start window
 router
   .route("/job-start-window")
-  .patch(jwtAuth, validate(jobStartWindowSchema), (req, res) => {
+  .patch(jwtAuth, requireAdmin, validate(jobStartWindowSchema), (req, res) => {
     const job_start_window = parseInt(req.body.job_start_window);
     if (isNaN(job_start_window) || job_start_window <= 0) {
       return res.status(400).json({ error: "Bad Request" });
@@ -70,7 +78,7 @@ router
 // update availability timeout
 router
   .route("/availability-timeout")
-  .patch(jwtAuth, validate(availabilityTimeoutSchema), (req, res) => {
+  .patch(jwtAuth, requireAdmin, validate(availabilityTimeoutSchema), (req, res) => {
     const availability_timeout = parseInt(req.body.availability_timeout);
     if (isNaN(availability_timeout) || availability_timeout <= 0) {
       return res.status(400).json({ error: "Bad Request" });

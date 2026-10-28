@@ -4,15 +4,9 @@ A real-time optometry staffing platform connecting qualified eye care profession
 
 <img width="1115" height="888" alt="image" src="https://github.com/user-attachments/assets/b2fa3f7f-b333-439e-baa8-1b4e9eae08b8" />
 
-## Live demo
+## Demo accounts
 
-[https://visus-production-ceda.up.railway.app](https://visus-production-ceda.up.railway.app/)
-
-> The Railway subdomain still says `visus` — it's the original deployment URL. A custom domain swap is on the backlog; the app itself is fully rebranded.
-
-### Demo accounts
-
-All accounts use the password `123123`.
+The seed script (`npx prisma db seed`) creates these accounts. All accounts use the password `123123`.
 
 | Role | Email |
 |------|-------|
@@ -97,11 +91,15 @@ npx prisma db seed
 # install frontend dependencies
 cd ../frontend
 npm install
+
+# install root dependencies (for the combined dev script)
+cd ..
+npm install
 ```
 
 ### Environment
 
-Copy `.env.example` to `backend/.env` and fill in values:
+Copy `backend/.env.example` to `backend/.env` and fill in values:
 
 ```
 JWT_SECRET=your-secret-key-here
@@ -109,17 +107,33 @@ FRONTEND_URL=http://localhost:5173
 NODE_ENV=development
 ```
 
+Create `frontend/.env` so the Vite dev server sends API requests to the backend:
+
+```
+VITE_BACKEND_URL=http://localhost:3000
+```
+
 ### Running locally
 
+Start the backend and frontend together from the repository root:
+
 ```bash
-# start backend (port 3000)
+npm run dev
+```
+
+Or start each one in its own terminal:
+
+```bash
+# terminal 1: start backend (port 3000)
 cd backend
 node --watch src/server.js 3000
 
-# start frontend (port 5173)
+# terminal 2: start frontend (port 5173)
 cd frontend
 npm run dev
 ```
+
+Open http://localhost:5173.
 
 ## Project structure
 

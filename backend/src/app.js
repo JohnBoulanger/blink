@@ -42,13 +42,7 @@ function create_app() {
           defaultSrc: ["'self'"],
           scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
           styleSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com"],
-          imgSrc: [
-            "'self'",
-            "data:",
-            "blob:",
-            "https://*.basemaps.cartocdn.com",
-            "https://*.tile.openstreetmap.org",
-          ],
+          imgSrc: ["'self'", "data:", "blob:", "https://tile.openstreetmap.org"],
           connectSrc: ["'self'", "ws:", "wss:", "https://nominatim.openstreetmap.org"],
           fontSrc: ["'self'", "data:"],
           objectSrc: ["'none'"],
@@ -61,8 +55,8 @@ function create_app() {
   // parse json with size limit to prevent oversized payloads
   app.use(express.json({ limit: "1mb" }));
 
-  // global rate limit fallback — all routes
-  app.use(globalLimiter);
+  // global rate limit fallback — api routes only, not static files
+  app.use("/api", globalLimiter);
 
   // all api routes live under /api so they don't collide with frontend spa routes
   app.use("/api/auth", authRoutes);
@@ -102,6 +96,17 @@ function create_app() {
   // route has no matches
   app.use((req, res) => {
     res.status(404).json({ error: "Not Found" });
+  });
+
+  // catch unhandled errors so clients never see a stack trace
+  app.use((err, req, res, next) => {
+    if (res.headersSent) return next(err);
+    // keep client errors from body parsing (bad json, payload too large) as 4xx
+    if (err.expose && err.status >= 400 && err.status < 500) {
+      return res.status(err.status).json({ error: err.message });
+    }
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
   });
 
   return app;

@@ -125,3 +125,18 @@
   font-size: 0.875rem;
   color: var(--accent);
 }
+
+/* keep datetime inputs inside the screen on narrow viewports */
+.bjd-edit-form .form-field {
+  min-width: 0;
+}
+
+.bjd-edit-form input {
+  max-width: 100%;
+}
+
+@media (max-width: 600px) {
+  .bjd-edit-form .form-row:has(input[type="datetime-local"]) {
+    flex-direction: column;
+  }
+}

@@ -28,9 +28,14 @@ export default function RegularPositionTypes() {
   const limit = 10;
   const totalPages = Math.ceil(count / limit);
 
+  // show the spinner before the effect below fetches the new page
+  function handlePageChange(next: number) {
+    setLoading(true);
+    setPage(next);
+  }
+
   // fetch position types with pagination
   useEffect(() => {
-    setLoading(true);
     api
       .get("/position-types", { params: { page, limit } })
       .then((res) => {
@@ -96,9 +101,7 @@ export default function RegularPositionTypes() {
                   {/* show inline create form when this card is selected */}
                   {creating === pt.id ? (
                     <div className="pt-create-form">
-                      {createError[pt.id] && (
-                        <p className="error-message">{createError[pt.id]}</p>
-                      )}
+                      {createError[pt.id] && <p className="error-message">{createError[pt.id]}</p>}
                       <textarea
                         className="pt-note-input"
                         placeholder="Optional note for the reviewer..."
@@ -107,10 +110,7 @@ export default function RegularPositionTypes() {
                         rows={2}
                       />
                       <div className="pt-create-actions">
-                        <button
-                          className="btn-primary btn-sm"
-                          onClick={() => handleCreate(pt.id)}
-                        >
+                        <button className="btn-primary btn-sm" onClick={() => handleCreate(pt.id)}>
                           Submit request
                         </button>
                         <button
@@ -126,14 +126,10 @@ export default function RegularPositionTypes() {
                     </div>
                   ) : createSuccess[pt.id] ? (
                     <span className="pt-success">
-                      Request submitted —{" "}
-                      <Link to="/qualifications">view qualifications</Link>
+                      Request submitted — <Link to="/qualifications">view qualifications</Link>
                     </span>
                   ) : (
-                    <button
-                      className="btn-secondary btn-sm"
-                      onClick={() => setCreating(pt.id)}
-                    >
+                    <button className="btn-secondary btn-sm" onClick={() => setCreating(pt.id)}>
                       Request qualification
                     </button>
                   )}
@@ -141,7 +137,7 @@ export default function RegularPositionTypes() {
               </div>
             ))}
           </div>
-          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+          <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
         </>
       )}
     </div>

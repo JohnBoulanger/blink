@@ -98,20 +98,28 @@ export default function AddressSearch({
 
   const debouncedQuery = useDebounce(query, 300);
 
-  // fetch suggestions from nominatim when debounced query changes
-  useEffect(() => {
-    const trimmed = debouncedQuery.trim();
-    if (trimmed.length < 3) {
+  // reset or start loading when the debounced query changes (during render, not in an effect)
+  // null so the first render also runs this, like the effect did on mount
+  const [prevQuery, setPrevQuery] = useState<string | null>(null);
+  if (debouncedQuery !== prevQuery) {
+    setPrevQuery(debouncedQuery);
+    if (debouncedQuery.trim().length < 3) {
       setSuggestions([]);
       setOpen(false);
       setLoading(false);
-      return;
+    } else {
+      setLoading(true);
     }
+  }
+
+  // fetch suggestions from nominatim when debounced query changes
+  useEffect(() => {
+    const trimmed = debouncedQuery.trim();
+    if (trimmed.length < 3) return;
 
     // use AbortController so that when the effect re-runs (new query),
     // the previous in-flight request is cancelled and its setState is skipped
     const controller = new AbortController();
-    setLoading(true);
 
     fetch(
       `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=${encodeURIComponent(trimmed)}`,

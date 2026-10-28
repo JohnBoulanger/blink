@@ -85,9 +85,11 @@ export default function HeroVisual() {
   const [clinics, setClinics] = useState<BusinessLocation[]>([]);
 
   useEffect(() => {
-    fetchAllBusinesses().then(setClinics).catch(() => {
-      // silently degrade — hero still shows an empty map
-    });
+    fetchAllBusinesses()
+      .then(setClinics)
+      .catch(() => {
+        // silently degrade — hero still shows an empty map
+      });
   }, []);
 
   return (
@@ -96,9 +98,7 @@ export default function HeroVisual() {
         <div className="hero-map-header">
           <span className="hero-map-dot" />
           <span className="hero-map-label">
-            {clinics.length > 0
-              ? `${clinics.length} clinics across Toronto`
-              : "clinic locations"}
+            {clinics.length > 0 ? `${clinics.length} clinics across Toronto` : "clinic locations"}
           </span>
         </div>
         <MapContainer
@@ -109,8 +109,8 @@ export default function HeroVisual() {
           zoomControl={true}
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           {clinics.map((clinic) => (
             <ClinicMarker key={clinic.id} clinic={clinic} />

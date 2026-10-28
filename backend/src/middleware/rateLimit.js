@@ -10,7 +10,7 @@ const handler = (req, res) => {
 // auth endpoints: strict (login, register, reset)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 15,
+  max: 50,
   standardHeaders: true,
   legacyHeaders: false,
   handler,
@@ -50,10 +50,10 @@ const uploadLimiter = rateLimit({
   handler,
 });
 
-// global fallback limiter — applies to all routes
+// global fallback limiter — applies to all api routes
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 200,
+  max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
   handler,

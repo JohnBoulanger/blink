@@ -16,11 +16,10 @@ const pinIcon = L.divIcon({
   popupAnchor: [0, -40],
 });
 
-// carto voyager light tiles
-const TILE_URL =
-  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+// openstreetmap standard tiles
+const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const TILE_ATTR =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
 // syncs map view when lat/lon/zoom props change (MapContainer ignores prop updates)
 function MapUpdater({ lat, lon, zoom }: { lat: number; lon: number; zoom: number }) {

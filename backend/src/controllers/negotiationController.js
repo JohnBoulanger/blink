@@ -21,8 +21,7 @@ async function createNegotiation(req, res) {
     }
     if (error.type === "conflict") {
       return res.status(409).json({
-        error:
-          "One or both parties are already in an active negotiation",
+        error: "One or both parties are already in an active negotiation",
       });
     }
     return res.status(500).json({ error: "Internal Server Error" });
@@ -38,8 +37,9 @@ async function getNegotiations(req, res) {
     if (error.type === "validation") {
       return res.status(400).json({ error: "Invalid request" });
     }
+    // no active negotiation is a normal state, not an error
     if (error.type === "not_found") {
-      return res.status(404).json({ error: "You are not currently in an active negotiation" });
+      return res.status(200).json(null);
     }
     return res.status(500).json({ error: "Internal Server Error" });
   }
@@ -59,8 +59,7 @@ async function setDecision(req, res) {
     }
     if (error.type === "conflict") {
       return res.status(409).json({
-        error:
-          "Negotiation ID does not match your current active negotiation",
+        error: "Negotiation ID does not match your current active negotiation",
       });
     }
     return res.status(500).json({ error: "Internal Server Error" });

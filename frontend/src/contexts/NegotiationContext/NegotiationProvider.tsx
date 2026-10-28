@@ -23,8 +23,9 @@ export default function NegotiationProvider({ children }: { children: React.Reac
         return;
       }
       try {
-        await api.get("/negotiations/me");
-        setHasActiveNeg(true);
+        // null means no active negotiation
+        const res = await api.get("/negotiations/me");
+        setHasActiveNeg(res.data !== null);
       } catch {
         setHasActiveNeg(false);
       }

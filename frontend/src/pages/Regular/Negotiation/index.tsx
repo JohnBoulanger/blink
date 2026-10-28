@@ -62,6 +62,8 @@ export default function Negotiation() {
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  // guards the zero-time re-fetch so it fires once per expiry
+  const expiryRefetchedRef = useRef(false);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
 
@@ -69,7 +71,15 @@ export default function Negotiation() {
   useEffect(() => {
     async function loadNegotiation() {
       try {
-        const res = await api.get("/negotiations/me");
+        const res = await api.get<(NegotiationData & { messages?: ChatMessage[] }) | null>(
+          "/negotiations/me"
+        );
+        // null means no active negotiation
+        if (!res.data) {
+          setNotFound(true);
+          setHasActiveNeg(false);
+          return;
+        }
         setNegotiation(res.data);
         // seed chat history from persisted messages
         if (res.data.messages?.length) {
@@ -91,24 +101,38 @@ export default function Negotiation() {
     loadNegotiation();
   }, [setHasActiveNeg]);
 
+  // primitive fields so effects only re-run when these change, not on every decision update
+  const negId = negotiation?.id;
+  const negStatus = negotiation?.status;
+  const negExpiresAt = negotiation?.expiresAt;
+
   // countdown timer — ticks every second while negotiation is active
   useEffect(() => {
-    if (!negotiation || negotiation.status !== "active") {
+    if (negStatus !== "active") {
       setSecondsLeft(null);
       return;
     }
 
+    expiryRefetchedRef.current = false;
+
     function tick() {
-      const remaining = Math.max(
-        0,
-        Math.floor((new Date(negotiation!.expiresAt).getTime() - Date.now()) / 1000)
-      );
-      setSecondsLeft(remaining);
-      // re-fetch when timer hits zero so status updates
-      if (remaining === 0) {
+      const msLeft = new Date(negExpiresAt!).getTime() - Date.now();
+      setSecondsLeft(Math.max(0, Math.floor(msLeft / 1000)));
+      // re-fetch once after expiry so status updates
+      if (msLeft <= 0 && !expiryRefetchedRef.current) {
+        expiryRefetchedRef.current = true;
         api
-          .get("/negotiations/me")
+          .get<NegotiationData | null>("/negotiations/me")
           .then((res) => {
+            // null, or a stale active record past its expiry, means it expired
+            if (
+              !res.data ||
+              (res.data.status === "active" && new Date(res.data.expiresAt).getTime() <= Date.now())
+            ) {
+              setNegotiation((prev) => (prev ? { ...prev, status: "failed" } : prev));
+              setHasActiveNeg(false);
+              return;
+            }
             setNegotiation(res.data);
             if (res.data.status !== "active") setHasActiveNeg(false);
           })
@@ -119,11 +143,11 @@ export default function Negotiation() {
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [negotiation?.id, negotiation?.status, negotiation?.expiresAt, setHasActiveNeg]);
+  }, [negId, negStatus, negExpiresAt, setHasActiveNeg]);
 
   // connect socket when negotiation is loaded
   useEffect(() => {
-    if (!negotiation || !token) return;
+    if (negId === undefined || !token) return;
 
     // allow polling fallback for production environments where websocket
     // upgrades may not be available immediately
@@ -136,10 +160,11 @@ export default function Negotiation() {
 
     // receive chat messages (deduplicate by createdAt+sender to handle strict-mode double-mount)
     socket.on("negotiation:message", (msg: ChatMessage) => {
-      if (msg.negotiation_id === negotiation.id) {
+      if (msg.negotiation_id === negId) {
         setMessages((prev) => {
           const isDupe = prev.some(
-            (m) => m.createdAt === msg.createdAt && m.sender.id === msg.sender.id && m.text === msg.text
+            (m) =>
+              m.createdAt === msg.createdAt && m.sender.id === msg.sender.id && m.text === msg.text
           );
           return isDupe ? prev : [...prev, msg];
         });
@@ -149,15 +174,21 @@ export default function Negotiation() {
     // server notifies negotiation started (update decisions/status)
     socket.on("negotiation:started", () => {
       api
-        .get("/negotiations/me")
-        .then((res) => setNegotiation(res.data))
+        .get<NegotiationData | null>("/negotiations/me")
+        .then((res) => {
+          if (res.data) setNegotiation(res.data);
+        })
         .catch(() => {});
     });
 
     // other party made a decision — update state immediately without polling
     socket.on(
       "negotiation:updated",
-      (data: { id: number; status: string; decisions: { candidate: string | null; business: string | null } }) => {
+      (data: {
+        id: number;
+        status: string;
+        decisions: { candidate: string | null; business: string | null };
+      }) => {
         setNegotiation((prev) =>
           prev ? { ...prev, status: data.status, decisions: data.decisions } : prev
         );
@@ -173,7 +204,7 @@ export default function Negotiation() {
     return () => {
       socket.disconnect();
     };
-  }, [negotiation?.id, token, backendUrl]);
+  }, [negId, token, backendUrl, setHasActiveNeg]);
 
   // auto-scroll to bottom when messages arrive
   useEffect(() => {

@@ -38,3 +38,18 @@
   gap: 12px;
   padding-top: 8px;
 }
+
+/* keep datetime inputs inside the screen on narrow viewports */
+.jcreate-form .form-field {
+  min-width: 0;
+}
+
+.jcreate-form input {
+  max-width: 100%;
+}
+
+@media (max-width: 600px) {
+  .jcreate-form .form-row:has(input[type="datetime-local"]) {
+    flex-direction: column;
+  }
+}
