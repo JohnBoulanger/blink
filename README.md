@@ -1,102 +1,102 @@
 # Blink
 
-A real-time optometry staffing platform connecting qualified eye care professionals with clinics that need them. Built with React, Express.js, Prisma, and Socket.IO.
+**Clinics and eye care pros, matched in the blink of an eye.**
 
-![Blink landing page with the shift search and open shifts](docs/screenshots/blink-landing.png)
+Blink is a full-stack staffing platform for optometry. Clinics post short-notice shifts, verified eye care professionals raise a hand, and when interest is mutual both sides get one live, 15-minute negotiation room to agree on the rate. If both accept, the shift is filled.
 
-## Demo accounts
+![Blink home page: shift search, open shifts and a map of rates](docs/screenshots/blink-home.png)
 
-The seed script (`npx prisma db seed`) creates these accounts. All accounts use the password `123123`.
+## Highlights
+
+- **Real-time negotiation.** Mutual interest opens a Socket.IO chat with a shared 15-minute clock, shown as 15 dots that fade one per minute. Both sides accept or decline, and the shift fills the moment both accept.
+- **Credential verification.** Professionals upload documents per position; an admin reviews each one before clinics can see that professional.
+- **Map-first shift search.** Photo cards beside a Mapbox map with price pills, clustering, and hover sync between cards and pins.
+- **Three roles, one app.** Professional, clinic and admin dashboards, each with one-click demo sign-in.
+- **A considered design system.** Iris and Sky palette, eight line illustrations, a logo that blinks, and eye-chart lettering in a few quiet places. See [DESIGN.md](DESIGN.md).
+
+![Shift search with photo cards, filters and the map](docs/screenshots/blink-shift-search.jpg)
+
+![A live negotiation: chat, deal card and the 15-dot timer](docs/screenshots/blink-negotiation.png)
+
+## Try the demo
+
+Run it locally (below), open the home page and pick **a professional**, **a clinic** or **an admin**. The seed script creates these accounts; every password is `123123`.
 
 | Role | Email |
 |------|-------|
-| Optometry professional | `regular1@blink.dev` through `regular20@blink.dev` |
-| Optometry clinic | `business1@blink.dev` through `business15@blink.dev` |
-| Platform admin | `admin1@blink.dev` |
+| Eye care professional | `regular1@blink.dev` to `regular20@blink.dev` |
+| Clinic | `business1@blink.dev` to `business15@blink.dev` |
+| Admin | `admin1@blink.dev` |
+
+The clinics are fictional seed data with Toronto street addresses. Demo data resets when you re-run the seed.
 
 ## Features
 
-### For optometry professionals
-- Browse open shifts with filtering by position type, salary range, and start date
-- Manage qualifications and upload credential documents for admin review
-- Express interest in jobs and receive invitations from clinics
-- Real-time negotiation chat with 15-minute time-boxed windows
+### Professionals
+- Find shifts by position type and start date, on a list or the map
+- Raise a hand with "I'm interested" and track interests, invitations and work history
+- Upload credential documents per position and follow their review status
+- Negotiate in a live chat room with a shared 15-minute clock
 
-![Shift search with photo cards and a map of rates](docs/screenshots/blink-shift-search.png)
+### Clinics
+- Post shifts with a position type, an hourly range and a time window
+- Browse candidates with approved qualifications and invite them
+- See who is interested, start a negotiation and confirm the hire
 
-![Shift detail with the rate card and the interest action](docs/screenshots/blink-shift-detail.png)
+### Admins
+- Review and approve or reject credential documents
+- Verify clinics, suspend users and manage position types
+- Configure system settings: negotiation window, reset cooldown, job start window and availability timeout
 
+### Public
+- A clinic directory with search, sort and a map
+- Clinic profiles with contact details, location and upcoming open shifts
 
-### For optometry clinics
-- Post shifts with position type, salary range, and time window
-- Browse discoverable candidates filtered by approved qualifications
-- Invite candidates and track mutual interest
-- Negotiate terms in real time and confirm hires
-
-![A clinic's job list with status filters](docs/screenshots/blink-clinic-jobs.png)
-
-![A confirmed negotiation from the clinic side](docs/screenshots/blink-negotiation-confirmed.png)
-
-### For platform administrators
-- Manage users (suspend/unsuspend) and businesses (verify/unverify)
-- Review and approve qualification submissions
-- Configure system settings: negotiation window, reset cooldown, job start window, availability timeout
-- Manage position types
-
-![Admin credential review with one request open](docs/screenshots/blink-credential-review.png)
-
-
-### Public pages
-- Browse verified optometry clinics with search and sorting
-- View clinic profiles with location map, contact info, and open positions
-
-### Authentication
-- JWT-based auth with role-dependent dashboards
-- Account activation via email token
-- Password reset flow
-- Registration for both professionals and clinics
-
+### Accounts
+- JWT authentication with role-based dashboards
+- Account activation and password reset flows
+- Sign-up for professionals and clinics
 
 ## Tech stack
 
 | Layer | Technology |
 |-------|-----------|
 | Frontend | React 19, TypeScript, Vite, React Router |
-| Backend | Express.js, Prisma ORM, SQLite |
-| Real-time | Socket.IO (WebSocket) |
-| Auth | JWT (JSON Web Tokens) |
-| Maps | Mapbox GL JS (Mapbox Standard style), with MapLibre GL JS + OpenFreeMap as the fallback; map data © OpenStreetMap |
-| Fonts | Schibsted Grotesk and Inter, self-hosted with Fontsource; [Optician Sans](https://github.com/anewtypeofinterference/Optician-Sans) by ANTI Hamar and Fábio Duarte Martins for the eye-chart lettering, self-hosted under the SIL Open Font License 1.1 (`frontend/src/assets/fonts/OFL.txt`) |
-| Security | Helmet, express-rate-limit, Zod validation |
+| Backend | Node.js, Express, Prisma ORM, SQLite |
+| Real time | Socket.IO |
+| Auth | JWT |
+| Validation and security | Zod, Helmet, express-rate-limit |
+| Maps | Mapbox GL JS with the Mapbox Standard style; MapLibre GL JS with OpenFreeMap tiles as a keyless fallback |
+| Type | Schibsted Grotesk and Inter (self-hosted with Fontsource), Optician Sans for eye-chart lettering |
 
 ## Getting started
 
 ### Prerequisites
-- Node.js 22+
+- Node.js 22 or later
 - npm
 
-### Installation
+### Install
 
 ```bash
-# install backend dependencies and set up the database
+# backend dependencies and database
 cd backend
 npm install
 npx prisma generate
 npx prisma db push
 npx prisma db seed
 
-# install frontend dependencies
+# frontend dependencies
 cd ../frontend
 npm install
 
-# install root dependencies (for the combined dev script)
+# root dependencies (for the combined dev script)
 cd ..
 npm install
 ```
 
 ### Environment
 
-Copy `backend/.env.example` to `backend/.env` and fill in values:
+Copy `backend/.env.example` to `backend/.env`:
 
 ```
 JWT_SECRET=your-secret-key-here
@@ -104,72 +104,79 @@ FRONTEND_URL=http://localhost:5173
 NODE_ENV=development
 ```
 
-Copy `frontend/.env.example` to `frontend/.env` so the Vite dev server sends API requests to the backend:
+Copy `frontend/.env.example` to `frontend/.env`:
 
 ```
 VITE_BACKEND_URL=http://localhost:3000
 VITE_MAPBOX_TOKEN=
 ```
 
-Maps use Mapbox when `VITE_MAPBOX_TOKEN` is set. Get a free public token (it starts with `pk.`) at [mapbox.com](https://account.mapbox.com/access-tokens/) and restrict it to your site URLs. Without a token, maps fall back to MapLibre with OpenFreeMap tiles.
+Maps use Mapbox when `VITE_MAPBOX_TOKEN` is set. Create a free public token (it starts with `pk.`) at [mapbox.com](https://account.mapbox.com/access-tokens/) and restrict it to your site URLs. Without a token, maps fall back to MapLibre with OpenFreeMap tiles, so the app still works.
 
-### Running locally
+### Run
 
-Start the backend and frontend together from the repository root:
+From the repository root, start the backend (port 3000) and the frontend (port 5173) together:
 
 ```bash
 npm run dev
 ```
 
-Or start each one in its own terminal:
+Then open http://localhost:5173. To reset the demo data, run `npm run seed` in `backend`.
+
+### Checks
 
 ```bash
-# terminal 1: start backend (port 3000)
-cd backend
-node --watch src/server.js 3000
-
-# terminal 2: start frontend (port 5173)
-cd frontend
-npm run dev
+npm run lint           # eslint on the frontend
+npm run format:check   # prettier on frontend and backend
+cd frontend && npx tsc -b && npx vite build
 ```
-
-Open http://localhost:5173.
 
 ## Project structure
 
 ```
 .
 ├── backend/
-│   ├── prisma/          # schema, migrations, seed
+│   ├── prisma/          # schema and seed data
 │   ├── src/
 │   │   ├── config/      # environment configuration
 │   │   ├── controllers/ # route handlers
-│   │   ├── middleware/  # auth, validation, rate limiting, upload
-│   │   ├── routes/      # express route definitions
+│   │   ├── middleware/  # auth, validation, rate limiting, uploads
+│   │   ├── routes/      # Express routes
 │   │   ├── services/    # business logic
-│   │   └── validators/  # zod schemas
-│   └── uploads/         # user-uploaded files (avatars, resumes, docs)
+│   │   └── validators/  # Zod schemas
+│   └── uploads/         # uploaded avatars, resumes and documents
 ├── frontend/
+│   ├── public/          # favicon and clinic photos
 │   └── src/
-│       ├── components/  # reusable UI components
-│       ├── contexts/    # React context providers (auth, negotiation)
-│       ├── pages/       # page-level components by role
-│       └── utils/       # API client, helpers
-└── docs/
-    └── screenshots/     # application screenshots
+│       ├── assets/      # self-hosted fonts
+│       ├── components/  # shared UI: Logo, Select, ClinicMap, Illustration, ...
+│       ├── contexts/    # auth and negotiation providers
+│       ├── hooks/
+│       ├── pages/       # pages by role: Public, Auth, Regular, Business, Admin
+│       └── utils/       # API client and helpers
+├── docs/screenshots/    # README images
+├── DESIGN.md            # the design system
+└── PRODUCT.md           # product and brand context
 ```
 
 ## Security
 
-- Tiered rate limiting on all endpoints (auth, upload, public, authenticated)
-- Strict input validation with Zod schemas on every route
-- Centralized secret management with startup validation in production
-- Helmet security headers
-- File upload size limits
-- Socket.IO per-connection message rate limiting
+- Tiered rate limiting for auth, uploads, public and signed-in routes
+- Zod validation on every route, with JSON error responses
+- Helmet security headers with a strict Content Security Policy
+- Admin-only system settings and upload size limits
+- Per-connection message rate limiting on Socket.IO
 
-## Photo credits
+## Credits
 
+### Fonts
+- [Schibsted Grotesk](https://fonts.google.com/specimen/Schibsted+Grotesk) and [Inter](https://rsms.me/inter/), self-hosted with Fontsource.
+- [Optician Sans](https://github.com/anewtypeofinterference/Optician-Sans) by ANTI Hamar and Fábio Duarte Martins, a typeface rebuilt from historical eye-chart letters. Used under the SIL Open Font License 1.1 (`frontend/src/assets/fonts/OFL.txt`).
+
+### Maps
+Map data © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors, styled by [Mapbox](https://www.mapbox.com/), with [OpenFreeMap](https://openfreemap.org/) as the fallback.
+
+### Photos
 The clinic photos in `frontend/public/photos/clinics/` are illustrative stock photos of optical shop fronts, windows and signs from [Unsplash](https://unsplash.com), used under the [Unsplash License](https://unsplash.com/license). Each seeded clinic has one fixed photo, cropped to 4:3. The clinics are fictional, and the photos do not show the buildings at their addresses.
 
 | File | Photographer | Source |
@@ -190,6 +197,10 @@ The clinic photos in `frontend/public/photos/clinics/` are illustrative stock ph
 | `leslieville-vision-care.jpg` | lesha tuman | [Unsplash](https://unsplash.com/photos/optician-shop-sign-with-sunglasses-logo-ql_w4SwGKaM) |
 | `midtown-eye-centre.jpg` | Alexander Zvir | [Unsplash](https://unsplash.com/photos/hats-and-sunglasses-on-wire-mannequins-mFTM9nSMzJQ) |
 
+## Background
+
+Blink began as DentaLink, a dental staffing platform built for a University of Toronto web programming course (CSC309). It was later adapted to optometry, then rebuilt with a new brand, design system and map-first search.
+
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

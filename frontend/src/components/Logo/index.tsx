@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import usePrefersReducedMotion from "../../hooks/usePrefersReducedMotion";
-import ChartWordmark from "../ChartWordmark";
 import "./style.css";
 
 export type LogoBlink = "loop" | "once" | "off";
@@ -94,7 +93,11 @@ export default function Logo({
   const content = (
     <>
       <Mark size={size} blink={blink} blinkKey={blinkKey} />
-      {wordmark && <ChartWordmark className="Logo-wordmark" />}
+      {wordmark && (
+        <span className="Logo-wordmark" style={{ fontSize: Math.round(size * 0.82) }}>
+          blink
+        </span>
+      )}
     </>
   );
 

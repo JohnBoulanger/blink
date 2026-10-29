@@ -1,6 +1,6 @@
 /* global theme: tokens, reset, base elements and shared primitives */
 
-/* eye-chart lettering, used only for the wordmark, the 404, zero-result charts, the admin badge and the footer */
+/* eye-chart lettering, used only for the 404, zero-result charts, the admin badge and the footer */
 @font-face {
   font-family: "Optician Sans";
   src: url("./assets/fonts/OpticianSans.woff") format("woff");

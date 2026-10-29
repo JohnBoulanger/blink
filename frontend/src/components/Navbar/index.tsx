@@ -286,7 +286,7 @@ export default function Navbar({ variant = "public" }: NavbarProps) {
             onKeyDown={handleDrawerKeyDown}
           >
             <div className="nav-drawer-header">
-              <Logo to="/" blink="off" onClick={() => setDrawerOpenAt(null)} />
+              <Logo to="/" blink="off" size={26} onClick={() => setDrawerOpenAt(null)} />
               <button
                 type="button"
                 className="nav-menu-toggle"

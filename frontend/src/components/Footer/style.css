@@ -26,7 +26,8 @@
   margin: -4px -8px;
 }
 
-.footer-signoff:hover {
+.footer-signoff:hover,
+.footer-signoff:visited {
   color: var(--footer-text);
 }
 
@@ -87,6 +88,6 @@
 
 @media (max-width: 599px) {
   .footer-signoff .ChartWordmark {
-    --chart-size: calc(64px * 0.65);
+    --chart-size: calc(48px * 0.7);
   }
 }

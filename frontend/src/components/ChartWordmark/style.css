@@ -1,37 +1,47 @@
-/* eye-chart wordmark: letters shrink 64, 54, 45, 37, 30 on one baseline.
-   --chart-size is the B's font size; Optician Sans caps are half of it. */
+/* eye-chart line: letters shrink 48, 44, 40, 36, 32 on one baseline.
+   --chart-size is the B's font size. The margins come from each glyph's measured
+   side bearings, so the ink gap between neighbours is the same everywhere:
+   0.36 x --chart-size (about 17px on desktop, 12px on phones). */
 .ChartWordmark {
-  --chart-size: 64px;
+  --chart-size: 48px;
   display: inline-flex;
   align-items: baseline;
   font-family: var(--font-chart);
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
+  color: inherit;
+  /* a layer of its own gets grayscale antialiasing, so thin stems such as the I
+     show no coloured subpixel fringes on dark bands */
+  will-change: transform;
 }
 
-/* each gap is 0.35em of its own letter, so the spacing shrinks with the line */
 .ChartWordmark-letter {
-  margin-right: 0.35em;
+  color: inherit;
 }
 
+/* B: the negative start puts the ink, not the side bearing, on the text edge */
 .ChartWordmark-letter:nth-child(1) {
   font-size: var(--chart-size);
+  margin-left: calc(var(--chart-size) * -0.07);
+  margin-right: calc(var(--chart-size) * 0.2458);
 }
 
 .ChartWordmark-letter:nth-child(2) {
-  font-size: calc(var(--chart-size) * 54 / 64);
+  font-size: calc(var(--chart-size) * 44 / 48);
+  margin-right: calc(var(--chart-size) * 0.2696);
 }
 
 .ChartWordmark-letter:nth-child(3) {
-  font-size: calc(var(--chart-size) * 45 / 64);
+  font-size: calc(var(--chart-size) * 40 / 48);
+  margin-right: calc(var(--chart-size) * 0.2492);
 }
 
 .ChartWordmark-letter:nth-child(4) {
-  font-size: calc(var(--chart-size) * 37 / 64);
+  font-size: calc(var(--chart-size) * 36 / 48);
+  margin-right: calc(var(--chart-size) * 0.2608);
 }
 
 .ChartWordmark-letter:nth-child(5) {
-  font-size: calc(var(--chart-size) * 30 / 64);
-  margin-right: 0;
+  font-size: calc(var(--chart-size) * 32 / 48);
 }

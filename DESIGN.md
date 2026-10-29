@@ -188,7 +188,7 @@ Blink borrows the grammar of a mature listings marketplace and applies it to opt
 
 Density changes with the mode. Public pages breathe, with a centred display headline and generous vertical space. App screens (shift search, negotiation, admin tables) are tighter and more precise: hairline rows, sticky table headers, tabular figures and quiet underline tabs. Motion is rare and named: the logo blinks, the hero's eyelid band flattens on scroll, the live dot pulses, and a confirmed match plays one blink. Pages do not animate in. Two small signatures carry the eye-care theme: a family of eight line illustrations, and eye-chart lettering in Optician Sans on a few quiet surfaces.
 
-The brand mark is a two-lid eye. The upper lid is ink, the lower lid is Iris with three short lashes, and the name sits beside it as a shrinking eye-chart line, "B L I N K", in Optician Sans. The product rejects the gradient hero with stock icon cards, a clinical white-and-blue hospital look, playful styling and a dark technical look.
+The brand mark is a two-lid eye. The upper lid is ink, the lower lid is Iris with three short lashes, and the lowercase "blink" wordmark sits beside it in the display face. The product rejects the gradient hero with stock icon cards, a clinical white-and-blue hospital look, playful styling and a dark technical look.
 
 **Key Characteristics:**
 - One accent, Iris, on a white and ink base, with a pale Sky tint for large areas.
@@ -198,7 +198,7 @@ The brand mark is a two-lid eye. The upper lid is ink, the lower lid is Iris wit
 - One soft shadow tier, used only for lift: search, hovered cards, menus, select lists and map markers.
 - Statuses are a dot and a label, never a coloured pill.
 - Eight spot illustrations in ink with one Iris detail, on the logo's 3px round stroke.
-- Optician Sans, the eye-chart face, only in the wordmark, the 404 page, zero-result charts, the admin review badge and the footer.
+- Optician Sans, the eye-chart face, only on the 404 page, zero-result charts, the admin review badge and the footer.
 
 ## Colors
 
@@ -252,14 +252,14 @@ Schibsted Grotesk and Inter are self-hosted through Fontsource.
 - **Card text** (0.9375rem, 1.35): listing card clinic name (600), meta lines (400, grey) and rate.
 - **Label** (500, 0.875rem): form labels, chips, nav links, status labels. Buttons use 600.
 - **Caption** (500 to 700, 0.75rem): table headers, tab counts, photo overlays, the small field labels inside the landing search pill. Sentence case, never uppercase.
-- **Chart** (Optician Sans 400, line height 1): shrinking eye-chart lines only. The 404 chart runs 150, 84, 48, 28 and 16px; the zero-result chart 40, 24 and 14px; the admin badge 26, 15 and 9px; the footer "B L I N K" 64, 54, 45, 37 and 30px (65% below 600px); the wordmark beside the logo mark 40, 33.75, 28.1, 23.1 and 18.75px (36px base, so 16.9px for the K, at 768px and below). It is always decorative and `aria-hidden`; the real text sits beside it, or the link around it carries the name.
+- **Chart** (Optician Sans 400, line height 1): shrinking eye-chart lines only. The 404 chart runs 150, 84, 48, 28 and 16px; the zero-result chart 40, 24 and 14px; the admin badge 26, 15 and 9px; the footer "B L I N K" 48, 44, 40, 36 and 32px (70% below 600px), spaced so the ink gaps between letters are equal. It is always decorative and `aria-hidden`; the real text sits beside it.
 
 ### Named Rules
 **The Tabular Money Rule.** Rates, times, counts and the countdown use tabular figures (`font-variant-numeric: tabular-nums`), so columns and live numbers do not jitter.
 
 **The Sentence Case Rule.** No text in the product is uppercase or letter-spaced for decoration. Small labels name a field; they never sit above a heading as a tag. The one exception is the eye-chart lettering, which is a picture of a chart and is hidden from screen readers.
 
-**The Five Places Rule.** Optician Sans appears in five places only: the wordmark beside the logo mark, the 404 page, zero-result search states (filtered shift search and clinic search), the admin credential review badge and the footer sign-off. It never sets working content such as rates, names or headings.
+**The Four Places Rule.** Optician Sans appears in four places only: the 404 page, zero-result search states (filtered shift search and clinic search), the admin credential review badge and the footer sign-off. It never sets working content such as rates, names or headings.
 
 ## Layout
 
@@ -345,7 +345,7 @@ Fifteen 8px dots, one per minute (10px in the large size). Remaining minutes are
 Mapbox GL JS on the Mapbox Standard style, framed with a Hairline border and 14px corners. The basemap is flat and calm: day light, no 3D buildings, trees or landmarks, no points of interest, transit labels or admin lines. Land, buildings and land-use fills are warm near-white neutrals, greenspace is a natural soft green (hsl(110, 30%, 87%)), water is a pale clear blue (hsl(205, 58%, 86%)), and roads, trunks and motorways are quiet greys, so the price pills stay the strongest thing on the map. Road and place labels stay. The Mapbox logo sits bottom left and the attribution bottom right, both small. Without a Mapbox token the same map runs on MapLibre GL with OpenFreeMap's Positron style. Each shift is a white price pill (rate range, 700 weight, tabular, shadow tier). Hovering the pin or its listing card makes it active: the pill fills Iris with white text and scales to 1.06. Nearby pins merge into ink cluster pills ("4 shifts") that also turn Iris when they hold the active shift. Clinic profiles use a 14px Iris dot pin with a white ring and a name tooltip. Clicking a pin opens a compact card with a 96px photo column.
 
 ### Logo
-The two-lid mark and the eye-chart wordmark: "B L I N K" in Optician Sans, the letters shrinking in the footer's ratio (64, 54, 45, 37, 30) on one baseline with 0.35em gaps (`components/ChartWordmark`, shared with the footer). Beside the 30px mark the B is 40px (a 20px cap, about the mark's visible height) and the K 18.75px (a 9.4px cap); at 768px and below the B is 36px and the K cap 8.4px. The B's cap is centred on the mark and the shared baseline sits on the lash line. The wordmark is ink and `aria-hidden`; the link is named "Blink home". The blink is natural: only the upper lid moves. Its path morphs from `M6 36 Q32 4 58 36` to the closed `M6 31 Q32 54 58 31`, holds and opens (close 160ms, hold 80ms, open 200ms), while the Iris lower lid and lashes stay still. The morph is an SMIL `<animate>` started with `beginElement()`, so it runs the same in Chrome, Firefox and Safari. In the top bar it plays once every 4.5 seconds. A confirmed negotiation plays one blink beside "Shift confirmed" after 0.15s. Reduced-motion users see a still mark.
+The two-lid mark and the lowercase "blink" wordmark (display face, 700, -0.04em, 82% of the mark height). The blink is natural: only the upper lid moves. Its path morphs from `M6 36 Q32 4 58 36` to the closed `M6 31 Q32 54 58 31`, holds and opens (close 160ms, hold 80ms, open 200ms), while the Iris lower lid and lashes stay still. The morph is an SMIL `<animate>` started with `beginElement()`, so it runs the same in Chrome, Firefox and Safari. In the top bar it plays once every 4.5 seconds. A confirmed negotiation plays one blink beside "Shift confirmed" after 0.15s. Reduced-motion users see a still mark.
 
 ### Eyelid Band
 The landing hero sits on a Sky Tint band that is wider than the viewport and has a curved lower edge. Scroll flattens the curve like a slow blink, using a scroll-driven animation with a passive scroll listener as fallback. The band keeps its size; only the curve changes.
@@ -367,13 +367,13 @@ On the landing page the step drawings sit at 80px in a 120px Soft Surface circle
 Shrinking lines of Optician Sans. The 404 page is a full chart ("4", "0 4", "P A G E", "N O T F O U N D", then a faded "L O O K I N G E L S E W H E R E"), a hairline, "This page is out of focus." and an Iris "Back to open shifts" button. Every line scales from one base size, so the chart fits a 390px screen. Zero-result searches (filtered shift search, clinic search) show a small three-line chart ("E", "F P", "T O Z") above the message instead of an illustration. The admin credential review shows the same three lines in a white bordered tile to the right of the heading, hidden below 600px.
 
 ### Footer
-A Deep Iris band with white text. It opens with the same `ChartWordmark` as the logo, "B L I N K" in Optician Sans as shrinking letters (64, 54, 45, 37 and 30px, 65% below 600px) on one shared baseline, each followed by a 0.35em gap; it is a home link named "Blink home" for screen readers. Below a faint white rule sit "Built by John Boulanger", the demo reset note with the photo credits link, and "Source on GitHub". Links are white and underlined, and the focus ring turns white on the band. Secondary text is white at 82% (8.34:1).
+A Deep Iris band with white text. It opens with "B L I N K" in Optician Sans (`components/ChartWordmark`) as a gently shrinking row (48, 44, 40, 36 and 32px, 70% below 600px) on one shared baseline. Each letter's margin comes from its measured side bearings, so the white space between neighbouring letters' ink is the same, 0.36 of the B's size (about 17px on desktop, 12px on phones), and the narrow I leaves no larger holes. The B's ink starts on the text edge below. Every letter is white, and the line sits in its own layer for grayscale antialiasing, so the thin I shows no coloured fringes; it is a home link named "Blink home" for screen readers. Below a faint white rule sit "Built by John Boulanger", the demo reset note with the photo credits link, and "Source on GitHub". Links are white and underlined, and the focus ring turns white on the band. Secondary text is white at 82% (8.34:1).
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** use Iris (#3451d1) only for primary actions, live and selected states, form-control fills, clinic map pins, the illustration details and the logo's lower lid.
-- **Do** keep Optician Sans to its five places, always decorative and hidden from screen readers.
+- **Do** keep Optician Sans to its four places, always decorative and hidden from screen readers.
 - **Do** show every status as an 8px dot plus a sentence-case label.
 - **Do** set rates, times and counts in tabular figures.
 - **Do** use 8px corners for controls, 14px for cards and photos, and full pills for search, chips and map markers.
