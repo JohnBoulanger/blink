@@ -122,8 +122,8 @@
       "name": "Map Price Pill",
       "kind": "custom",
       "refersTo": "map-price-pill",
-      "description": "White rate pill on the map; Pine when active; ink cluster.",
-      "html": "<div style=\"display:flex;gap:10px;padding:16px;background:#f7f7f7\"><button class=\"ds-map-pill\">$29–39</button><button class=\"ds-map-pill ds-active\">$37–47</button><button class=\"ds-map-cluster\">4 shifts</button></div>",
+      "description": "White rate pill on the Mapbox Standard basemap (flat, day light, no 3D or points of interest, neutral land, soft green parks, pale blue water, grey roads); Pine when active; ink cluster. MapLibre with OpenFreeMap Positron is the fallback without a token.",
+      "html": "<div style=\"display:flex;gap:10px;padding:16px;background:hsl(40, 14%, 97%)\"><button class=\"ds-map-pill\">$29–39</button><button class=\"ds-map-pill ds-active\">$37–47</button><button class=\"ds-map-cluster\">4 shifts</button></div>",
       "css": ".ds-map-pill, .ds-map-cluster { display: inline-flex; align-items: center; border: 0; border-radius: 999px; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; cursor: pointer; box-shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0; transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s cubic-bezier(0.16,1,0.3,1); } .ds-map-pill { min-height: 28px; padding: 0 10px; background: #ffffff; color: var(--color-ink, #222222); font-weight: 700; } .ds-map-pill:hover, .ds-map-pill.ds-active { background: var(--color-pine, #1f6f4a); color: #ffffff; transform: scale(1.06); } .ds-map-cluster { min-height: 30px; padding: 0 12px; background: var(--color-ink, #222222); color: #ffffff; font-weight: 600; } .ds-map-cluster:hover { transform: scale(1.06); } .ds-map-pill:focus-visible, .ds-map-cluster:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
     }
   ],

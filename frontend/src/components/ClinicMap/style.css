@@ -139,14 +139,16 @@
   z-index: 5;
 }
 
-.map-card-popup .maplibregl-popup-content {
+.map-card-popup .maplibregl-popup-content,
+.map-card-popup .mapboxgl-popup-content {
   padding: 0;
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-tier);
   overflow: hidden;
 }
 
-.map-card-popup .maplibregl-popup-tip {
+.map-card-popup .maplibregl-popup-tip,
+.map-card-popup .mapboxgl-popup-tip {
   display: none;
 }
 
@@ -235,12 +237,14 @@
 }
 
 /* map chrome: small attribution and quiet zoom buttons */
-.ClinicMap .maplibregl-ctrl-attrib {
+.ClinicMap .maplibregl-ctrl-attrib,
+.ClinicMap .mapboxgl-ctrl-attrib {
   font-size: 11px;
   line-height: 1.4;
 }
 
-.ClinicMap .maplibregl-ctrl-group {
+.ClinicMap .maplibregl-ctrl-group,
+.ClinicMap .mapboxgl-ctrl-group {
   border-radius: var(--radius-control);
   box-shadow: var(--shadow-tier);
 }

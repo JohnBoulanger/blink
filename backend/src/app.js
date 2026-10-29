@@ -33,7 +33,7 @@ function create_app() {
     })
   );
 
-  // security headers — relax CSP so maplibre can load openfreemap tiles and run its worker
+  // security headers — relax CSP so the map can load mapbox (or openfreemap fallback) tiles and run its worker
   // allow cross-origin resource loading so frontend can display uploaded files
   app.use(
     helmet({
@@ -42,12 +42,21 @@ function create_app() {
           defaultSrc: ["'self'"],
           scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
           styleSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com"],
-          imgSrc: ["'self'", "data:", "blob:", "https://tiles.openfreemap.org"],
+          imgSrc: [
+            "'self'",
+            "data:",
+            "blob:",
+            "https://api.mapbox.com",
+            "https://tiles.openfreemap.org",
+          ],
           connectSrc: [
             "'self'",
             "ws:",
             "wss:",
             "https://nominatim.openstreetmap.org",
+            "https://api.mapbox.com",
+            "https://*.tiles.mapbox.com",
+            "https://events.mapbox.com",
             "https://tiles.openfreemap.org",
           ],
           workerSrc: ["'self'", "blob:"],

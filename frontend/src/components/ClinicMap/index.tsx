@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import "./style.css";
 
-// maplibre is large, so it loads only when a page draws a map
+// the map library is large, so it loads only when a page draws a map
 const MapCanvas = lazy(() => import("./MapCanvas"));
 
 // the small card a pin opens on the map

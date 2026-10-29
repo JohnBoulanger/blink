@@ -1,25 +1,11 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import {
-  AttributionControl,
-  LngLatBounds,
-  Map as MapLibre,
-  Marker,
-  NavigationControl,
-  Popup,
-  setWorkerUrl,
-} from "maplibre-gl";
-import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?url";
-import "maplibre-gl/dist/maplibre-gl.css";
 import ClinicPhoto from "../ClinicPhoto";
 import usePrefersReducedMotion from "../../hooks/usePrefersReducedMotion";
 import type { ClinicMapProps, MapPin } from ".";
+import { loadEngine, type EngineMap, type MapEngine } from "./engine";
 
-// the bundler moves the worker, so tell maplibre where it ended up
-setWorkerUrl(workerUrl);
-
-const STYLE_URL = "https://tiles.openfreemap.org/styles/positron";
 const TORONTO: [number, number] = [-79.3832, 43.6532];
 // below this zoom, pins closer than the radius merge into one bubble
 const CLUSTER_MAX_ZOOM = 15;
@@ -62,12 +48,23 @@ function sameSpot(a: MapPin, b: MapPin) {
   return a.lat === b.lat && a.lon === b.lon;
 }
 
+// a cluster bubble is wider than the grouping radius, so these sizes catch overlaps it misses
+const CLUSTER_WIDTH = 88;
+const MARKER_HEIGHT = 34;
+
+function centre(members: MapPin[]) {
+  return {
+    lng: members.reduce((sum, m) => sum + m.lon, 0) / members.length,
+    lat: members.reduce((sum, m) => sum + m.lat, 0) / members.length,
+  };
+}
+
 // greedy grouping in screen space, recomputed after each zoom
-function buildGroups(map: MapLibre, pins: MapPin[], radius: number): Group[] {
+function buildGroups(map: EngineMap, pins: MapPin[], radius: number, pinWidth: number): Group[] {
   const points = pins.map((pin) => ({ pin, pt: map.project([pin.lon, pin.lat]) }));
   const clustering = map.getZoom() < CLUSTER_MAX_ZOOM;
   const used = new Set<number>();
-  const groups: Group[] = [];
+  const sets: MapPin[][] = [];
   points.forEach((seed, i) => {
     if (used.has(i)) return;
     used.add(i);
@@ -81,14 +78,37 @@ function buildGroups(map: MapLibre, pins: MapPin[], radius: number): Group[] {
         }
       });
     }
-    groups.push({
-      key: members.length > 1 ? `c${members.map((m) => m.id).join("-")}` : `p${seed.pin.id}`,
-      members,
-      lng: members.reduce((sum, m) => sum + m.lon, 0) / members.length,
-      lat: members.reduce((sum, m) => sum + m.lat, 0) / members.length,
-      offsetY: 0,
-    });
+    sets.push(members);
   });
+  // a cluster that would cover a neighbour absorbs it
+  const width = (members: MapPin[]) => (members.length > 1 ? CLUSTER_WIDTH : pinWidth);
+  let merging = clustering;
+  while (merging) {
+    merging = false;
+    const spots = sets.map((members) => {
+      const c = centre(members);
+      return map.project([c.lng, c.lat]);
+    });
+    search: for (let i = 0; i < sets.length; i++) {
+      for (let j = i + 1; j < sets.length; j++) {
+        if (sets[i].length === 1 && sets[j].length === 1) continue;
+        const overlapX = Math.abs(spots[i].x - spots[j].x) < (width(sets[i]) + width(sets[j])) / 2;
+        const overlapY = Math.abs(spots[i].y - spots[j].y) < MARKER_HEIGHT;
+        if (overlapX && overlapY) {
+          sets[i] = sets[i].concat(sets[j]);
+          sets.splice(j, 1);
+          merging = true;
+          break search;
+        }
+      }
+    }
+  }
+  const groups: Group[] = sets.map((members) => ({
+    key: members.length > 1 ? `c${members.map((m) => m.id).join("-")}` : `p${members[0].id}`,
+    members,
+    ...centre(members),
+    offsetY: 0,
+  }));
   // zoomed in, pins at one address fan out vertically
   const singles = groups.filter((g) => g.members.length === 1);
   singles.forEach((g) => {
@@ -111,14 +131,16 @@ export default function MapCanvas({
 }: ClinicMapProps) {
   const reducedMotion = usePrefersReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<MapLibre | null>(null);
+  const [map, setMap] = useState<EngineMap | null>(null);
+  // the library behind the map, set once it loads
+  const engineRef = useRef<MapEngine | null>(null);
   // bumps after each zoom, since grouping depends on pixel distances
   const [zoomTick, setZoomTick] = useState(0);
   const [openId, setOpenId] = useState<number | null>(null);
   const [elements] = useState(() => new MarkerElements());
-  const markers = useRef(new Map<string, Marker>());
+  const markers = useRef(new Map<string, InstanceType<MapEngine["Marker"]>>());
   const cardEl = useMemo(() => document.createElement("div"), []);
-  const popupRef = useRef<Popup | null>(null);
+  const popupRef = useRef<InstanceType<MapEngine["Popup"]> | null>(null);
   // the pin that opened the card, so focus can return to it
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const focusCardRef = useRef(false);
@@ -130,52 +152,63 @@ export default function MapCanvas({
   }, [pins, fitPadding]);
 
   const radius = variant === "price" ? 44 : 22;
+  // rough marker width: a rate pill, or the 28px dot target
+  const pinWidth = variant === "price" ? 76 : 28;
 
-  // create the map once
+  // create the map once the library loads
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    const instance = new MapLibre({
-      container,
-      style: STYLE_URL,
-      center: TORONTO,
-      zoom: 12,
-      maxZoom: 18,
-      attributionControl: false,
-      scrollZoom: false,
-      dragRotate: false,
-      pitchWithRotate: false,
-      touchPitch: false,
-      dragPan: touchPan || !coarse,
+    let cancelled = false;
+    let teardown: (() => void) | null = null;
+    loadEngine().then((engine) => {
+      if (cancelled) return;
+      engineRef.current = engine;
+      const coarse = window.matchMedia("(pointer: coarse)").matches;
+      const instance = engine.createMap({
+        container,
+        center: TORONTO,
+        zoom: 12,
+        maxZoom: 18,
+        attributionControl: false,
+        scrollZoom: false,
+        dragRotate: false,
+        pitchWithRotate: false,
+        touchPitch: false,
+        dragPan: touchPan || !coarse,
+      });
+      instance.touchZoomRotate.disableRotation();
+      instance.addControl(new engine.NavigationControl({ showCompass: false }), "top-right");
+      instance.addControl(new engine.AttributionControl({ compact: false }), "bottom-right");
+      // the container can settle after the map starts (lazy chunk, grid column), so follow its size
+      const observer = new ResizeObserver(() => instance.resize());
+      observer.observe(container);
+      instance.on("load", () => {
+        instance.resize();
+        setMap(instance);
+      });
+      instance.on("zoomend", () => setZoomTick((t) => t + 1));
+      // lets screenshots and tests wait for the tiles
+      instance.on("idle", () => container.setAttribute("data-map-idle", "true"));
+      instance.on("dataloading", () => container.removeAttribute("data-map-idle"));
+      // a click on the map itself closes the card
+      instance.on("click", (e) => {
+        const target = e.originalEvent.target as Element | null;
+        if (!target?.closest(".map-marker, .map-card-popup")) setOpenId(null);
+      });
+      const placed = markers.current;
+      teardown = () => {
+        observer.disconnect();
+        for (const marker of placed.values()) marker.remove();
+        placed.clear();
+        popupRef.current = null;
+        instance.remove();
+        setMap(null);
+      };
     });
-    instance.touchZoomRotate.disableRotation();
-    instance.addControl(new NavigationControl({ showCompass: false }), "top-right");
-    instance.addControl(new AttributionControl({ compact: false }), "bottom-right");
-    // the container can settle after the map starts (lazy chunk, grid column), so follow its size
-    const observer = new ResizeObserver(() => instance.resize());
-    observer.observe(container);
-    instance.on("load", () => {
-      instance.resize();
-      setMap(instance);
-    });
-    instance.on("zoomend", () => setZoomTick((t) => t + 1));
-    // lets screenshots and tests wait for the tiles
-    instance.on("idle", () => container.setAttribute("data-map-idle", "true"));
-    instance.on("dataloading", () => container.removeAttribute("data-map-idle"));
-    // a click on the map itself closes the card
-    instance.on("click", (e) => {
-      const target = e.originalEvent.target as Element | null;
-      if (!target?.closest(".map-marker, .map-card-popup")) setOpenId(null);
-    });
-    const placed = markers.current;
     return () => {
-      observer.disconnect();
-      for (const marker of placed.values()) marker.remove();
-      placed.clear();
-      popupRef.current = null;
-      instance.remove();
-      setMap(null);
+      cancelled = true;
+      teardown?.();
     };
   }, [touchPan]);
 
@@ -184,14 +217,15 @@ export default function MapCanvas({
   // a new padding object each render must not refit the map, so compare by value
   const paddingKey = fitPadding ? Object.values(fitPadding).join(",") : "";
   useEffect(() => {
-    if (!map) return;
+    const engine = engineRef.current;
+    if (!map || !engine) return;
     const current = pinsRef.current;
     if (current.length === 0) {
       map.jumpTo({ center: TORONTO, zoom: 12 });
     } else if (current.every((p) => sameSpot(p, current[0]))) {
       map.jumpTo({ center: [current[0].lon, current[0].lat], zoom: SINGLE_ZOOM });
     } else {
-      const bounds = new LngLatBounds();
+      const bounds = new engine.LngLatBounds();
       for (const p of current) bounds.extend([p.lon, p.lat]);
       map.fitBounds(bounds, {
         padding: fitPaddingRef.current ?? 56,
@@ -202,10 +236,10 @@ export default function MapCanvas({
   }, [map, placesKey, paddingKey]);
 
   const groups = useMemo(
-    () => (map ? buildGroups(map, pins, radius) : []),
+    () => (map ? buildGroups(map, pins, radius, pinWidth) : []),
     // zoomTick re-reads the map's zoom
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [map, pins, radius, zoomTick]
+    [map, pins, radius, pinWidth, zoomTick]
   );
 
   // the open card closes when its pin leaves the results
@@ -213,7 +247,8 @@ export default function MapCanvas({
 
   // place markers for the current groups and drop stale ones
   useEffect(() => {
-    if (!map) return;
+    const engine = engineRef.current;
+    if (!map || !engine) return;
     const live = new Set(groups.map((g) => g.key));
     for (const [key, marker] of markers.current) {
       if (!live.has(key)) {
@@ -227,7 +262,9 @@ export default function MapCanvas({
       if (!el) continue;
       let marker = markers.current.get(g.key);
       if (!marker) {
-        marker = new Marker({ element: el, anchor: "center" }).setLngLat([g.lng, g.lat]).addTo(map);
+        marker = new engine.Marker({ element: el, anchor: "center" })
+          .setLngLat([g.lng, g.lat])
+          .addTo(map);
         markers.current.set(g.key, marker);
       }
       marker.setLngLat([g.lng, g.lat]);
@@ -239,7 +276,8 @@ export default function MapCanvas({
 
   // show or move the card
   useEffect(() => {
-    if (!map) return;
+    const engine = engineRef.current;
+    if (!map || !engine) return;
     if (!openPin) {
       popupRef.current?.remove();
       popupRef.current = null;
@@ -247,7 +285,7 @@ export default function MapCanvas({
     }
     let popup = popupRef.current;
     if (!popup) {
-      popup = new Popup({
+      popup = new engine.Popup({
         closeButton: false,
         closeOnClick: false,
         focusAfterOpen: false,
@@ -294,7 +332,8 @@ export default function MapCanvas({
   }
 
   function zoomInto(group: Group) {
-    if (!map) return;
+    const engine = engineRef.current;
+    if (!map || !engine) return;
     const allSame = group.members.every((m) => sameSpot(m, group.members[0]));
     if (allSame) {
       map.easeTo({
@@ -304,7 +343,7 @@ export default function MapCanvas({
       });
       return;
     }
-    const bounds = new LngLatBounds();
+    const bounds = new engine.LngLatBounds();
     for (const m of group.members) bounds.extend([m.lon, m.lat]);
     map.fitBounds(bounds, { padding: 72, maxZoom: 16, animate: !reducedMotion });
   }

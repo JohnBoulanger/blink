@@ -65,7 +65,7 @@ The seed script (`npx prisma db seed`) creates these accounts. All accounts use 
 | Backend | Express.js, Prisma ORM, SQLite |
 | Real-time | Socket.IO (WebSocket) |
 | Auth | JWT (JSON Web Tokens) |
-| Maps | MapLibre GL JS + OpenFreeMap (OpenStreetMap data) |
+| Maps | Mapbox GL JS (Mapbox Standard style), with MapLibre GL JS + OpenFreeMap as the fallback; map data © OpenStreetMap |
 | Fonts | Schibsted Grotesk and Inter, self-hosted with Fontsource |
 | Security | Helmet, express-rate-limit, Zod validation |
 
@@ -104,11 +104,14 @@ FRONTEND_URL=http://localhost:5173
 NODE_ENV=development
 ```
 
-Create `frontend/.env` so the Vite dev server sends API requests to the backend:
+Copy `frontend/.env.example` to `frontend/.env` so the Vite dev server sends API requests to the backend:
 
 ```
 VITE_BACKEND_URL=http://localhost:3000
+VITE_MAPBOX_TOKEN=
 ```
+
+Maps use Mapbox when `VITE_MAPBOX_TOKEN` is set. Get a free public token (it starts with `pk.`) at [mapbox.com](https://account.mapbox.com/access-tokens/) and restrict it to your site URLs. Without a token, maps fall back to MapLibre with OpenFreeMap tiles.
 
 ### Running locally
 
