@@ -1,4 +1,4 @@
-/* not found: the logo, one line and a way home */
+/* not found: a shrinking eye chart, one line and a way back */
 
 .NotFound {
   flex: 1;
@@ -7,20 +7,80 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-3);
-  padding: var(--space-20) 0;
+  padding: var(--space-16) 0 var(--space-20);
   text-align: center;
 }
 
-.NotFound .Logo {
-  margin-bottom: var(--space-2);
+/* every line scales from one base size, so the chart shrinks as a whole on phones */
+.nf-chart {
+  --nf-base: min(10px, 2vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--nf-base) * 1.2);
+  max-width: 100%;
+  font-family: var(--font-chart);
+  font-size: var(--nf-base);
+  line-height: 1;
+  color: var(--color-ink);
+  user-select: none;
+}
+
+.nf-line {
+  white-space: nowrap;
+}
+
+.nf-line-1 {
+  font-size: 15em;
+}
+
+.nf-line-2 {
+  font-size: 8.4em;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+}
+
+.nf-line-3 {
+  font-size: 4.8em;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+}
+
+.nf-line-4 {
+  font-size: 2.8em;
+  letter-spacing: 0.26em;
+  text-indent: 0.26em;
+  color: var(--color-text-secondary);
+}
+
+.nf-line-5 {
+  font-size: 1.6em;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: var(--color-border-strong);
+}
+
+.nf-rule {
+  width: 220px;
+  max-width: 60%;
+  height: 1px;
+  margin: var(--space-4) 0 var(--space-1);
+  background: var(--color-border-soft);
+}
+
+.NotFound h1 {
+  font-size: 1.625rem;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 
 .NotFound p {
   max-width: 40ch;
+  font-size: var(--text-sm);
   color: var(--color-text-secondary);
 }
 
-.NotFound .btn-secondary {
+.NotFound .btn-primary {
   margin-top: var(--space-3);
   min-height: 44px;
 }

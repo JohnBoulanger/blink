@@ -146,7 +146,7 @@
 }
 
 .up-switch[aria-checked="true"]::before {
-  background: var(--color-pine);
+  background: var(--color-brand);
 }
 
 .up-switch[aria-checked="true"] .up-switch-thumb {

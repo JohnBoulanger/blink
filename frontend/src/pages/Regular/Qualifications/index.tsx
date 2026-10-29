@@ -6,6 +6,7 @@ import Pagination from "../../../components/Pagination";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import FileUpload from "../../../components/FileUpload";
 import StatusBadge from "../../../components/StatusBadge";
+import Illustration from "../../../components/Illustration";
 import { QUAL_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
 
@@ -236,6 +237,7 @@ export default function Qualifications() {
         <LoadingSpinner />
       ) : quals.length === 0 ? (
         <div className="myquals-empty">
+          <Illustration name="verified-id" size={104} className="empty-illustration" />
           <p className="myquals-empty-title">No qualifications yet</p>
           <p>Add one for each position you want to work. An admin reviews your document.</p>
           {!showCreate && (

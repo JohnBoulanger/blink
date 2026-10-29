@@ -9,6 +9,8 @@ import { formatDay, formatRate, formatShiftWhen } from "../../../utils/format";
 import Pagination from "../../../components/Pagination";
 import ShiftCard from "../../../components/ShiftCard";
 import ClinicMap, { type MapPin } from "../../../components/ClinicMap";
+import Illustration from "../../../components/Illustration";
+import EyeChart from "../../../components/EyeChart";
 import "./style.css";
 
 interface PositionType {
@@ -190,6 +192,11 @@ export default function Jobs() {
   } else if (jobs.length === 0) {
     results = (
       <div className="jobs-empty">
+        {businessFilter || positionFilter ? (
+          <EyeChart />
+        ) : (
+          <Illustration name="eye-chart" size={104} className="empty-illustration" />
+        )}
         <p className="jobs-empty-title">No shifts match these filters</p>
         <p>
           {businessFilter || positionFilter

@@ -1,0 +1,57 @@
+/* spot illustrations: ink shape, one brand detail, 3px round stroke */
+
+.Illustration {
+  --illus-ink: var(--color-ink);
+  --illus-brand: var(--color-brand);
+  display: block;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.Illustration .illus-ink,
+.Illustration .illus-brand,
+.Illustration .illus-faint {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.Illustration .illus-ink {
+  stroke: var(--illus-ink);
+}
+
+.Illustration .illus-brand {
+  stroke: var(--illus-brand);
+}
+
+.Illustration .illus-badge {
+  fill: var(--color-surface);
+}
+
+.Illustration .illus-check {
+  stroke-width: 3.5;
+}
+
+.Illustration .illus-lashes {
+  stroke-width: 2.5;
+}
+
+.Illustration .illus-wedge {
+  fill: var(--illus-brand);
+  fill-opacity: 0.16;
+}
+
+.Illustration .illus-dot {
+  fill: var(--illus-ink);
+}
+
+.Illustration .illus-faint {
+  stroke: var(--color-dot-ended);
+  stroke-dasharray: 2 4;
+}
+
+/* the illustration above an empty-state title */
+.empty-illustration {
+  margin-bottom: var(--space-3);
+}

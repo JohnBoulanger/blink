@@ -18,14 +18,14 @@ const BASEMAP_CONFIG = {
   show3dLandmarks: false,
   show3dFacades: false,
   showAdminBoundaries: false,
-  // neutral land and quiet roads, a soft green that sits beside Pine, a clear pale blue for water
+  // neutral land and quiet roads, a natural soft green for parks, a clear pale blue for water
   colorLand: "hsl(40, 14%, 97%)",
   colorBuildings: "hsl(40, 10%, 94%)",
   colorCommercial: "hsl(40, 14%, 95%)",
   colorEducation: "hsl(40, 14%, 95%)",
   colorMedical: "hsl(40, 14%, 95%)",
   colorIndustrial: "hsl(220, 8%, 94%)",
-  colorGreenspace: "hsl(148, 32%, 87%)",
+  colorGreenspace: "hsl(110, 30%, 87%)",
   colorWater: "hsl(205, 58%, 86%)",
   colorRoads: "hsl(220, 8%, 88%)",
   colorTrunks: "hsl(220, 7%, 84%)",

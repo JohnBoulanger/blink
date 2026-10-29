@@ -1,5 +1,16 @@
 /* credential review: a table of requests; a row opens its review panel in place */
 
+/* decorative eye-chart badge beside the heading */
+.aq-chart {
+  align-self: center;
+}
+
+@media (max-width: 599px) {
+  .aq-chart {
+    display: none;
+  }
+}
+
 .aq-controls {
   display: flex;
   flex-wrap: wrap;

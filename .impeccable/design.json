@@ -1,14 +1,15 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-29T00:00:00Z",
+  "generatedAt": "2026-10-29T12:00:00Z",
   "title": "Design System: Blink",
   "extensions": {
     "colorMeta": {
-      "pine": { "role": "primary", "displayName": "Pine", "canonical": "#1f6f4a", "tonalRamp": ["#0b2a1b", "#123f29", "#175a3c", "#1f6f4a", "#3e8c66", "#7cb898", "#b5d9c5", "#e2f1e9"] },
-      "pine-deep": { "role": "primary", "displayName": "Deep Pine", "canonical": "#175a3c", "tonalRamp": ["#0b2a1b", "#123f29", "#175a3c", "#1f6f4a", "#3e8c66", "#7cb898", "#b5d9c5", "#e2f1e9"] },
-      "pine-tint": { "role": "primary", "displayName": "Pine Tint", "canonical": "#e2f1e9", "tonalRamp": ["#0b2a1b", "#123f29", "#175a3c", "#1f6f4a", "#3e8c66", "#7cb898", "#b5d9c5", "#e2f1e9"] },
-      "pine-band": { "role": "primary", "displayName": "Pine Band", "canonical": "#edf6f1", "tonalRamp": ["#123f29", "#1f6f4a", "#3e8c66", "#7cb898", "#b5d9c5", "#e2f1e9", "#edf6f1", "#f6fbf8"] },
-      "pine-border": { "role": "primary", "displayName": "Pine Border", "canonical": "#b5d9c5", "tonalRamp": ["#0b2a1b", "#123f29", "#175a3c", "#1f6f4a", "#3e8c66", "#7cb898", "#b5d9c5", "#e2f1e9"] },
+      "brand": { "role": "primary", "displayName": "Iris", "canonical": "#3451d1", "tonalRamp": ["#0f1745", "#1f2f86", "#2b45bd", "#3451d1", "#5f78e0", "#9db8ff", "#c9d6ff", "#eaefff"] },
+      "brand-hover": { "role": "primary", "displayName": "Iris Hover", "canonical": "#2b45bd", "tonalRamp": ["#0f1745", "#1f2f86", "#2b45bd", "#3451d1", "#5f78e0", "#9db8ff", "#c9d6ff", "#eaefff"] },
+      "brand-deep": { "role": "primary", "displayName": "Deep Iris", "canonical": "#1f2f86", "tonalRamp": ["#0f1745", "#1f2f86", "#2b45bd", "#3451d1", "#5f78e0", "#9db8ff", "#c9d6ff", "#eaefff"] },
+      "brand-tint": { "role": "primary", "displayName": "Sky Tint", "canonical": "#eaefff", "tonalRamp": ["#0f1745", "#1f2f86", "#2b45bd", "#3451d1", "#5f78e0", "#9db8ff", "#c9d6ff", "#eaefff"] },
+      "brand-band": { "role": "primary", "displayName": "Sky Band", "canonical": "#eaefff", "tonalRamp": ["#0f1745", "#1f2f86", "#2b45bd", "#3451d1", "#5f78e0", "#9db8ff", "#c9d6ff", "#eaefff"] },
+      "sky": { "role": "primary", "displayName": "Sky", "canonical": "#9db8ff", "tonalRamp": ["#0f1745", "#1f2f86", "#2b45bd", "#3451d1", "#5f78e0", "#9db8ff", "#c9d6ff", "#eaefff"] },
       "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#222222", "tonalRamp": ["#000000", "#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f7f7f7"] },
       "ink-pressed": { "role": "neutral", "displayName": "Pressed Ink", "canonical": "#000000", "tonalRamp": ["#000000", "#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f7f7f7"] },
       "text-secondary": { "role": "neutral", "displayName": "Secondary Grey", "canonical": "#6a6a6a", "tonalRamp": ["#000000", "#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f7f7f7"] },
@@ -33,7 +34,8 @@
       "body-sm": { "displayName": "Body small", "purpose": "Page subtitles, helper text, table cells." },
       "label": { "displayName": "Label", "purpose": "Form labels, chips, nav links, status labels; buttons use 600." },
       "caption": { "displayName": "Caption", "purpose": "Table headers, tab counts, photo overlays, search pill field labels. Sentence case." },
-      "figures": { "displayName": "Figures", "purpose": "Rates, times, counts and the countdown, in tabular figures." }
+      "figures": { "displayName": "Figures", "purpose": "Rates, times, counts and the countdown, in tabular figures." },
+      "chart": { "displayName": "Chart", "purpose": "Optician Sans eye-chart lines, decorative only: the 404 page, zero-result search charts, the admin credential review badge and the footer sign-off." }
     },
     "shadows": [
       { "name": "tier", "value": "rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0", "purpose": "The one shadow: landing search pill, hovered listing cards, account pill on hover, menus, map markers and the map card popup." }
@@ -44,8 +46,9 @@
       { "name": "card-lift", "value": "0.25s cubic-bezier(0.16, 1, 0.3, 1), translateY(-2px)", "purpose": "Listing card hover." },
       { "name": "press", "value": "transform: scale(0.98), 0.1s ease", "purpose": "Button press." },
       { "name": "status-pulse", "value": "opacity 1 to 0.35, 1.6s ease-in-out infinite", "purpose": "Live status dot, sidebar live dot and the current countdown minute." },
-      { "name": "logo-blink-loop", "value": "4.5s ease-in-out infinite, lids meet at 92%", "purpose": "The logo in the top bar." },
-      { "name": "logo-blink-once", "value": "0.42s ease-in-out, 0.15s delay", "purpose": "One blink when a negotiation is confirmed." },
+      { "name": "logo-blink", "value": "SMIL path morph of the upper lid only, M6 36 Q32 4 58 36 to M6 31 Q32 54 58 31; close 160ms, hold 80ms, open 200ms", "purpose": "Blink A, the natural blink. Started with beginElement() so it runs in Chrome, Firefox and Safari." },
+      { "name": "logo-blink-loop", "value": "one blink every 4.5s", "purpose": "The logo in the top bar." },
+      { "name": "logo-blink-once", "value": "one blink after a 0.15s delay", "purpose": "One blink when a negotiation is confirmed." },
       { "name": "lid-close", "value": "scroll(root block), range 0 to 300px, curve 220px to 24px (96px to 12px on phones)", "purpose": "The landing eyelid band flattens on scroll." }
     ],
     "breakpoints": [
@@ -60,7 +63,7 @@
       "refersTo": "button-primary",
       "description": "The one coloured action on a screen.",
       "html": "<button class=\"ds-btn-primary\">Try the demo</button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 18px; border: 1px solid var(--color-pine, #1f6f4a); border-radius: 8px; background: var(--color-pine, #1f6f4a); color: #ffffff; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 600; line-height: 1.25; cursor: pointer; transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease; } .ds-btn-primary:hover { background: var(--color-pine-deep, #175a3c); border-color: var(--color-pine-deep, #175a3c); } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 18px; border: 1px solid var(--color-brand, #3451d1); border-radius: 8px; background: var(--color-brand, #3451d1); color: #ffffff; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 600; line-height: 1.25; cursor: pointer; transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease; } .ds-btn-primary:hover { background: var(--color-brand-hover, #2b45bd); border-color: var(--color-brand-hover, #2b45bd); } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
     },
     {
       "name": "Secondary Button",
@@ -76,15 +79,15 @@
       "refersTo": "input",
       "description": "Hairline field with a doubled ink border on focus.",
       "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Hourly rate</span><input class=\"ds-input\" placeholder=\"35\" /></label>",
-      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; } .ds-field-label { font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #222222); } .ds-input { width: 100%; min-height: 44px; padding: 10px 14px; border: 1px solid var(--color-border, #dddddd); border-radius: 8px; background: #ffffff; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 1rem; caret-color: var(--color-pine, #1f6f4a); outline: none; transition: border-color 0.15s ease, box-shadow 0.15s ease; } .ds-input::placeholder { color: #6a6a6a; } .ds-input:hover:not(:focus) { border-color: #b0b0b0; } .ds-input:focus { border-color: var(--color-ink, #222222); box-shadow: inset 0 0 0 1px var(--color-ink, #222222); }"
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; } .ds-field-label { font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #222222); } .ds-input { width: 100%; min-height: 44px; padding: 10px 14px; border: 1px solid var(--color-border, #dddddd); border-radius: 8px; background: #ffffff; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 1rem; caret-color: var(--color-brand, #3451d1); outline: none; transition: border-color 0.15s ease, box-shadow 0.15s ease; } .ds-input::placeholder { color: #6a6a6a; } .ds-input:hover:not(:focus) { border-color: #b0b0b0; } .ds-input:focus { border-color: var(--color-ink, #222222); box-shadow: inset 0 0 0 1px var(--color-ink, #222222); }"
     },
     {
       "name": "Filter Chip",
       "kind": "chip",
       "refersTo": "chip",
-      "description": "Full pill toggle; Pine Tint when selected.",
+      "description": "Full pill toggle; Sky Tint with an Iris border when selected.",
       "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-chip\" aria-pressed=\"true\">Optician</button><button class=\"ds-chip\" aria-pressed=\"false\">Technician</button></div>",
-      "css": ".ds-chip { display: inline-flex; align-items: center; min-height: 36px; padding: 0 16px; border: 1px solid var(--color-border, #dddddd); border-radius: 999px; background: #ffffff; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: border-color 0.15s ease, background-color 0.15s ease; } .ds-chip:hover { border-color: var(--color-ink, #222222); } .ds-chip[aria-pressed=\"true\"] { background: var(--color-pine-tint, #e2f1e9); border-color: var(--color-pine, #1f6f4a); color: var(--color-pine-deep, #175a3c); } .ds-chip:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
+      "css": ".ds-chip { display: inline-flex; align-items: center; min-height: 36px; padding: 0 16px; border: 1px solid var(--color-border, #dddddd); border-radius: 999px; background: #ffffff; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: border-color 0.15s ease, background-color 0.15s ease; } .ds-chip:hover { border-color: var(--color-ink, #222222); } .ds-chip[aria-pressed=\"true\"] { background: var(--color-brand-tint, #eaefff); border-color: var(--color-brand, #3451d1); color: var(--color-brand-deep, #1f2f86); } .ds-chip:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
     },
     {
       "name": "Top Bar Link",
@@ -100,15 +103,15 @@
       "refersTo": "card",
       "description": "Photo-led shift card that lifts on hover.",
       "html": "<a class=\"ds-listing\" href=\"#\"><span class=\"ds-listing-photo\"><span class=\"ds-photo-pill\">Verified clinic</span></span><span class=\"ds-listing-name\">Bahen Vision Clinic</span><span class=\"ds-listing-meta\">Optometric Assistant (Level 1)</span><span class=\"ds-listing-meta\">Fri, Oct 30 · 9:00 AM–5:00 PM</span><span class=\"ds-listing-rate\"><strong>$25–35</strong> /hr</span></a>",
-      "css": ".ds-listing { display: flex; flex-direction: column; gap: 2px; width: 260px; padding: 8px; border-radius: 20px; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); text-decoration: none; transition: box-shadow 0.25s cubic-bezier(0.16,1,0.3,1), transform 0.25s cubic-bezier(0.16,1,0.3,1); } .ds-listing:hover, .ds-listing:focus-visible { box-shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0; transform: translateY(-2px); outline: none; } .ds-listing-photo { position: relative; display: block; aspect-ratio: 4 / 3; margin-bottom: 10px; border-radius: 14px; background: var(--color-pine-tint, #e2f1e9); } .ds-photo-pill { position: absolute; top: 12px; left: 12px; padding: 4px 10px; border-radius: 999px; background: #ffffff; font-size: 0.75rem; font-weight: 600; } .ds-listing-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.35; } .ds-listing-meta { font-size: 0.9375rem; line-height: 1.35; color: #6a6a6a; } .ds-listing-rate { margin-top: 4px; font-size: 0.9375rem; font-variant-numeric: tabular-nums; } .ds-listing-rate strong { font-weight: 600; }"
+      "css": ".ds-listing { display: flex; flex-direction: column; gap: 2px; width: 260px; padding: 8px; border-radius: 20px; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); text-decoration: none; transition: box-shadow 0.25s cubic-bezier(0.16,1,0.3,1), transform 0.25s cubic-bezier(0.16,1,0.3,1); } .ds-listing:hover, .ds-listing:focus-visible { box-shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0; transform: translateY(-2px); outline: none; } .ds-listing-photo { position: relative; display: block; aspect-ratio: 4 / 3; margin-bottom: 10px; border-radius: 14px; background: var(--color-brand-tint, #eaefff); } .ds-photo-pill { position: absolute; top: 12px; left: 12px; padding: 4px 10px; border-radius: 999px; background: #ffffff; font-size: 0.75rem; font-weight: 600; } .ds-listing-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.35; } .ds-listing-meta { font-size: 0.9375rem; line-height: 1.35; color: #6a6a6a; } .ds-listing-rate { margin-top: 4px; font-size: 0.9375rem; font-variant-numeric: tabular-nums; } .ds-listing-rate strong { font-weight: 600; }"
     },
     {
       "name": "Status Badge",
       "kind": "custom",
       "refersTo": "status-badge",
-      "description": "Dot plus label; only Live is green and pulses.",
+      "description": "Dot plus label; only Live is Iris and pulses.",
       "html": "<div style=\"display:flex;gap:20px\"><span class=\"ds-status ds-live\"><span class=\"ds-dot\"></span>Live</span><span class=\"ds-status ds-success\"><span class=\"ds-dot\"></span>Filled</span><span class=\"ds-status ds-pending\"><span class=\"ds-dot\"></span>Open</span><span class=\"ds-status ds-ended\"><span class=\"ds-dot\"></span>Expired</span></div>",
-      "css": ".ds-status { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #222222); } .ds-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-ink, #222222); } .ds-live .ds-dot { background: var(--color-pine, #1f6f4a); animation: ds-pulse 1.6s ease-in-out infinite; } .ds-pending .ds-dot { background: transparent; box-shadow: inset 0 0 0 1.5px #6a6a6a; } .ds-ended { color: #6a6a6a; } .ds-ended .ds-dot { background: #c1c1c1; } @keyframes ds-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } } @media (prefers-reduced-motion: reduce) { .ds-live .ds-dot { animation: none; } }"
+      "css": ".ds-status { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #222222); } .ds-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-ink, #222222); } .ds-live .ds-dot { background: var(--color-brand, #3451d1); animation: ds-pulse 1.6s ease-in-out infinite; } .ds-pending .ds-dot { background: transparent; box-shadow: inset 0 0 0 1.5px #6a6a6a; } .ds-ended { color: #6a6a6a; } .ds-ended .ds-dot { background: #c1c1c1; } @keyframes ds-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } } @media (prefers-reduced-motion: reduce) { .ds-live .ds-dot { animation: none; } }"
     },
     {
       "name": "Negotiation Countdown",
@@ -116,37 +119,41 @@
       "refersTo": "countdown",
       "description": "Fifteen dots, one per minute, with a plain sentence.",
       "html": "<div class=\"ds-countdown\" role=\"timer\"><span class=\"ds-cd-dots\"><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-current\"></i><i class=\"ds-cd\"></i><i class=\"ds-cd\"></i><i class=\"ds-cd\"></i></span><span class=\"ds-cd-value\">12 of 15 minutes left</span></div>",
-      "css": ".ds-countdown { display: inline-flex; flex-direction: column; gap: 8px; font-family: var(--font-body, Inter, system-ui, sans-serif); } .ds-cd-dots { display: flex; gap: 5px; } .ds-cd { display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-border, #dddddd); } .ds-left, .ds-current { background: var(--color-pine, #1f6f4a); } .ds-current { animation: ds-cd-pulse 1.6s ease-in-out infinite; } .ds-cd-value { font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #222222); font-variant-numeric: tabular-nums; } @keyframes ds-cd-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } } @media (prefers-reduced-motion: reduce) { .ds-current { animation: none; } }"
+      "css": ".ds-countdown { display: inline-flex; flex-direction: column; gap: 8px; font-family: var(--font-body, Inter, system-ui, sans-serif); } .ds-cd-dots { display: flex; gap: 5px; } .ds-cd { display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-border, #dddddd); } .ds-left, .ds-current { background: var(--color-brand, #3451d1); } .ds-current { animation: ds-cd-pulse 1.6s ease-in-out infinite; } .ds-cd-value { font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #222222); font-variant-numeric: tabular-nums; } @keyframes ds-cd-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } } @media (prefers-reduced-motion: reduce) { .ds-current { animation: none; } }"
     },
     {
       "name": "Map Price Pill",
       "kind": "custom",
       "refersTo": "map-price-pill",
-      "description": "White rate pill on the Mapbox Standard basemap (flat, day light, no 3D or points of interest, neutral land, soft green parks, pale blue water, grey roads); Pine when active; ink cluster. MapLibre with OpenFreeMap Positron is the fallback without a token.",
+      "description": "White rate pill on the Mapbox Standard basemap (flat, day light, no 3D or points of interest, neutral land, soft green parks, pale blue water, grey roads); Iris when active; ink cluster. MapLibre with OpenFreeMap Positron is the fallback without a token.",
       "html": "<div style=\"display:flex;gap:10px;padding:16px;background:hsl(40, 14%, 97%)\"><button class=\"ds-map-pill\">$29–39</button><button class=\"ds-map-pill ds-active\">$37–47</button><button class=\"ds-map-cluster\">4 shifts</button></div>",
-      "css": ".ds-map-pill, .ds-map-cluster { display: inline-flex; align-items: center; border: 0; border-radius: 999px; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; cursor: pointer; box-shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0; transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s cubic-bezier(0.16,1,0.3,1); } .ds-map-pill { min-height: 28px; padding: 0 10px; background: #ffffff; color: var(--color-ink, #222222); font-weight: 700; } .ds-map-pill:hover, .ds-map-pill.ds-active { background: var(--color-pine, #1f6f4a); color: #ffffff; transform: scale(1.06); } .ds-map-cluster { min-height: 30px; padding: 0 12px; background: var(--color-ink, #222222); color: #ffffff; font-weight: 600; } .ds-map-cluster:hover { transform: scale(1.06); } .ds-map-pill:focus-visible, .ds-map-cluster:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
+      "css": ".ds-map-pill, .ds-map-cluster { display: inline-flex; align-items: center; border: 0; border-radius: 999px; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; cursor: pointer; box-shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0; transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s cubic-bezier(0.16,1,0.3,1); } .ds-map-pill { min-height: 28px; padding: 0 10px; background: #ffffff; color: var(--color-ink, #222222); font-weight: 700; } .ds-map-pill:hover, .ds-map-pill.ds-active { background: var(--color-brand, #3451d1); color: #ffffff; transform: scale(1.06); } .ds-map-cluster { min-height: 30px; padding: 0 12px; background: var(--color-ink, #222222); color: #ffffff; font-weight: 600; } .ds-map-cluster:hover { transform: scale(1.06); } .ds-map-pill:focus-visible, .ds-map-cluster:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
     }
   ],
   "narrative": {
     "northStar": "The Quiet Marketplace",
-    "overview": "Blink borrows the grammar of a mature listings marketplace and applies it to optometry shifts. Shifts read like listings: a storefront photo, the clinic name, the role, the day and the rate. Search comes first and sits in a wide pill. The canvas is white, the text is near-black ink, and one green does every job that needs colour. Everything else is hairlines, soft grey surfaces and type.\n\nDensity changes with the mode. Public pages breathe, with a centred display headline and generous vertical space. App screens (shift search, negotiation, admin tables) are tighter and more precise: hairline rows, sticky table headers, tabular figures and quiet underline tabs. Motion is rare and named: the logo blinks, the hero's eyelid band flattens on scroll, the live dot pulses, and a confirmed match plays one blink. Pages do not animate in.\n\nThe brand mark is a two-lid eye. The upper lid is ink, the lower lid is Pine with three short lashes, and the lowercase \"blink\" wordmark sits beside it in the display face. The product rejects the gradient hero with stock icon cards, a clinical white-and-blue hospital look, playful styling and a dark technical look.",
+    "overview": "Blink borrows the grammar of a mature listings marketplace and applies it to optometry shifts. Shifts read like listings: a storefront photo, the clinic name, the role, the day and the rate. Search comes first and sits in a wide pill. The canvas is white, the text is near-black ink, and one blue, Iris, does every job that needs colour. A pale Sky tint carries the large quiet areas. Everything else is hairlines, soft grey surfaces and type.\n\nDensity changes with the mode. Public pages breathe, with a centred display headline and generous vertical space. App screens (shift search, negotiation, admin tables) are tighter and more precise: hairline rows, sticky table headers, tabular figures and quiet underline tabs. Motion is rare and named: the logo blinks, the hero's eyelid band flattens on scroll, the live dot pulses, and a confirmed match plays one blink. Pages do not animate in. Two small signatures carry the eye-care theme: a family of eight line illustrations, and eye-chart lettering in Optician Sans on a few quiet surfaces.\n\nThe brand mark is a two-lid eye. The upper lid is ink, the lower lid is Iris with three short lashes, and the lowercase \"blink\" wordmark sits beside it in the display face. The product rejects the gradient hero with stock icon cards, a clinical white-and-blue hospital look, playful styling and a dark technical look.",
     "keyCharacteristics": [
-      "One accent, Pine, on a white and ink base.",
+      "One accent, Iris, on a white and ink base, with a pale Sky tint for large areas.",
       "Photo-led listing cards with one fixed illustrative storefront photo per clinic.",
       "Schibsted Grotesk headlines, Inter interface text, tabular figures for money and times.",
       "8px controls, 14px cards, full pills for search, chips and map markers.",
       "One soft shadow tier, used only for lift: search, hovered cards, menus and map markers.",
-      "Statuses are a dot and a label, never a coloured pill."
+      "Statuses are a dot and a label, never a coloured pill.",
+      "Eight spot illustrations in ink with one Iris detail, on the logo's 3px round stroke.",
+      "Optician Sans, the eye-chart face, only on the 404 page, zero-result charts, the admin review badge and the footer."
     ],
     "rules": [
-      { "name": "The One Green Rule", "body": "Pine is the only accent. If a new element needs emphasis and is not a primary action, a live state or a selected state, it gets ink or weight, not a colour.", "section": "colors" },
-      { "name": "The Live Is Green Rule", "body": "Among statuses, only Live is green, and it pulses. Filled and Approved use a solid ink dot, Open and In review use a hollow grey ring, Ended states use a grey dot.", "section": "colors" },
+      { "name": "The One Accent Rule", "body": "Iris is the only accent; Sky is its tint, not a second colour. If a new element needs emphasis and is not a primary action, a live state or a selected state, it gets ink or weight, not a colour.", "section": "colors" },
+      { "name": "The Live Is Iris Rule", "body": "Among statuses, only Live is Iris, and it pulses. Filled and Approved use a solid ink dot, Open and In review use a hollow grey ring, Ended states use a grey dot.", "section": "colors" },
       { "name": "The Tabular Money Rule", "body": "Rates, times, counts and the countdown use tabular figures (`font-variant-numeric: tabular-nums`), so columns and live numbers do not jitter.", "section": "typography" },
       { "name": "The Sentence Case Rule", "body": "No text in the product is uppercase or letter-spaced for decoration. Small labels name a field; they never sit above a heading as a tag.", "section": "typography" },
-      { "name": "The One Tier Rule", "body": "There is one shadow. A hovered listing card gets the tier and rises 2px; nothing gets a second, heavier shadow.", "section": "elevation" }
+      { "name": "The One Tier Rule", "body": "There is one shadow. A hovered listing card gets the tier and rises 2px; nothing gets a second, heavier shadow.", "section": "elevation" },
+      { "name": "The Four Places Rule", "body": "Optician Sans appears in four places only: the 404 page, zero-result search states (filtered shift search and clinic search), the admin credential review badge and the footer sign-off. It never sets working content such as rates, names or headings.", "section": "typography" }
     ],
     "dos": [
-      "Do use Pine (#1f6f4a) only for primary actions, live and selected states, form-control fills, clinic map pins and the logo's lower lid.",
+      "Do use Iris (#3451d1) only for primary actions, live and selected states, form-control fills, clinic map pins, the illustration details and the logo's lower lid.",
+      "Do keep Optician Sans to its four places, always decorative and hidden from screen readers.",
       "Do show every status as an 8px dot plus a sentence-case label.",
       "Do set rates, times and counts in tabular figures.",
       "Do use 8px corners for controls, 14px for cards and photos, and full pills for search, chips and map markers.",
@@ -155,13 +162,14 @@
       "Do honour reduced motion: the logo, the eyelid band and the pulses all stop."
     ],
     "donts": [
-      "Don't add a second accent colour or colour-coded status pills.",
-      "Don't make any status other than Live green.",
+      "Don't add a second accent colour or colour-coded status pills. Sky is a tint of Iris, not a second accent.",
+      "Don't make any status other than Live Iris.",
       "Don't show a large ticking countdown number; the 15 dots carry the time.",
       "Don't add a second, heavier shadow.",
       "Don't use a gradient hero, stock icon feature cards, a white-and-blue clinical look, playful styling or a dark technical theme.",
       "Don't put uppercase or letter-spaced tags above headings.",
-      "Don't colour destructive buttons red; confirm the action in context instead."
+      "Don't colour destructive buttons red; confirm the action in context instead.",
+      "Don't put a faint eye chart behind the home hero."
     ]
   }
 }

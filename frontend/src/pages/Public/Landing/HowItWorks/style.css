@@ -22,14 +22,15 @@
   gap: var(--space-2);
 }
 
-.step-number {
-  font-family: var(--font-display);
-  font-size: var(--text-4xl);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.04em;
-  color: var(--color-ink);
+/* the step drawing sits in a soft circle */
+.step-art {
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 120px;
   margin-bottom: var(--space-3);
+  border-radius: 50%;
+  background: var(--color-surface-subtle);
 }
 
 .step h3 {
@@ -60,14 +61,22 @@
 
   .step {
     display: grid;
-    grid-template-columns: 48px minmax(0, 1fr);
+    grid-template-columns: 80px minmax(0, 1fr);
+    align-items: center;
     column-gap: var(--space-4);
     row-gap: var(--space-1);
   }
 
-  .step-number {
+  .step-art {
     grid-row: span 2;
-    font-size: var(--text-3xl);
+    align-self: start;
+    width: 80px;
+    height: 80px;
     margin-bottom: 0;
+  }
+
+  .step-art .Illustration {
+    width: 56px;
+    height: 56px;
   }
 }

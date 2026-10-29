@@ -9,6 +9,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import CountdownTimer from "../../../components/CountdownTimer";
 import StatusBadge from "../../../components/StatusBadge";
 import Logo from "../../../components/Logo";
+import Illustration from "../../../components/Illustration";
 import { formatRate, formatShiftWhen, formatTime } from "../../../utils/format";
 import "./style.css";
 
@@ -250,6 +251,7 @@ export default function Negotiation() {
       <div className="Negotiation page-enter">
         <h1>Negotiation</h1>
         <div className="neg-empty">
+          <Illustration name="clock15" size={104} className="empty-illustration" />
           <p className="neg-empty-title">No active negotiation</p>
           <p>
             When you and the other side are both interested in a shift, either of you can open a

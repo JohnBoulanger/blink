@@ -5,6 +5,7 @@ import api from "../../../utils/api";
 import useDebounce from "../../../hooks/useDebounce";
 import Pagination from "../../../components/Pagination";
 import StatusBadge from "../../../components/StatusBadge";
+import Illustration from "../../../components/Illustration";
 import { formatRate, formatShiftWhen } from "../../../utils/format";
 import { JOB_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
@@ -132,6 +133,7 @@ export default function BusinessJobs() {
   } else if (jobs.length === 0) {
     body = (
       <div className="empty-state">
+        <Illustration name="storefront" size={104} className="empty-illustration" />
         <p className="empty-state-title">No shifts match these filters</p>
         <p>Pick other statuses above, or post a new shift for professionals to find.</p>
         <Link to="/business/jobs/new" className="btn-primary">

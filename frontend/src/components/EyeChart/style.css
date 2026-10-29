@@ -1,0 +1,61 @@
+/* small eye chart in optician sans: e / f p / t o z */
+
+.EyeChart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-chart);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--color-ink);
+  user-select: none;
+}
+
+/* letter-spacing adds space after the last letter; the matching indent keeps the line centred */
+.eyechart-line-2 {
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+}
+
+.eyechart-line-3 {
+  letter-spacing: 0.25em;
+  text-indent: 0.25em;
+}
+
+.EyeChart-empty {
+  gap: 6px;
+  margin-bottom: var(--space-3);
+}
+
+.EyeChart-empty .eyechart-line-1 {
+  font-size: 40px;
+}
+
+.EyeChart-empty .eyechart-line-2 {
+  font-size: 24px;
+}
+
+.EyeChart-empty .eyechart-line-3 {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.EyeChart-badge {
+  gap: 2px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 10px;
+  background: var(--color-surface);
+}
+
+.EyeChart-badge .eyechart-line-1 {
+  font-size: 26px;
+}
+
+.EyeChart-badge .eyechart-line-2 {
+  font-size: 15px;
+}
+
+.EyeChart-badge .eyechart-line-3 {
+  font-size: 9px;
+}

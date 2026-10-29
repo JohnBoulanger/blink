@@ -8,6 +8,7 @@ import Pagination from "../../../components/Pagination";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import StatusBadge from "../../../components/StatusBadge";
 import NegotiationBanner from "../../../components/NegotiationBanner";
+import Illustration, { type IllustrationName } from "../../../components/Illustration";
 import { JOB_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
 
@@ -59,11 +60,13 @@ function JobSummary({ job }: { job: JobEntry }) {
 }
 
 function EmptyState({
+  illustration,
   title,
   text,
   to,
   action,
 }: {
+  illustration: IllustrationName;
   title: string;
   text: string;
   to: string;
@@ -71,6 +74,7 @@ function EmptyState({
 }) {
   return (
     <div className="myjobs-empty">
+      <Illustration name={illustration} size={104} className="empty-illustration" />
       <p className="myjobs-empty-title">{title}</p>
       <p>{text}</p>
       <Link to={to} className="btn-secondary">
@@ -183,6 +187,7 @@ export default function MyJobs() {
       <>
         {interests.length === 0 ? (
           <EmptyState
+            illustration="glasses"
             title="No interests yet"
             text="Open a shift and press I'm interested. It shows up here while the clinic decides."
             to="/jobs"
@@ -241,6 +246,7 @@ export default function MyJobs() {
       <>
         {invitations.length === 0 ? (
           <EmptyState
+            illustration="glasses"
             title="No invitations yet"
             text="Clinics can invite you when you are available and hold an approved qualification."
             to="/profile"
@@ -276,6 +282,7 @@ export default function MyJobs() {
       <>
         {confirmed.length === 0 ? (
           <EmptyState
+            illustration="calendar"
             title="No work history yet"
             text="Shifts you confirm in a negotiation appear here."
             to="/jobs"

@@ -7,6 +7,8 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import StatusBadge from "../../../components/StatusBadge";
 import SearchPill from "../../../components/SearchPill";
 import ErrorBanner from "../../../components/ErrorBanner";
+import Illustration from "../../../components/Illustration";
+import EyeChart from "../../../components/EyeChart";
 import { QUAL_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
 
@@ -329,6 +331,7 @@ export default function AdminQualifications() {
               : `${count} qualification request${count !== 1 ? "s" : ""}`}
           </p>
         </div>
+        <EyeChart variant="badge" className="aq-chart" />
       </header>
 
       <div className="aq-controls">
@@ -359,6 +362,7 @@ export default function AdminQualifications() {
         <LoadingSpinner />
       ) : quals.length === 0 ? (
         <div className="empty-state">
+          <Illustration name="phoropter" size={104} className="empty-illustration" />
           <p className="empty-state-title">No requests match these filters</p>
           <p>When a professional submits a credential, it appears here for review.</p>
         </div>

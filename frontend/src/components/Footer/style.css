@@ -1,26 +1,78 @@
+/* footer: deep brand band with the name as an eye-chart line */
+
 .Footer {
-  border-top: 1px solid var(--color-border-soft);
-  background: var(--color-surface-subtle);
+  --footer-text: #ffffff;
+  --footer-muted: rgba(255, 255, 255, 0.82);
+  background: var(--color-brand-deep);
+  color: var(--footer-text);
 }
 
 .footer-inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding-block: var(--space-10) var(--space-8);
+  font-size: var(--text-sm);
+}
+
+.footer-signoff {
+  --signoff-scale: 1;
+  display: inline-flex;
+  align-items: baseline;
+  align-self: flex-start;
+  font-family: var(--font-chart);
+  font-weight: 400;
+  line-height: 1;
+  color: var(--footer-text);
+  text-decoration: none;
+  border-radius: var(--radius-control);
+  /* room for the focus ring without moving the letters */
+  padding: 4px 8px;
+  margin: -4px -8px;
+}
+
+.footer-signoff:hover {
+  color: var(--footer-text);
+}
+
+/* each gap is 0.35em of its own letter, so the spacing shrinks with the line */
+.footer-letter {
+  margin-right: 0.35em;
+}
+
+.footer-letter-1 {
+  font-size: calc(64px * var(--signoff-scale));
+}
+
+.footer-letter-2 {
+  font-size: calc(54px * var(--signoff-scale));
+}
+
+.footer-letter-3 {
+  font-size: calc(45px * var(--signoff-scale));
+}
+
+.footer-letter-4 {
+  font-size: calc(37px * var(--signoff-scale));
+}
+
+.footer-letter-5 {
+  font-size: calc(30px * var(--signoff-scale));
+  margin-right: 0;
+}
+
+.footer-row {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-4) var(--space-10);
-  padding-block: var(--space-8);
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--footer-muted);
 }
 
-.footer-brand {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-
-.footer-brand p {
-  color: var(--color-ink);
+.footer-credit {
+  color: var(--footer-text);
   font-weight: 500;
 }
 
@@ -30,27 +82,42 @@
   gap: 2px;
 }
 
-.footer-notes a {
-  color: var(--color-text-secondary);
+.Footer a {
+  color: var(--footer-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.Footer a:hover {
+  color: var(--footer-text);
+  text-decoration-thickness: 2px;
 }
 
 .footer-link {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  color: var(--color-ink);
   font-weight: 600;
-  text-underline-offset: 3px;
 }
 
-.footer-link:hover {
-  color: var(--color-ink);
-  text-decoration: underline;
+/* the ink focus ring disappears on the dark band */
+.Footer :focus-visible {
+  outline-color: var(--footer-text);
+}
+
+.Footer .footer-signoff {
+  text-decoration: none;
 }
 
 @media (max-width: 900px) {
-  .footer-inner {
+  .footer-row {
     grid-template-columns: 1fr;
     gap: var(--space-3);
+  }
+}
+
+@media (max-width: 599px) {
+  .footer-signoff {
+    --signoff-scale: 0.65;
   }
 }

@@ -7,6 +7,8 @@ import Pagination from "../../../components/Pagination";
 import ClinicPhoto from "../../../components/ClinicPhoto";
 import ClinicMap, { type MapPin } from "../../../components/ClinicMap";
 import SearchPill from "../../../components/SearchPill";
+import Illustration from "../../../components/Illustration";
+import EyeChart from "../../../components/EyeChart";
 import { hasLocation, type ClinicSummary } from "../../../utils/clinics";
 import "./style.css";
 
@@ -111,6 +113,11 @@ export default function BusinessList() {
   } else if (businesses.length === 0) {
     results = (
       <div className="empty-state">
+        {searchInput ? (
+          <EyeChart />
+        ) : (
+          <Illustration name="clinic-pin" size={104} className="empty-illustration" />
+        )}
         <p className="empty-state-title">No clinics found</p>
         <p>Try a shorter search, such as part of the clinic name.</p>
         {searchInput && (

@@ -1,12 +1,22 @@
 /* global theme: tokens, reset, base elements and shared primitives */
 
+/* eye-chart lettering, used only for the 404, zero-result charts, the admin badge and the footer */
+@font-face {
+  font-family: "Optician Sans";
+  src: url("./assets/fonts/OpticianSans.woff") format("woff");
+  font-display: swap;
+}
+
 :root {
   /* palette */
   --color-ink: #222222;
-  --color-pine: #1f6f4a;
-  --color-pine-deep: #175a3c;
-  --color-pine-tint: #e2f1e9;
-  --color-pine-band: #edf6f1;
+  --color-brand: #3451d1;
+  --color-brand-hover: #2b45bd;
+  --color-brand-deep: #1f2f86;
+  --color-brand-tint: #eaefff;
+  --color-brand-band: #eaefff;
+  --color-sky: #9db8ff;
+  --color-brand-border: var(--color-sky);
 
   /* neutrals */
   --color-text: var(--color-ink);
@@ -22,22 +32,22 @@
   --color-dot-ended: #c1c1c1;
 
   /* primary action */
-  --color-primary: var(--color-pine);
-  --color-primary-hover: var(--color-pine-deep);
+  --color-primary: var(--color-brand);
+  --color-primary-hover: var(--color-brand-hover);
   --color-on-primary: #ffffff;
 
   /* the single accent: primary actions, selected and live states */
-  --color-accent: var(--color-pine);
-  --color-accent-hover: var(--color-pine-deep);
-  --color-accent-strong: var(--color-pine-deep);
-  --color-accent-subtle: var(--color-pine-tint);
-  --color-accent-border: #b5d9c5;
+  --color-accent: var(--color-brand);
+  --color-accent-hover: var(--color-brand-hover);
+  --color-accent-strong: var(--color-brand-deep);
+  --color-accent-subtle: var(--color-brand-tint);
+  --color-accent-border: var(--color-brand-border);
   --color-focus: var(--color-ink);
 
   /* feedback: form errors and the final-minutes warning only */
-  --color-success: var(--color-pine-deep);
-  --color-success-subtle: var(--color-pine-tint);
-  --color-success-border: #b5d9c5;
+  --color-success: var(--color-brand-deep);
+  --color-success-subtle: var(--color-brand-tint);
+  --color-success-border: var(--color-brand-border);
   --color-warning: #8a5300;
   --color-warning-subtle: #fff6e5;
   --color-warning-border: #f3d9a4;
@@ -97,6 +107,7 @@
   --font-body: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display:
     "Schibsted Grotesk Variable", "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-chart: "Optician Sans", var(--font-display);
   --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -157,13 +168,13 @@ body {
 }
 
 ::selection {
-  background: var(--color-pine-tint);
+  background: var(--color-brand-tint);
   color: var(--color-ink);
 }
 
 input,
 textarea {
-  caret-color: var(--color-pine);
+  caret-color: var(--color-brand);
 }
 
 * {
@@ -285,7 +296,7 @@ input[type="checkbox"],
 input[type="radio"] {
   width: auto;
   min-height: 0;
-  accent-color: var(--color-pine);
+  accent-color: var(--color-brand);
 }
 
 input[type="file"] {
@@ -496,9 +507,9 @@ button:disabled {
 
 .chip.active,
 .chip[aria-pressed="true"] {
-  background: var(--color-pine-tint);
-  border-color: var(--color-pine);
-  color: var(--color-pine-deep);
+  background: var(--color-brand-tint);
+  border-color: var(--color-brand);
+  color: var(--color-brand-deep);
 }
 
 /* cards and panels */
@@ -687,8 +698,8 @@ button:disabled {
 }
 
 .success-message {
-  color: var(--color-pine-deep);
-  background: var(--color-pine-tint);
+  color: var(--color-brand-deep);
+  background: var(--color-brand-tint);
   border-color: var(--color-accent-border);
 }
 

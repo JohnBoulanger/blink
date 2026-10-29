@@ -35,7 +35,7 @@ Two mechanisms together, weighted equally:
 
 ## Capabilities and Constraints
 
-- Stack: React 19 + TypeScript + Vite frontend, Express + Prisma + SQLite + Socket.IO backend, single-service deploy. Maps use Mapbox GL JS with the Mapbox Standard style when a Mapbox token is set, and fall back to MapLibre GL JS with OpenFreeMap tiles without one (OpenStreetMap data in both). Fonts are self-hosted.
+- Stack: React 19 + TypeScript + Vite frontend, Express + Prisma + SQLite + Socket.IO backend, single-service deploy. Maps use Mapbox GL JS with the Mapbox Standard style when a Mapbox token is set, and fall back to MapLibre GL JS with OpenFreeMap tiles without one (OpenStreetMap data in both). Fonts are self-hosted (Schibsted Grotesk and Inter through Fontsource, Optician Sans under the SIL Open Font License 1.1).
 - All existing features, pages, and workflows stay. The overhaul changes presentation, not functionality.
 - The product name is Blink (formerly Visus). No logo asset exists yet.
 - The seeded Toronto clinics and demo accounts stay as the content shown.
@@ -49,6 +49,8 @@ Two mechanisms together, weighted equally:
 - Primary headline (chosen 2026-10-28): "Clinics and eye care pros, matched in the blink of an eye."
 - Visual direction (chosen 2026-10-28): the category standard, played straight. Blink should look like a clean, conventional staffing marketplace at the craft level of Linear and Airbnb, with no gimmicks or novelty themes.
 - Ruled out by the user: generic SaaS-template filler (gradient hero, stock icon cards), a clinical/hospital look, playful or cartoon styling, and a dark/techy look.
+- Brand colour (chosen 2026-10-29): Iris (#3451d1) replaces Pine green as the one accent, for primary buttons, the logo's lower lid, live status and selected states. Sky (pale tint #eaefff, mid tone #9db8ff) replaces the green bands and tints. Deep Iris (#1f2f86) carries the footer.
+- Eye-care signatures (chosen 2026-10-29): eight spot illustrations in ink with one Iris detail (storefront, verified ID, 15-minute clock, glasses, phoropter, eye chart, calendar, clinic pin) on the "How it works" steps and the empty states; a natural logo blink where only the upper lid closes (blink A); and Optician Sans eye-chart lettering in four places only: the 404 page, zero-result search charts, the admin credential review badge and the footer sign-off. The home hero has no background chart.
 
 ## Evidence on Hand
 

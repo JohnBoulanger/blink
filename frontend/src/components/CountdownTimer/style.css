@@ -26,7 +26,7 @@
 
 .countdown-dot-left,
 .countdown-dot-current {
-  background: var(--color-pine);
+  background: var(--color-brand);
 }
 
 .countdown-dot-current {

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ClinicPhoto from "../../../../components/ClinicPhoto";
+import Illustration from "../../../../components/Illustration";
 import type { Clinic } from "../types";
 import "./style.css";
 
@@ -33,7 +34,12 @@ export default function ClinicDirectory({ clinics, loading, error }: ClinicDirec
     );
   }
   if (clinics.length === 0) {
-    return <p className="clinic-list-message">No clinics are listed yet.</p>;
+    return (
+      <div className="clinic-list-empty">
+        <Illustration name="clinic-pin" size={96} />
+        <p className="clinic-list-message">No clinics are listed yet.</p>
+      </div>
+    );
   }
   return (
     <ul className="ClinicDirectory clinic-grid">

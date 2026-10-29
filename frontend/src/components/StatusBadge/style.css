@@ -19,7 +19,7 @@
 }
 
 .StatusBadge-live .StatusBadge-dot {
-  background: var(--color-pine);
+  background: var(--color-brand);
   animation: status-pulse 1.6s ease-in-out infinite;
 }
 

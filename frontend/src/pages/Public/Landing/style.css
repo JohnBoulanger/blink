@@ -93,7 +93,7 @@
 /* closing band */
 .landing-cta {
   padding-block: var(--space-20);
-  background: var(--color-pine-band);
+  background: var(--color-brand-band);
 }
 
 .cta-inner {

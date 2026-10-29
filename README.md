@@ -66,7 +66,7 @@ The seed script (`npx prisma db seed`) creates these accounts. All accounts use 
 | Real-time | Socket.IO (WebSocket) |
 | Auth | JWT (JSON Web Tokens) |
 | Maps | Mapbox GL JS (Mapbox Standard style), with MapLibre GL JS + OpenFreeMap as the fallback; map data © OpenStreetMap |
-| Fonts | Schibsted Grotesk and Inter, self-hosted with Fontsource |
+| Fonts | Schibsted Grotesk and Inter, self-hosted with Fontsource; [Optician Sans](https://github.com/anewtypeofinterference/Optician-Sans) by ANTI Hamar and Fábio Duarte Martins for the eye-chart lettering, self-hosted under the SIL Open Font License 1.1 (`frontend/src/assets/fonts/OFL.txt`) |
 | Security | Helmet, express-rate-limit, Zod validation |
 
 ## Getting started

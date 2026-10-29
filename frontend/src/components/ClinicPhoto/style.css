@@ -4,7 +4,7 @@
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: var(--radius-card);
-  background: var(--color-pine-tint);
+  background: var(--color-brand-tint);
 }
 
 .ClinicPhoto img {

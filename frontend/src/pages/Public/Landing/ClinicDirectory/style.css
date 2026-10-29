@@ -72,6 +72,18 @@
   color: var(--color-text-secondary);
 }
 
+.clinic-list-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: var(--space-6);
+  text-align: center;
+}
+
+.clinic-list-empty .clinic-list-message {
+  padding: var(--space-3) 0 0;
+}
+
 @media (hover: none) {
   .clinic-card:hover {
     box-shadow: none;

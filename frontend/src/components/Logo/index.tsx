@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import usePrefersReducedMotion from "../../hooks/usePrefersReducedMotion";
 import "./style.css";
 
 export type LogoBlink = "loop" | "once" | "off";
@@ -17,14 +19,35 @@ interface LogoProps {
   onClick?: () => void;
 }
 
+// blink a: only the upper lid moves; it closes onto the lower lid, holds and opens
+const LID_OPEN = "M6 36 Q32 4 58 36";
+const LID_CLOSED = "M6 31 Q32 54 58 31";
+// close 160ms, hold 80ms, open 200ms
+const BLINK_MS = 440;
+const LOOP_MS = 4500;
+const ONCE_DELAY_MS = 150;
+
 function Mark({ size, blink, blinkKey }: { size: number; blink: LogoBlink; blinkKey: number }) {
-  const playOnce = blink === "once" && blinkKey > 0;
-  const motion = blink === "loop" ? " Logo-loop" : playOnce ? " Logo-once" : "";
+  const lidAnim = useRef<SVGAnimateElement>(null);
+  const reducedMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (reducedMotion || blink === "off") return;
+    // smil restarts on beginElement in chrome, firefox and safari
+    const play = () => lidAnim.current?.beginElement();
+    if (blink === "loop") {
+      const id = window.setInterval(play, LOOP_MS);
+      return () => window.clearInterval(id);
+    }
+    if (blinkKey > 0) {
+      const id = window.setTimeout(play, ONCE_DELAY_MS);
+      return () => window.clearTimeout(id);
+    }
+  }, [blink, blinkKey, reducedMotion]);
+
   return (
     <svg
-      // remounting restarts the single blink
-      key={playOnce ? blinkKey : "mark"}
-      className={`Logo-mark${motion}`}
+      className="Logo-mark"
       width={size}
       height={size}
       viewBox="0 0 64 64"
@@ -33,17 +56,27 @@ function Mark({ size, blink, blinkKey }: { size: number; blink: LogoBlink; blink
       aria-hidden="true"
       focusable="false"
     >
-      <g className="Logo-upper">
-        <path d="M6 36 Q32 4 58 36" stroke="#222222" strokeWidth="7" />
-      </g>
-      <g className="Logo-lower">
-        <path d="M6 28 Q32 60 58 28" stroke="#1f6f4a" strokeWidth="7" />
-        <path
-          d="M21.6 41.4 L18.1 48.6 M32 44 L32 52 M42.4 41.4 L45.9 48.6"
-          stroke="#1f6f4a"
-          strokeWidth="5"
-        />
-      </g>
+      <path className="Logo-lower" d="M6 28 Q32 60 58 28" strokeWidth="7" />
+      <path
+        className="Logo-lower"
+        d="M21.6 41.4 L18.1 48.6 M32 44 L32 52 M42.4 41.4 L45.9 48.6"
+        strokeWidth="5"
+      />
+      <path className="Logo-upper" d={LID_OPEN} strokeWidth="7">
+        {blink !== "off" && (
+          <animate
+            ref={lidAnim}
+            attributeName="d"
+            begin="indefinite"
+            dur={`${BLINK_MS}ms`}
+            keyTimes="0;0.3636;0.5455;1"
+            values={`${LID_OPEN};${LID_CLOSED};${LID_CLOSED};${LID_OPEN}`}
+            calcMode="spline"
+            keySplines="0.4 0 0.6 1;0 0 1 1;0.4 0 0.6 1"
+            fill="remove"
+          />
+        )}
+      </path>
     </svg>
   );
 }

@@ -40,7 +40,7 @@
 }
 
 .map-pill.active {
-  background: var(--color-pine);
+  background: var(--color-brand);
   color: var(--color-on-primary);
   transform: scale(1.06);
 }
@@ -68,7 +68,7 @@
 }
 
 .map-cluster.active {
-  background: var(--color-pine);
+  background: var(--color-brand);
 }
 
 /* clinic dot: the button gives a 28px target around a small mark */
@@ -86,7 +86,7 @@
   height: 14px;
   border: 2px solid #ffffff;
   border-radius: 50%;
-  background: var(--color-pine);
+  background: var(--color-brand);
   box-shadow: var(--shadow-tier);
   transition: transform 0.15s var(--ease-out);
 }
