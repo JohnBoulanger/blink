@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-29T12:00:00Z",
+  "generatedAt": "2026-10-29T18:00:00Z",
   "title": "Design System: Blink",
   "extensions": {
     "colorMeta": {
@@ -35,7 +35,7 @@
       "label": { "displayName": "Label", "purpose": "Form labels, chips, nav links, status labels; buttons use 600." },
       "caption": { "displayName": "Caption", "purpose": "Table headers, tab counts, photo overlays, search pill field labels. Sentence case." },
       "figures": { "displayName": "Figures", "purpose": "Rates, times, counts and the countdown, in tabular figures." },
-      "chart": { "displayName": "Chart", "purpose": "Optician Sans eye-chart lines, decorative only: the 404 page, zero-result search charts, the admin credential review badge and the footer sign-off." }
+      "chart": { "displayName": "Chart", "purpose": "Optician Sans eye-chart lines, decorative only: the wordmark beside the logo mark, the 404 page, zero-result search charts, the admin credential review badge and the footer sign-off." }
     },
     "shadows": [
       { "name": "tier", "value": "rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0", "purpose": "The one shadow: landing search pill, hovered listing cards, account pill on hover, menus, map markers and the map card popup." }
@@ -49,7 +49,8 @@
       { "name": "logo-blink", "value": "SMIL path morph of the upper lid only, M6 36 Q32 4 58 36 to M6 31 Q32 54 58 31; close 160ms, hold 80ms, open 200ms", "purpose": "Blink A, the natural blink. Started with beginElement() so it runs in Chrome, Firefox and Safari." },
       { "name": "logo-blink-loop", "value": "one blink every 4.5s", "purpose": "The logo in the top bar." },
       { "name": "logo-blink-once", "value": "one blink after a 0.15s delay", "purpose": "One blink when a negotiation is confirmed." },
-      { "name": "lid-close", "value": "scroll(root block), range 0 to 300px, curve 220px to 24px (96px to 12px on phones)", "purpose": "The landing eyelid band flattens on scroll." }
+      { "name": "lid-close", "value": "scroll(root block), range 0 to 300px, curve 220px to 24px (96px to 12px on phones)", "purpose": "The landing eyelid band flattens on scroll." },
+      { "name": "select-in", "value": "opacity 0 to 1, scale 0.97 to 1, 0.14s cubic-bezier(0.16, 1, 0.3, 1); off under reduced motion", "purpose": "An opening select list." }
     ],
     "breakpoints": [
       { "name": "phone", "value": "768px" },
@@ -90,6 +91,14 @@
       "css": ".ds-chip { display: inline-flex; align-items: center; min-height: 36px; padding: 0 16px; border: 1px solid var(--color-border, #dddddd); border-radius: 999px; background: #ffffff; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: border-color 0.15s ease, background-color 0.15s ease; } .ds-chip:hover { border-color: var(--color-ink, #222222); } .ds-chip[aria-pressed=\"true\"] { background: var(--color-brand-tint, #eaefff); border-color: var(--color-brand, #3451d1); color: var(--color-brand-deep, #1f2f86); } .ds-chip:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
     },
     {
+      "name": "Select",
+      "kind": "select",
+      "refersTo": "select-list",
+      "description": "Select-only combobox: one button opens a white listbox with the shadow tier; the active option fills Soft Surface and the selected option is 600 with an Iris check. Field, pill and search triggers share it.",
+      "html": "<div class=\"ds-select\"><span class=\"ds-select-label\" id=\"ds-sel-label\">Position type</span><button class=\"ds-select-trigger\" type=\"button\" role=\"combobox\" aria-haspopup=\"listbox\" aria-expanded=\"true\" aria-labelledby=\"ds-sel-label\" aria-controls=\"ds-sel-list\" aria-activedescendant=\"ds-sel-2\"><span>Licensed Optician</span><svg class=\"ds-select-chevron\" width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M6 9l6 6 6-6\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button><ul class=\"ds-select-list\" id=\"ds-sel-list\" role=\"listbox\" aria-labelledby=\"ds-sel-label\"><li class=\"ds-select-option\" id=\"ds-sel-1\" role=\"option\" aria-selected=\"false\">Contact Lens Specialist</li><li class=\"ds-select-option is-active\" id=\"ds-sel-2\" role=\"option\" aria-selected=\"true\">Licensed Optician<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\" stroke=\"#3451d1\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></li><li class=\"ds-select-option\" id=\"ds-sel-3\" role=\"option\" aria-selected=\"false\">Optical Lab Technician</li></ul></div>",
+      "css": ".ds-select { display: flex; flex-direction: column; gap: 6px; max-width: 320px; font-family: var(--font-body, Inter, system-ui, sans-serif); } .ds-select-label { font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #222222); } .ds-select-trigger { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; border: 1px solid var(--color-ink, #222222); box-shadow: inset 0 0 0 1px var(--color-ink, #222222); border-radius: 8px; background: #ffffff; color: var(--color-ink, #222222); font: inherit; font-size: 1rem; text-align: left; cursor: pointer; } .ds-select-trigger span { flex: 1; } .ds-select-chevron { transform: rotate(180deg); } .ds-select-list { margin: 2px 0 0; padding: 6px; list-style: none; background: #ffffff; border-radius: 14px; box-shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0; } .ds-select-option { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; padding: 10px 12px; border-radius: 8px; font-size: 0.9375rem; color: var(--color-ink, #222222); cursor: pointer; } .ds-select-option.is-active { background: var(--color-surface-subtle, #f7f7f7); } .ds-select-option[aria-selected=\"true\"] { font-weight: 600; }"
+    },
+    {
       "name": "Top Bar Link",
       "kind": "nav",
       "refersTo": "nav-link",
@@ -128,20 +137,28 @@
       "description": "White rate pill on the Mapbox Standard basemap (flat, day light, no 3D or points of interest, neutral land, soft green parks, pale blue water, grey roads); Iris when active; ink cluster. MapLibre with OpenFreeMap Positron is the fallback without a token.",
       "html": "<div style=\"display:flex;gap:10px;padding:16px;background:hsl(40, 14%, 97%)\"><button class=\"ds-map-pill\">$29–39</button><button class=\"ds-map-pill ds-active\">$37–47</button><button class=\"ds-map-cluster\">4 shifts</button></div>",
       "css": ".ds-map-pill, .ds-map-cluster { display: inline-flex; align-items: center; border: 0; border-radius: 999px; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; cursor: pointer; box-shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0; transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s cubic-bezier(0.16,1,0.3,1); } .ds-map-pill { min-height: 28px; padding: 0 10px; background: #ffffff; color: var(--color-ink, #222222); font-weight: 700; } .ds-map-pill:hover, .ds-map-pill.ds-active { background: var(--color-brand, #3451d1); color: #ffffff; transform: scale(1.06); } .ds-map-cluster { min-height: 30px; padding: 0 12px; background: var(--color-ink, #222222); color: #ffffff; font-weight: 600; } .ds-map-cluster:hover { transform: scale(1.06); } .ds-map-pill:focus-visible, .ds-map-cluster:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
+    },
+    {
+      "name": "Logo Wordmark",
+      "kind": "custom",
+      "refersTo": "logo",
+      "description": "The two-lid mark with the name as a shrinking eye-chart line in Optician Sans (ratio 64, 54, 45, 37, 30; 0.35em gaps; one baseline). Beside a 30px mark the B is 40px, so its 20px cap matches the mark and the K cap is 9.4px. The same line opens the footer at 64px.",
+      "html": "<a class=\"ds-logo\" href=\"#\" aria-label=\"Blink home\"><svg width=\"30\" height=\"30\" viewBox=\"0 0 64 64\" fill=\"none\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M6 28 Q32 60 58 28\" stroke=\"#3451d1\" stroke-width=\"7\"/><path d=\"M21.6 41.4 L18.1 48.6 M32 44 L32 52 M42.4 41.4 L45.9 48.6\" stroke=\"#3451d1\" stroke-width=\"5\"/><path d=\"M6 36 Q32 4 58 36\" stroke=\"#222222\" stroke-width=\"7\"/></svg><span class=\"ds-chart\" aria-hidden=\"true\"><span>B</span><span>L</span><span>I</span><span>N</span><span>K</span></span></a>",
+      "css": ".ds-logo { display: inline-flex; align-items: center; gap: 8px; color: var(--color-ink, #222222); text-decoration: none; } .ds-chart { --chart-size: 40px; display: inline-flex; align-items: baseline; font-family: 'Optician Sans', var(--font-display, 'Schibsted Grotesk Variable', sans-serif); font-weight: 400; line-height: 1; transform: translateY(1px); } .ds-chart span { margin-right: 0.35em; } .ds-chart span:nth-child(1) { font-size: var(--chart-size); } .ds-chart span:nth-child(2) { font-size: calc(var(--chart-size) * 54 / 64); } .ds-chart span:nth-child(3) { font-size: calc(var(--chart-size) * 45 / 64); } .ds-chart span:nth-child(4) { font-size: calc(var(--chart-size) * 37 / 64); } .ds-chart span:nth-child(5) { font-size: calc(var(--chart-size) * 30 / 64); margin-right: 0; }"
     }
   ],
   "narrative": {
     "northStar": "The Quiet Marketplace",
-    "overview": "Blink borrows the grammar of a mature listings marketplace and applies it to optometry shifts. Shifts read like listings: a storefront photo, the clinic name, the role, the day and the rate. Search comes first and sits in a wide pill. The canvas is white, the text is near-black ink, and one blue, Iris, does every job that needs colour. A pale Sky tint carries the large quiet areas. Everything else is hairlines, soft grey surfaces and type.\n\nDensity changes with the mode. Public pages breathe, with a centred display headline and generous vertical space. App screens (shift search, negotiation, admin tables) are tighter and more precise: hairline rows, sticky table headers, tabular figures and quiet underline tabs. Motion is rare and named: the logo blinks, the hero's eyelid band flattens on scroll, the live dot pulses, and a confirmed match plays one blink. Pages do not animate in. Two small signatures carry the eye-care theme: a family of eight line illustrations, and eye-chart lettering in Optician Sans on a few quiet surfaces.\n\nThe brand mark is a two-lid eye. The upper lid is ink, the lower lid is Iris with three short lashes, and the lowercase \"blink\" wordmark sits beside it in the display face. The product rejects the gradient hero with stock icon cards, a clinical white-and-blue hospital look, playful styling and a dark technical look.",
+    "overview": "Blink borrows the grammar of a mature listings marketplace and applies it to optometry shifts. Shifts read like listings: a storefront photo, the clinic name, the role, the day and the rate. Search comes first and sits in a wide pill. The canvas is white, the text is near-black ink, and one blue, Iris, does every job that needs colour. A pale Sky tint carries the large quiet areas. Everything else is hairlines, soft grey surfaces and type.\n\nDensity changes with the mode. Public pages breathe, with a centred display headline and generous vertical space. App screens (shift search, negotiation, admin tables) are tighter and more precise: hairline rows, sticky table headers, tabular figures and quiet underline tabs. Motion is rare and named: the logo blinks, the hero's eyelid band flattens on scroll, the live dot pulses, and a confirmed match plays one blink. Pages do not animate in. Two small signatures carry the eye-care theme: a family of eight line illustrations, and eye-chart lettering in Optician Sans on a few quiet surfaces.\n\nThe brand mark is a two-lid eye. The upper lid is ink, the lower lid is Iris with three short lashes, and the name sits beside it as a shrinking eye-chart line, \"B L I N K\", in Optician Sans. The product rejects the gradient hero with stock icon cards, a clinical white-and-blue hospital look, playful styling and a dark technical look.",
     "keyCharacteristics": [
       "One accent, Iris, on a white and ink base, with a pale Sky tint for large areas.",
       "Photo-led listing cards with one fixed illustrative storefront photo per clinic.",
       "Schibsted Grotesk headlines, Inter interface text, tabular figures for money and times.",
       "8px controls, 14px cards, full pills for search, chips and map markers.",
-      "One soft shadow tier, used only for lift: search, hovered cards, menus and map markers.",
+      "One soft shadow tier, used only for lift: search, hovered cards, menus, select lists and map markers.",
       "Statuses are a dot and a label, never a coloured pill.",
       "Eight spot illustrations in ink with one Iris detail, on the logo's 3px round stroke.",
-      "Optician Sans, the eye-chart face, only on the 404 page, zero-result charts, the admin review badge and the footer."
+      "Optician Sans, the eye-chart face, only in the wordmark, the 404 page, zero-result charts, the admin review badge and the footer."
     ],
     "rules": [
       { "name": "The One Accent Rule", "body": "Iris is the only accent; Sky is its tint, not a second colour. If a new element needs emphasis and is not a primary action, a live state or a selected state, it gets ink or weight, not a colour.", "section": "colors" },
@@ -149,11 +166,11 @@
       { "name": "The Tabular Money Rule", "body": "Rates, times, counts and the countdown use tabular figures (`font-variant-numeric: tabular-nums`), so columns and live numbers do not jitter.", "section": "typography" },
       { "name": "The Sentence Case Rule", "body": "No text in the product is uppercase or letter-spaced for decoration. Small labels name a field; they never sit above a heading as a tag.", "section": "typography" },
       { "name": "The One Tier Rule", "body": "There is one shadow. A hovered listing card gets the tier and rises 2px; nothing gets a second, heavier shadow.", "section": "elevation" },
-      { "name": "The Four Places Rule", "body": "Optician Sans appears in four places only: the 404 page, zero-result search states (filtered shift search and clinic search), the admin credential review badge and the footer sign-off. It never sets working content such as rates, names or headings.", "section": "typography" }
+      { "name": "The Five Places Rule", "body": "Optician Sans appears in five places only: the wordmark beside the logo mark, the 404 page, zero-result search states (filtered shift search and clinic search), the admin credential review badge and the footer sign-off. It never sets working content such as rates, names or headings.", "section": "typography" }
     ],
     "dos": [
       "Do use Iris (#3451d1) only for primary actions, live and selected states, form-control fills, clinic map pins, the illustration details and the logo's lower lid.",
-      "Do keep Optician Sans to its four places, always decorative and hidden from screen readers.",
+      "Do keep Optician Sans to its five places, always decorative and hidden from screen readers.",
       "Do show every status as an 8px dot plus a sentence-case label.",
       "Do set rates, times and counts in tabular figures.",
       "Do use 8px corners for controls, 14px for cards and photos, and full pills for search, chips and map markers.",

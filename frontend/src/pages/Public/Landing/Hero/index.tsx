@@ -54,7 +54,6 @@ export default function Hero({ clinics, positionTypes, loading }: HeroProps) {
           <span className="hero-line">Clinics and eye care pros,</span>{" "}
           <span className="hero-line">matched in the blink of an eye.</span>
         </h1>
-        <p className="hero-subcopy">Verified staff. One live, 15-minute negotiation per shift.</p>
         <ShiftSearch clinics={clinics} positionTypes={positionTypes} loading={loading} />
         <DemoLinks id="demo" />
       </div>

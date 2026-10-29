@@ -1,23 +1,13 @@
 import { Link } from "react-router-dom";
+import ChartWordmark from "../ChartWordmark";
 import "./style.css";
-
-// the name as a shrinking eye-chart line
-const SIGN_OFF = ["B", "L", "I", "N", "K"];
 
 export default function Footer() {
   return (
     <footer className="Footer">
       <div className="container footer-inner">
         <Link to="/" className="footer-signoff" aria-label="Blink home">
-          {SIGN_OFF.map((letter, i) => (
-            <span
-              key={letter}
-              className={`footer-letter footer-letter-${i + 1}`}
-              aria-hidden="true"
-            >
-              {letter}
-            </span>
-          ))}
+          <ChartWordmark />
         </Link>
         <div className="footer-row">
           <p className="footer-credit">Built by John Boulanger</p>

@@ -1,0 +1,37 @@
+/* eye-chart wordmark: letters shrink 64, 54, 45, 37, 30 on one baseline.
+   --chart-size is the B's font size; Optician Sans caps are half of it. */
+.ChartWordmark {
+  --chart-size: 64px;
+  display: inline-flex;
+  align-items: baseline;
+  font-family: var(--font-chart);
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* each gap is 0.35em of its own letter, so the spacing shrinks with the line */
+.ChartWordmark-letter {
+  margin-right: 0.35em;
+}
+
+.ChartWordmark-letter:nth-child(1) {
+  font-size: var(--chart-size);
+}
+
+.ChartWordmark-letter:nth-child(2) {
+  font-size: calc(var(--chart-size) * 54 / 64);
+}
+
+.ChartWordmark-letter:nth-child(3) {
+  font-size: calc(var(--chart-size) * 45 / 64);
+}
+
+.ChartWordmark-letter:nth-child(4) {
+  font-size: calc(var(--chart-size) * 37 / 64);
+}
+
+.ChartWordmark-letter:nth-child(5) {
+  font-size: calc(var(--chart-size) * 30 / 64);
+  margin-right: 0;
+}

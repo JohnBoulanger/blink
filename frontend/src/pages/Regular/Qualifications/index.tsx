@@ -7,6 +7,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import FileUpload from "../../../components/FileUpload";
 import StatusBadge from "../../../components/StatusBadge";
 import Illustration from "../../../components/Illustration";
+import Select from "../../../components/Select";
 import { QUAL_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
 
@@ -200,20 +201,18 @@ export default function Qualifications() {
         <form onSubmit={handleCreate} className="myqual-create-form">
           {createError && <p className="error-message">{createError}</p>}
           <div className="form-field">
-            <label htmlFor="myqual-position">Position type</label>
-            <select
+            <Select
+              variant="field"
+              label="Position type"
               id="myqual-position"
               value={newPositionId}
-              onChange={(e) => setNewPositionId(e.target.value)}
+              onChange={setNewPositionId}
               required
-            >
-              <option value="">Select position type</option>
-              {positionTypes.map((pt) => (
-                <option key={pt.id} value={pt.id}>
-                  {pt.name}
-                </option>
-              ))}
-            </select>
+              options={[
+                { value: "", label: "Select position type" },
+                ...positionTypes.map((pt) => ({ value: String(pt.id), label: pt.name })),
+              ]}
+            />
           </div>
           <div className="form-field">
             <label htmlFor="myqual-note">Note for the reviewer (optional)</label>

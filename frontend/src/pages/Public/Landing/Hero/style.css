@@ -28,8 +28,10 @@
   text-align: center;
 }
 
+/* the headline sits 40px above the search (32px on phones) */
 .Hero h1 {
   max-width: 20em;
+  margin-bottom: var(--space-4);
   font-size: clamp(2.375rem, 1.2rem + 3.6vw, var(--text-display));
   font-weight: 700;
   line-height: 1.04;
@@ -38,14 +40,6 @@
 
 .hero-line {
   display: block;
-}
-
-.hero-subcopy {
-  margin-top: calc(var(--space-2) * -1);
-  margin-bottom: var(--space-2);
-  font-size: var(--text-lg);
-  line-height: 1.5;
-  color: var(--color-ink);
 }
 
 /* scroll flattens the curved edge like a lid closing; the band keeps its size */
@@ -90,11 +84,7 @@
 
   .Hero h1 {
     max-width: 12em;
+    margin-bottom: var(--space-2);
     letter-spacing: -0.03em;
-  }
-
-  .hero-subcopy {
-    font-size: var(--text-base);
-    max-width: 30ch;
   }
 }

@@ -16,13 +16,8 @@
 }
 
 .footer-signoff {
-  --signoff-scale: 1;
   display: inline-flex;
-  align-items: baseline;
   align-self: flex-start;
-  font-family: var(--font-chart);
-  font-weight: 400;
-  line-height: 1;
   color: var(--footer-text);
   text-decoration: none;
   border-radius: var(--radius-control);
@@ -33,32 +28,6 @@
 
 .footer-signoff:hover {
   color: var(--footer-text);
-}
-
-/* each gap is 0.35em of its own letter, so the spacing shrinks with the line */
-.footer-letter {
-  margin-right: 0.35em;
-}
-
-.footer-letter-1 {
-  font-size: calc(64px * var(--signoff-scale));
-}
-
-.footer-letter-2 {
-  font-size: calc(54px * var(--signoff-scale));
-}
-
-.footer-letter-3 {
-  font-size: calc(45px * var(--signoff-scale));
-}
-
-.footer-letter-4 {
-  font-size: calc(37px * var(--signoff-scale));
-}
-
-.footer-letter-5 {
-  font-size: calc(30px * var(--signoff-scale));
-  margin-right: 0;
 }
 
 .footer-row {
@@ -117,7 +86,7 @@
 }
 
 @media (max-width: 599px) {
-  .footer-signoff {
-    --signoff-scale: 0.65;
+  .footer-signoff .ChartWordmark {
+    --chart-size: calc(64px * 0.65);
   }
 }

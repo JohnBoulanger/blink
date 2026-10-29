@@ -18,7 +18,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* filter row: native selects drawn as pills (.pill-select lives in index.css) */
+/* filter row: pill selects and the clinic chip */
 .jobs-controls {
   display: flex;
   flex-wrap: wrap;
@@ -200,7 +200,7 @@
     scrollbar-width: none;
   }
 
-  .pill-select,
+  .Select-pill,
   .jobs-clinic-chip {
     flex-shrink: 0;
   }

@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import Select from "../../../../components/Select";
 import useDemoLogin from "../useDemoLogin";
 import type { Clinic, PositionType } from "../types";
 import "./style.css";
@@ -33,39 +34,33 @@ export default function ShiftSearch({ clinics, positionTypes, loading }: ShiftSe
         aria-describedby={hintId}
         onSubmit={handleSubmit}
       >
-        <div className="search-segment">
-          <label htmlFor="search-clinic">Clinic</label>
-          <select
-            id="search-clinic"
-            value={clinicId}
-            onChange={(e) => setClinicId(e.target.value)}
-            disabled={loading}
-          >
-            <option value="">{loading ? "Loading clinics…" : "Any clinic in Toronto"}</option>
-            {clinics.map((clinic) => (
-              <option key={clinic.id} value={clinic.id}>
-                {clinic.business_name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Select
+          variant="search"
+          className="search-segment"
+          id="search-clinic"
+          label="Clinic"
+          value={clinicId}
+          onChange={setClinicId}
+          disabled={loading}
+          options={[
+            { value: "", label: loading ? "Loading clinics…" : "Any clinic in Toronto" },
+            ...clinics.map((clinic) => ({ value: String(clinic.id), label: clinic.business_name })),
+          ]}
+        />
         <span className="search-divider" aria-hidden="true" />
-        <div className="search-segment">
-          <label htmlFor="search-role">Role</label>
-          <select
-            id="search-role"
-            value={roleId}
-            onChange={(e) => setRoleId(e.target.value)}
-            disabled={loading}
-          >
-            <option value="">{loading ? "Loading roles…" : "Any role"}</option>
-            {positionTypes.map((type) => (
-              <option key={type.id} value={type.id}>
-                {type.name}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Select
+          variant="search"
+          className="search-segment"
+          id="search-role"
+          label="Role"
+          value={roleId}
+          onChange={setRoleId}
+          disabled={loading}
+          options={[
+            { value: "", label: loading ? "Loading roles…" : "Any role" },
+            ...positionTypes.map((type) => ({ value: String(type.id), label: type.name })),
+          ]}
+        />
         <button
           type="submit"
           className="search-submit"

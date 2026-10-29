@@ -7,6 +7,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import StatusBadge from "../../../components/StatusBadge";
 import SearchPill from "../../../components/SearchPill";
 import ErrorBanner from "../../../components/ErrorBanner";
+import Select from "../../../components/Select";
 import "./style.css";
 
 interface User {
@@ -121,30 +122,30 @@ export default function AdminUsers() {
           label="Search users"
           placeholder="Search name, email or phone"
         />
-        <label className="pill-select">
-          <span className="visually-hidden">Filter by activation</span>
-          <select
-            value={activatedFilter}
-            onChange={(e) => setActivatedFilter(e.target.value)}
-            className={activatedFilter ? "is-set" : ""}
-          >
-            <option value="">Any activation</option>
-            <option value="true">Activated</option>
-            <option value="false">Not activated</option>
-          </select>
-        </label>
-        <label className="pill-select">
-          <span className="visually-hidden">Filter by suspension</span>
-          <select
-            value={suspendedFilter}
-            onChange={(e) => setSuspendedFilter(e.target.value)}
-            className={suspendedFilter ? "is-set" : ""}
-          >
-            <option value="">Any access</option>
-            <option value="false">Active only</option>
-            <option value="true">Suspended only</option>
-          </select>
-        </label>
+        <Select
+          variant="pill"
+          label="Filter by activation"
+          value={activatedFilter}
+          onChange={setActivatedFilter}
+          active={activatedFilter !== ""}
+          options={[
+            { value: "", label: "Any activation" },
+            { value: "true", label: "Activated" },
+            { value: "false", label: "Not activated" },
+          ]}
+        />
+        <Select
+          variant="pill"
+          label="Filter by suspension"
+          value={suspendedFilter}
+          onChange={setSuspendedFilter}
+          active={suspendedFilter !== ""}
+          options={[
+            { value: "", label: "Any access" },
+            { value: "false", label: "Active only" },
+            { value: "true", label: "Suspended only" },
+          ]}
+        />
       </div>
 
       {error && <ErrorBanner message={error} onDismiss={() => setError("")} />}

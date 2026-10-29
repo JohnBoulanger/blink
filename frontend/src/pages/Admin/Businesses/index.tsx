@@ -8,6 +8,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import StatusBadge from "../../../components/StatusBadge";
 import SearchPill from "../../../components/SearchPill";
 import ErrorBanner from "../../../components/ErrorBanner";
+import Select from "../../../components/Select";
 import "./style.css";
 
 interface Business {
@@ -136,37 +137,40 @@ export default function AdminBusinesses() {
           label="Search clinics"
           placeholder="Search name, owner, email or phone"
         />
-        <label className="pill-select">
-          <span className="visually-hidden">Filter by activation</span>
-          <select
-            value={activatedFilter}
-            onChange={(e) => setActivatedFilter(e.target.value)}
-            className={activatedFilter ? "is-set" : ""}
-          >
-            <option value="">Any activation</option>
-            <option value="true">Activated</option>
-            <option value="false">Not activated</option>
-          </select>
-        </label>
-        <label className="pill-select">
-          <span className="visually-hidden">Filter by verification</span>
-          <select
-            value={verifiedFilter}
-            onChange={(e) => setVerifiedFilter(e.target.value)}
-            className={verifiedFilter ? "is-set" : ""}
-          >
-            <option value="">Any verification</option>
-            <option value="true">Verified</option>
-            <option value="false">Unverified</option>
-          </select>
-        </label>
-        <label className="pill-select">
-          <span className="visually-hidden">Sort order</span>
-          <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-            <option value="asc">Name, A to Z</option>
-            <option value="desc">Name, Z to A</option>
-          </select>
-        </label>
+        <Select
+          variant="pill"
+          label="Filter by activation"
+          value={activatedFilter}
+          onChange={setActivatedFilter}
+          active={activatedFilter !== ""}
+          options={[
+            { value: "", label: "Any activation" },
+            { value: "true", label: "Activated" },
+            { value: "false", label: "Not activated" },
+          ]}
+        />
+        <Select
+          variant="pill"
+          label="Filter by verification"
+          value={verifiedFilter}
+          onChange={setVerifiedFilter}
+          active={verifiedFilter !== ""}
+          options={[
+            { value: "", label: "Any verification" },
+            { value: "true", label: "Verified" },
+            { value: "false", label: "Unverified" },
+          ]}
+        />
+        <Select
+          variant="pill"
+          label="Sort order"
+          value={sortOrder}
+          onChange={setSortOrder}
+          options={[
+            { value: "asc", label: "Name, A to Z" },
+            { value: "desc", label: "Name, Z to A" },
+          ]}
+        />
       </div>
 
       {error && <ErrorBanner message={error} onDismiss={() => setError("")} />}

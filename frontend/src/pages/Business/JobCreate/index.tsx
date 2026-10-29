@@ -4,6 +4,7 @@ import axios from "axios";
 import api from "../../../utils/api";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import BackLink from "../../../components/BackLink";
+import Select from "../../../components/Select";
 import { toDateTimeLocal } from "../../../utils/format";
 import "./style.css";
 
@@ -65,9 +66,7 @@ export default function BusinessJobCreate() {
       .finally(() => setPtLoading(false));
   }, []);
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
@@ -206,22 +205,20 @@ export default function BusinessJobCreate() {
         <section className="jcreate-section" aria-labelledby="jc-role-title">
           <h2 id="jc-role-title">Role</h2>
           <div className="form-field">
-            <label htmlFor="position_type_id">Position type</label>
-            <select
+            <Select
+              variant="field"
+              label="Position type"
               id="position_type_id"
               name="position_type_id"
               value={form.position_type_id}
-              onChange={handleChange}
+              onChange={(value) => setForm((prev) => ({ ...prev, position_type_id: value }))}
               required
               {...invalidProps("position_type_id")}
-            >
-              <option value="">Select a position</option>
-              {positionTypes.map((pt) => (
-                <option key={pt.id} value={pt.id}>
-                  {pt.name}
-                </option>
-              ))}
-            </select>
+              options={[
+                { value: "", label: "Select a position" },
+                ...positionTypes.map((pt) => ({ value: String(pt.id), label: pt.name })),
+              ]}
+            />
             {errorLine("position_type_id")}
           </div>
         </section>

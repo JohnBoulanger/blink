@@ -9,6 +9,7 @@ import ClinicMap, { type MapPin } from "../../../components/ClinicMap";
 import SearchPill from "../../../components/SearchPill";
 import Illustration from "../../../components/Illustration";
 import EyeChart from "../../../components/EyeChart";
+import Select from "../../../components/Select";
 import { hasLocation, type ClinicSummary } from "../../../utils/clinics";
 import "./style.css";
 
@@ -175,13 +176,16 @@ export default function BusinessList() {
           label="Search clinics"
           placeholder="Search clinics"
         />
-        <label className="pill-select">
-          <span className="visually-hidden">Sort order</span>
-          <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-            <option value="asc">Name, A to Z</option>
-            <option value="desc">Name, Z to A</option>
-          </select>
-        </label>
+        <Select
+          variant="pill"
+          label="Sort order"
+          value={sortOrder}
+          onChange={setSortOrder}
+          options={[
+            { value: "asc", label: "Name, A to Z" },
+            { value: "desc", label: "Name, Z to A" },
+          ]}
+        />
       </div>
 
       <div className="bl-layout">

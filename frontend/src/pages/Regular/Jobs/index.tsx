@@ -11,6 +11,7 @@ import ShiftCard from "../../../components/ShiftCard";
 import ClinicMap, { type MapPin } from "../../../components/ClinicMap";
 import Illustration from "../../../components/Illustration";
 import EyeChart from "../../../components/EyeChart";
+import Select from "../../../components/Select";
 import "./style.css";
 
 interface PositionType {
@@ -252,29 +253,28 @@ export default function Jobs() {
 
       {/* filter + sort controls */}
       <div className="jobs-controls" role="group" aria-label="Filter and sort shifts">
-        <label className="pill-select">
-          <span className="visually-hidden">Position type</span>
-          <select
-            value={positionFilter}
-            onChange={(e) => setPositionFilter(e.target.value)}
-            className={positionFilter ? "is-set" : ""}
-          >
-            <option value="">All position types</option>
-            {positionTypes.map((pt) => (
-              <option key={pt.id} value={pt.id}>
-                {pt.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <Select
+          variant="pill"
+          label="Position type"
+          value={positionFilter}
+          onChange={setPositionFilter}
+          active={positionFilter !== ""}
+          options={[
+            { value: "", label: "All position types" },
+            ...positionTypes.map((pt) => ({ value: String(pt.id), label: pt.name })),
+          ]}
+        />
 
-        <label className="pill-select">
-          <span className="visually-hidden">Sort order</span>
-          <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-            <option value="asc">Soonest first</option>
-            <option value="desc">Latest first</option>
-          </select>
-        </label>
+        <Select
+          variant="pill"
+          label="Sort order"
+          value={sortOrder}
+          onChange={setSortOrder}
+          options={[
+            { value: "asc", label: "Soonest first" },
+            { value: "desc", label: "Latest first" },
+          ]}
+        />
 
         {businessFilter && (
           <span className="jobs-clinic-chip">

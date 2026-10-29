@@ -1,0 +1,240 @@
+/* custom select: one button opens a floating listbox */
+
+.Select {
+  position: relative;
+  display: flex;
+  min-width: 0;
+}
+
+.Select-trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.Select-trigger:active:not(:disabled) {
+  transform: none;
+}
+
+.Select-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.Select-chevron {
+  flex-shrink: 0;
+  color: var(--color-ink);
+  transition: transform 0.15s var(--ease-out);
+}
+
+.Select.is-open .Select-chevron {
+  transform: rotate(180deg);
+}
+
+/* the hidden input only anchors the browser's required message over the field */
+.Select-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* field: the form input look */
+.Select-field .Select-trigger {
+  min-height: var(--control-height);
+  padding: 10px 14px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.4;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.Select-field .Select-trigger:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+}
+
+.Select-field .Select-trigger:focus-visible,
+.Select-field.is-open .Select-trigger,
+.Select-field:has(.Select-native:focus) .Select-trigger {
+  outline: none;
+  border-color: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--color-ink);
+}
+
+.Select-field .Select-trigger[aria-invalid="true"] {
+  border-color: var(--color-danger);
+  box-shadow: inset 0 0 0 1px var(--color-danger);
+}
+
+.Select-field .Select-trigger:disabled {
+  background: var(--color-surface-subtle);
+  color: var(--color-text-muted);
+}
+
+/* pill: the filter chip look */
+.Select-pill {
+  display: inline-flex;
+}
+
+.Select-pill .Select-trigger {
+  width: auto;
+  max-width: 280px;
+  min-height: var(--control-height);
+  padding: 0 16px 0 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.25;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.Select-pill .Select-trigger:hover:not(:disabled),
+.Select-pill.is-open .Select-trigger {
+  border-color: var(--color-ink);
+}
+
+.Select-pill .Select-trigger.is-set {
+  border-color: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--color-ink);
+}
+
+/* search: a caption and a value inside the landing search pill */
+.Select-search .Select-trigger {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  column-gap: var(--space-3);
+  row-gap: 2px;
+  align-content: center;
+  background: transparent;
+}
+
+.Select-search .Select-label {
+  grid-column: 1;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--color-ink);
+}
+
+.Select-search .Select-value {
+  grid-column: 1;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.Select-search .Select-chevron {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+
+/* the floating list */
+.Select-list {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 250;
+  width: max-content;
+  max-width: min(360px, calc(100vw - 32px));
+  max-height: 328px;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-tier);
+  outline: none;
+  transform-origin: top center;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+.Select-list.is-above {
+  transform-origin: bottom center;
+}
+
+.Select-list-search {
+  max-width: min(420px, calc(100vw - 32px));
+}
+
+.Select-list-field {
+  max-width: calc(100vw - 32px);
+}
+
+.Select-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: var(--radius-control);
+  font-size: var(--text-md);
+  line-height: 1.35;
+  color: var(--color-ink);
+  cursor: pointer;
+  user-select: none;
+}
+
+.Select-option.is-active {
+  background: var(--color-surface-subtle);
+}
+
+.Select-option[aria-selected="true"] {
+  font-weight: 600;
+}
+
+.Select-option-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.Select-check {
+  flex-shrink: 0;
+  color: var(--color-brand);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .Select-list {
+    animation: select-in 0.14s var(--ease-out) both;
+  }
+}
+
+@keyframes select-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@media (max-width: 768px) {
+  .Select-option {
+    font-size: var(--text-base);
+  }
+}

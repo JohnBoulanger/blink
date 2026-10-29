@@ -7,6 +7,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import StatusBadge from "../../../components/StatusBadge";
 import SearchPill from "../../../components/SearchPill";
 import ErrorBanner from "../../../components/ErrorBanner";
+import Select from "../../../components/Select";
 import "./style.css";
 
 interface PositionType {
@@ -264,25 +265,28 @@ export default function AdminPositionTypes() {
           label="Search position types"
           placeholder="Search name or description"
         />
-        <label className="pill-select">
-          <span className="visually-hidden">Filter by visibility</span>
-          <select
-            value={hiddenFilter}
-            onChange={(e) => setHiddenFilter(e.target.value)}
-            className={hiddenFilter ? "is-set" : ""}
-          >
-            <option value="">Any visibility</option>
-            <option value="false">Visible</option>
-            <option value="true">Hidden</option>
-          </select>
-        </label>
-        <label className="pill-select">
-          <span className="visually-hidden">Sort order</span>
-          <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-            <option value="asc">Name, A to Z</option>
-            <option value="desc">Name, Z to A</option>
-          </select>
-        </label>
+        <Select
+          variant="pill"
+          label="Filter by visibility"
+          value={hiddenFilter}
+          onChange={setHiddenFilter}
+          active={hiddenFilter !== ""}
+          options={[
+            { value: "", label: "Any visibility" },
+            { value: "false", label: "Visible" },
+            { value: "true", label: "Hidden" },
+          ]}
+        />
+        <Select
+          variant="pill"
+          label="Sort order"
+          value={sortOrder}
+          onChange={setSortOrder}
+          options={[
+            { value: "asc", label: "Name, A to Z" },
+            { value: "desc", label: "Name, Z to A" },
+          ]}
+        />
       </div>
 
       {error && <ErrorBanner message={error} onDismiss={() => setError("")} />}
