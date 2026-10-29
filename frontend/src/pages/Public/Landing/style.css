@@ -142,7 +142,7 @@
   }
 
   .cta-copy h2 {
-    font-size: 1.875rem;
+    font-size: var(--text-3xl);
   }
 
   .section-head {

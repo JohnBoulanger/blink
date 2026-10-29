@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import MapEmbed from "../../../components/MapEmbed";
+import ClinicMap from "../../../components/ClinicMap";
 import StatusBadge from "../../../components/StatusBadge";
 import "./style.css";
 
@@ -180,7 +180,27 @@ export default function BusinessProfile() {
             <p className="bp-text">{profile.postal_address || "No address added."}</p>
             {hasLocation && profile.location && (
               <>
-                <MapEmbed lat={profile.location.lat} lon={profile.location.lon} />
+                <ClinicMap
+                  pins={[
+                    {
+                      id: profile.id,
+                      lat: profile.location.lat,
+                      lon: profile.location.lon,
+                      title: profile.business_name,
+                      card: {
+                        businessId: profile.id,
+                        businessName: profile.business_name,
+                        lines: [profile.postal_address ?? ""],
+                        to: `/businesses/${profile.id}`,
+                        linkLabel: "View public page",
+                      },
+                    },
+                  ]}
+                  variant="dot"
+                  label="Map of your clinic"
+                  touchPan={false}
+                  className="bp-map"
+                />
                 <p className="bp-coords tabular">
                   {profile.location.lat.toFixed(4)}, {profile.location.lon.toFixed(4)}
                 </p>

@@ -129,6 +129,10 @@
   color: var(--color-ink);
 }
 
+.bp-map {
+  height: 280px;
+}
+
 .bp-coords {
   font-size: var(--text-xs);
   color: var(--color-text-secondary);

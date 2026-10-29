@@ -4,6 +4,7 @@ import axios from "axios";
 import api from "../../../utils/api";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import BackLink from "../../../components/BackLink";
+import { toDateTimeLocal } from "../../../utils/format";
 import "./style.css";
 
 interface PositionType {
@@ -149,8 +150,8 @@ export default function BusinessJobCreate() {
     } catch (err) {
       setError(
         axios.isAxiosError(err)
-          ? err.response?.data?.error || "Failed to create job."
-          : "Failed to create job."
+          ? err.response?.data?.error || "Failed to create shift."
+          : "Failed to create shift."
       );
     } finally {
       setSaving(false);
@@ -161,7 +162,7 @@ export default function BusinessJobCreate() {
   if (verified === false)
     return (
       <div className="BusinessJobCreate page-enter">
-        <BackLink to="/business/jobs">Your jobs</BackLink>
+        <BackLink to="/business/jobs">Your shifts</BackLink>
         <header className="page-header">
           <div className="page-header-text">
             <h1>Post a shift</h1>
@@ -184,7 +185,7 @@ export default function BusinessJobCreate() {
 
   return (
     <div className="BusinessJobCreate page-enter">
-      <BackLink to="/business/jobs">Your jobs</BackLink>
+      <BackLink to="/business/jobs">Your shifts</BackLink>
       <header className="page-header">
         <div className="page-header-text">
           <h1>Post a shift</h1>
@@ -275,7 +276,7 @@ export default function BusinessJobCreate() {
                 id="start_time"
                 name="start_time"
                 type="datetime-local"
-                min={new Date().toISOString().slice(0, 16)}
+                min={toDateTimeLocal(new Date())}
                 value={form.start_time}
                 onChange={handleChange}
                 required
@@ -290,7 +291,7 @@ export default function BusinessJobCreate() {
                 id="end_time"
                 name="end_time"
                 type="datetime-local"
-                min={form.start_time || new Date().toISOString().slice(0, 16)}
+                min={form.start_time || toDateTimeLocal(new Date())}
                 value={form.end_time}
                 onChange={handleChange}
                 required

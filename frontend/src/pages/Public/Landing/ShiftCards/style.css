@@ -26,6 +26,99 @@
   gap: var(--space-10) var(--space-6);
 }
 
+/* cards on the left, their map on the right */
+.shift-layout.has-map {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.shift-layout.has-map .shift-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.shift-map-col {
+  position: sticky;
+  top: calc(var(--topbar-height) + var(--space-6));
+}
+
+.shift-map {
+  height: min(720px, calc(100vh - var(--topbar-height) - var(--space-12)));
+  min-height: 420px;
+}
+
+/* narrow screens: a short strip above the cards */
+.shift-strip {
+  position: relative;
+  margin-bottom: var(--space-6);
+}
+
+.shift-strip-map {
+  height: 180px;
+}
+
+/* same ink pill as the jobs page map toggle */
+.shift-strip-button {
+  position: absolute;
+  left: 50%;
+  /* clears the attribution line at the foot of the map */
+  bottom: var(--space-6);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-full);
+  background: var(--color-ink);
+  color: #ffffff;
+  box-shadow: var(--shadow-tier);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.shift-strip-button:hover {
+  background: #000000;
+}
+
+.shift-strip-button:active {
+  transform: translateX(-50%) scale(0.98);
+}
+
+/* the full-screen map, opened from the strip */
+.shift-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+}
+
+.shift-sheet-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 64px;
+  padding: var(--space-2) var(--container-gutter);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.shift-sheet-bar h2 {
+  font-size: var(--text-lg);
+  letter-spacing: -0.01em;
+}
+
+.shift-sheet-map {
+  flex: 1;
+  border: 0;
+  border-radius: 0;
+}
+
 .shift-error {
   margin-bottom: var(--space-4);
   font-size: var(--text-sm);

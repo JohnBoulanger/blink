@@ -14,7 +14,7 @@
 .demo-link {
   display: inline;
   padding: 4px 0;
-  border-radius: 4px;
+  border-radius: 0;
   font-size: inherit;
   font-weight: 600;
   color: var(--color-ink);

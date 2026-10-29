@@ -5,7 +5,7 @@ import api from "../../../utils/api";
 import useDebounce from "../../../hooks/useDebounce";
 import useMediaQuery from "../../../hooks/useMediaQuery";
 import { getClinicDirectory, hasLocation, type ClinicSummary } from "../../../utils/clinics";
-import { formatRate } from "../../../utils/format";
+import { formatDay, formatRate, formatShiftWhen } from "../../../utils/format";
 import Pagination from "../../../components/Pagination";
 import ShiftCard from "../../../components/ShiftCard";
 import ClinicMap, { type MapPin } from "../../../components/ClinicMap";
@@ -20,7 +20,7 @@ interface Job {
   id: number;
   status: string;
   position_type: { id: number; name: string };
-  business: { id: number; business_name: string };
+  business: { id: number; business_name: string; verified?: boolean };
   salary_min: number;
   salary_max: number;
   start_time: string;
@@ -36,7 +36,6 @@ export default function Jobs() {
   const [page, setPage] = useState(1);
   const [positionTypes, setPositionTypes] = useState<PositionType[]>([]);
   const [positionFilter, setPositionFilter] = useState(searchParams.get("position_type_id") ?? "");
-  const [sortField, setSortField] = useState("start_time");
   const [sortOrder, setSortOrder] = useState("asc");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -44,11 +43,10 @@ export default function Jobs() {
 
   // clinic locations come from the public clinic list, joined on the client
   const [clinics, setClinics] = useState<Map<number, ClinicSummary>>(new Map());
-  // the clinic highlighted by a hovered card or pin
-  const [activeClinic, setActiveClinic] = useState<number | null>(null);
+  // the shift highlighted by a hovered card or pill
+  const [activeId, setActiveId] = useState<number | null>(null);
   const isPhone = useMediaQuery("(max-width: 768px)");
   const [showMap, setShowMap] = useState(false);
-  const resultsRef = useRef<HTMLUListElement>(null);
 
   // debounce the position filter to avoid rapid re-fetches
   const debouncedPosition = useDebounce(positionFilter, 200);
@@ -92,7 +90,7 @@ export default function Jobs() {
         const params: Record<string, string | number> = {
           page: targetPage,
           limit,
-          sort: sortField,
+          sort: "start_time",
           order: sortOrder,
         };
         if (debouncedPosition) params.position_type_id = debouncedPosition;
@@ -111,22 +109,21 @@ export default function Jobs() {
       }
     }
     fetchJobs();
-  }, [page, debouncedPosition, businessFilter, sortField, sortOrder]);
+  }, [page, debouncedPosition, businessFilter, sortOrder]);
 
   // reset page to 1 when filter/sort changes (separate from fetch to avoid stale page)
-  const prevFiltersRef = useRef({ debouncedPosition, businessFilter, sortField, sortOrder });
+  const prevFiltersRef = useRef({ debouncedPosition, businessFilter, sortOrder });
   useEffect(() => {
     const prev = prevFiltersRef.current;
     if (
       prev.debouncedPosition !== debouncedPosition ||
       prev.businessFilter !== businessFilter ||
-      prev.sortField !== sortField ||
       prev.sortOrder !== sortOrder
     ) {
-      prevFiltersRef.current = { debouncedPosition, businessFilter, sortField, sortOrder };
+      prevFiltersRef.current = { debouncedPosition, businessFilter, sortOrder };
       setPage(1);
     }
-  }, [debouncedPosition, businessFilter, sortField, sortOrder]);
+  }, [debouncedPosition, businessFilter, sortOrder]);
 
   function clearBusinessFilter() {
     const next = new URLSearchParams(searchParams);
@@ -134,42 +131,33 @@ export default function Jobs() {
     setSearchParams(next);
   }
 
-  // one pin per clinic in the current results, labelled with its rate range
-  const pins = useMemo<MapPin[]>(() => {
-    const byClinic = new Map<number, Job[]>();
-    for (const job of jobs) {
-      const list = byClinic.get(job.business.id) ?? [];
-      list.push(job);
-      byClinic.set(job.business.id, list);
-    }
-    const result: MapPin[] = [];
-    for (const [id, list] of byClinic) {
-      const clinic = clinics.get(id);
-      if (!hasLocation(clinic)) continue;
-      const min = Math.min(...list.map((j) => j.salary_min));
-      const max = Math.max(...list.map((j) => j.salary_max));
-      const shifts = list.length === 1 ? "1 shift" : `${list.length} shifts`;
-      result.push({
-        id,
-        lat: clinic.location.lat,
-        lon: clinic.location.lon,
-        label: formatRate(min, max),
-        title: `${clinic.business_name}, ${shifts}`,
-      });
-    }
-    return result;
-  }, [jobs, clinics]);
-
-  // a pin click brings that clinic's first card into view
-  function revealClinic(id: number) {
-    setActiveClinic(id);
-    if (isPhone) setShowMap(false);
-    requestAnimationFrame(() => {
-      const card = resultsRef.current?.querySelector<HTMLElement>(`[data-clinic="${id}"] a`);
-      card?.scrollIntoView({ block: "center" });
-      card?.focus({ preventScroll: true });
-    });
-  }
+  // one price pill per shift in the current results, at its clinic
+  const pins = useMemo<MapPin[]>(
+    () =>
+      jobs.flatMap((job) => {
+        const clinic = clinics.get(job.business.id);
+        if (!hasLocation(clinic)) return [];
+        const rate = formatRate(job.salary_min, job.salary_max);
+        return [
+          {
+            id: job.id,
+            lat: clinic.location.lat,
+            lon: clinic.location.lon,
+            label: rate,
+            title: `${job.business.business_name}, ${job.position_type.name}, ${formatDay(job.start_time)}, ${rate} per hour`,
+            card: {
+              businessId: job.business.id,
+              businessName: job.business.business_name,
+              lines: [job.position_type.name, formatShiftWhen(job.start_time, job.end_time)],
+              rate,
+              to: `/jobs/${job.id}`,
+              linkLabel: "View shift",
+            },
+          },
+        ];
+      }),
+    [jobs, clinics]
+  );
 
   const totalPages = Math.ceil(count / limit);
   const clinicName =
@@ -225,19 +213,15 @@ export default function Jobs() {
   } else {
     results = (
       <>
-        <ul className="jobs-grid" ref={resultsRef}>
-          {jobs.map((job, i) => (
-            <li key={job.id} data-clinic={job.business.id}>
+        <ul className="jobs-grid">
+          {jobs.map((job) => (
+            <li key={job.id}>
               <ShiftCard
                 shift={job}
                 to={`/jobs/${job.id}`}
-                state={{ photoIndex: i }}
-                photoIndex={i}
-                active={activeClinic === job.business.id}
+                active={activeId === job.id}
                 onActiveChange={(on) =>
-                  setActiveClinic((current) =>
-                    on ? job.business.id : current === job.business.id ? null : current
-                  )
+                  setActiveId((current) => (on ? job.id : current === job.id ? null : current))
                 }
               />
             </li>
@@ -278,20 +262,10 @@ export default function Jobs() {
         </label>
 
         <label className="pill-select">
-          <span className="visually-hidden">Sort by</span>
-          <select value={sortField} onChange={(e) => setSortField(e.target.value)}>
-            <option value="start_time">Start date</option>
-            <option value="salary_min">Min salary</option>
-            <option value="salary_max">Max salary</option>
-            <option value="updatedAt">Recently updated</option>
-          </select>
-        </label>
-
-        <label className="pill-select">
-          <span className="visually-hidden">Order</span>
+          <span className="visually-hidden">Sort order</span>
           <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
+            <option value="asc">Soonest first</option>
+            <option value="desc">Latest first</option>
           </select>
         </label>
 
@@ -320,13 +294,15 @@ export default function Jobs() {
         )}
 
         {mapVisible && (
-          <aside className="jobs-map" aria-label="Map of clinics in these results">
+          <aside className="jobs-map" aria-label="Map of the shifts in these results">
             <ClinicMap
               pins={pins}
-              activeId={activeClinic}
-              onActiveChange={setActiveClinic}
-              onPinClick={revealClinic}
-              label="Clinics with open shifts"
+              variant="price"
+              activeId={activeId}
+              onActiveChange={setActiveId}
+              clusterNoun={["shift", "shifts"]}
+              label="Open shifts on a map"
+              touchPan
               className="jobs-map-frame"
             />
             {!loading && jobs.length > 0 && pins.length === 0 && (

@@ -95,12 +95,76 @@
   margin-bottom: 0;
 }
 
+.pbp-map {
+  height: 280px;
+}
+
+/* shift rows with hairlines, like the clinic's own job list */
 .pbp-shifts {
   list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.pbp-shifts > li {
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+/* the section hairline closes the list */
+.pbp-shifts > li:last-child {
+  border-bottom: 0;
+}
+
+.pbp-shift-row {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--space-8) var(--space-6);
-  padding-top: var(--space-2);
+  grid-template-columns: minmax(0, 1fr) auto 16px;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 64px;
+  padding: var(--space-3) var(--space-2);
+  margin-inline: calc(var(--space-2) * -1);
+  border-radius: var(--radius-control);
+  color: var(--color-ink);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.pbp-shift-row:hover {
+  color: var(--color-ink);
+  background: var(--color-surface-subtle);
+}
+
+.pbp-shift-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pbp-shift-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.pbp-shift-meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.pbp-shift-rate {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.pbp-shift-rate-unit {
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.pbp-shift-chevron,
+.pbp-shift-spinner {
+  color: var(--color-text-secondary);
 }
 
 /* contact card */
@@ -160,8 +224,8 @@
     border-radius: 0;
   }
 
-  .pbp-shifts {
-    grid-template-columns: minmax(0, 1fr);
+  .pbp-map {
+    height: 280px;
   }
 
   .pbp-contact > div {

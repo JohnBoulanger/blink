@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
 import { useNegotiation } from "../../../contexts/NegotiationContext/NegotiationContext";
@@ -14,7 +14,7 @@ import {
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import BackLink from "../../../components/BackLink";
 import ClinicPhoto from "../../../components/ClinicPhoto";
-import MapEmbed from "../../../components/MapEmbed";
+import ClinicMap from "../../../components/ClinicMap";
 import StatusBadge from "../../../components/StatusBadge";
 import { JOB_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
@@ -23,7 +23,7 @@ interface JobDetail {
   id: number;
   status: string;
   position_type: { id: number; name: string };
-  business: { id: number; business_name: string };
+  business: { id: number; business_name: string; verified?: boolean };
   note: string;
   salary_min: number;
   salary_max: number;
@@ -36,7 +36,6 @@ const timeFormat = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "
 
 export default function JobDetail() {
   const { jobId } = useParams();
-  const location = useLocation();
   const { hasActiveNeg } = useNegotiation();
   const [job, setJob] = useState<JobDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,9 +45,6 @@ export default function JobDetail() {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState("");
   const [clinic, setClinic] = useState<ClinicSummary | undefined>(undefined);
-
-  // the search page passes the card's photo so the header matches it
-  const photoIndex = (location.state as { photoIndex?: number } | null)?.photoIndex;
 
   // fetch job and seed interest state from server in parallel
   useEffect(() => {
@@ -192,7 +188,11 @@ export default function JobDetail() {
     <div className={`JobDetail page-enter${isOpen ? " jd-has-bar" : ""}`}>
       <BackLink to="/jobs">Back to shifts</BackLink>
 
-      <ClinicPhoto businessId={job.business.id} photoIndex={photoIndex} className="jd-photo" />
+      <ClinicPhoto
+        businessId={job.business.id}
+        businessName={job.business.business_name}
+        className="jd-photo"
+      />
 
       <div className="jd-layout">
         <div className="jd-main">
@@ -209,6 +209,9 @@ export default function JobDetail() {
                 <span className="jd-address">{clinic.postal_address}</span>
               )}
             </p>
+            {job.business.verified && (
+              <p className="jd-verified">Verified clinic · Reviewed by a Blink admin</p>
+            )}
           </header>
 
           <section className="jd-section" aria-labelledby="jd-shift-title">
@@ -237,7 +240,27 @@ export default function JobDetail() {
             <section className="jd-section jd-map" aria-labelledby="jd-map-title">
               <h2 id="jd-map-title">Where you will work</h2>
               <p className="jd-meta">{located.postal_address}</p>
-              <MapEmbed lat={located.location.lat} lon={located.location.lon} zoom={15} />
+              <ClinicMap
+                pins={[
+                  {
+                    id: located.id,
+                    lat: located.location.lat,
+                    lon: located.location.lon,
+                    title: located.business_name,
+                    card: {
+                      businessId: located.id,
+                      businessName: located.business_name,
+                      lines: [located.postal_address],
+                      to: `/businesses/${located.id}`,
+                      linkLabel: "View clinic",
+                    },
+                  },
+                ]}
+                variant="dot"
+                label={`Map of ${located.business_name}`}
+                touchPan={false}
+                className="jd-map-frame"
+              />
             </section>
           )}
         </div>

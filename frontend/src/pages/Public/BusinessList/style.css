@@ -47,13 +47,13 @@
 }
 
 .bl-card-name {
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
   font-weight: 600;
   line-height: 1.35;
 }
 
 .bl-card-meta {
-  font-size: 0.9375rem;
+  font-size: var(--text-md);
   line-height: 1.35;
   color: var(--color-text-secondary);
 }

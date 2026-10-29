@@ -7,6 +7,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import BackLink from "../../../components/BackLink";
 import JobTabs from "../../../components/JobTabs";
 import StatusBadge from "../../../components/StatusBadge";
+import { formatDay } from "../../../utils/format";
 import "./style.css";
 
 interface Candidate {
@@ -26,7 +27,20 @@ export default function BusinessCandidates() {
   // per-candidate invite loading/error
   const [inviteLoading, setInviteLoading] = useState<number | null>(null);
   const [inviteError, setInviteError] = useState<Record<number, string>>({});
+  // role and date for the subtitle; optional, so a failure leaves them out
+  const [positionName, setPositionName] = useState("");
+  const [startTime, setStartTime] = useState("");
   const limit = 10;
+
+  useEffect(() => {
+    api
+      .get(`/jobs/${jobId}`)
+      .then((res) => {
+        setPositionName(res.data.position_type?.name ?? "");
+        setStartTime(res.data.start_time ?? "");
+      })
+      .catch(() => undefined);
+  }, [jobId]);
 
   useEffect(() => {
     async function fetchCandidates() {
@@ -141,15 +155,20 @@ export default function BusinessCandidates() {
 
   return (
     <div className="BusinessCandidates page-enter">
-      <BackLink to="/business/jobs">Your jobs</BackLink>
+      <BackLink to="/business/jobs">Your shifts</BackLink>
       <header className="page-header">
         <div className="page-header-text">
           <h1>Candidates</h1>
           <p className="page-subtitle" aria-live="polite">
-            Job #{jobId}
-            {!loading &&
-              !error &&
-              ` · ${count} available professional${count !== 1 ? "s" : ""} you can invite`}
+            {[
+              positionName,
+              startTime && formatDay(startTime),
+              !loading &&
+                !error &&
+                `${count} available professional${count !== 1 ? "s" : ""} you can invite`,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
         </div>
       </header>

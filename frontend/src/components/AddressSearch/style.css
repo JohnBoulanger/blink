@@ -30,10 +30,10 @@
   list-style: none;
   margin: 0;
   padding: 4px 0;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-tier);
   max-height: 240px;
   overflow-y: auto;
   animation: addr-dropdown-in 0.1s ease;
@@ -54,7 +54,7 @@
 .addr-search-option {
   padding: 10px 14px;
   font-size: 0.875rem;
-  color: var(--text-body);
+  color: var(--color-ink);
   cursor: pointer;
   line-height: 1.4;
   white-space: normal;
@@ -66,7 +66,7 @@
 
 .addr-search-option:hover {
   background: var(--accent-subtle);
-  color: var(--text-strong);
+  color: var(--color-ink);
 }
 
 /* separator between consecutive options */

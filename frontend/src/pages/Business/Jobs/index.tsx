@@ -39,7 +39,6 @@ export default function BusinessJobs() {
   const [positionTypes, setPositionTypes] = useState<PositionType[]>([]);
   const [positionFilter, setPositionFilter] = useState("");
   const [statusFilters, setStatusFilters] = useState<string[]>(["open", "filled"]);
-  const [sortField, setSortField] = useState("start_time");
   const [sortOrder, setSortOrder] = useState("desc");
 
   const limit = 10;
@@ -53,8 +52,8 @@ export default function BusinessJobs() {
       .catch((err) =>
         setError(
           axios.isAxiosError(err)
-            ? err.response?.data?.error || "Failed to load jobs."
-            : "Failed to load jobs."
+            ? err.response?.data?.error || "Failed to load shifts."
+            : "Failed to load shifts."
         )
       );
   }, []);
@@ -68,7 +67,7 @@ export default function BusinessJobs() {
         const params: Record<string, unknown> = {
           page,
           limit,
-          sort: sortField,
+          sort: "start_time",
           order: sortOrder,
         };
         // send status as array so backend receives separate values (comma-joined causes 500)
@@ -81,30 +80,29 @@ export default function BusinessJobs() {
       } catch (err) {
         setError(
           axios.isAxiosError(err)
-            ? err.response?.data?.error || "Failed to load jobs."
-            : "Failed to load jobs."
+            ? err.response?.data?.error || "Failed to load shifts."
+            : "Failed to load shifts."
         );
       } finally {
         setLoading(false);
       }
     }
     fetchJobs();
-  }, [page, debouncedPosition, statusFilters, sortField, sortOrder]);
+  }, [page, debouncedPosition, statusFilters, sortOrder]);
 
   // reset to page 1 when filters change
-  const prevFiltersRef = useRef({ debouncedPosition, statusFilters, sortField, sortOrder });
+  const prevFiltersRef = useRef({ debouncedPosition, statusFilters, sortOrder });
   useEffect(() => {
     const prev = prevFiltersRef.current;
     if (
       prev.debouncedPosition !== debouncedPosition ||
       prev.statusFilters !== statusFilters ||
-      prev.sortField !== sortField ||
       prev.sortOrder !== sortOrder
     ) {
-      prevFiltersRef.current = { debouncedPosition, statusFilters, sortField, sortOrder };
+      prevFiltersRef.current = { debouncedPosition, statusFilters, sortOrder };
       setPage(1);
     }
-  }, [debouncedPosition, statusFilters, sortField, sortOrder]);
+  }, [debouncedPosition, statusFilters, sortOrder]);
 
   // toggle a single status in the multi-select filter
   function toggleStatus(s: string) {
@@ -134,7 +132,7 @@ export default function BusinessJobs() {
   } else if (jobs.length === 0) {
     body = (
       <div className="empty-state">
-        <p className="empty-state-title">No jobs match these filters</p>
+        <p className="empty-state-title">No shifts match these filters</p>
         <p>Pick other statuses above, or post a new shift for professionals to find.</p>
         <Link to="/business/jobs/new" className="btn-primary">
           Post a shift
@@ -203,9 +201,9 @@ export default function BusinessJobs() {
     <div className="BusinessJobs page-enter">
       <header className="page-header">
         <div className="page-header-text">
-          <h1>Your jobs</h1>
+          <h1>Your shifts</h1>
           <p className="page-subtitle" aria-live="polite">
-            {loading ? "Loading jobs…" : `${count} job${count !== 1 ? "s" : ""}`}
+            {loading ? "Loading shifts…" : `${count} shift${count !== 1 ? "s" : ""}`}
           </p>
         </div>
         <Link to="/business/jobs/new" className="btn-primary">
@@ -229,7 +227,7 @@ export default function BusinessJobs() {
           ))}
         </div>
 
-        <div className="bjobs-sort-row" role="group" aria-label="Filter and sort jobs">
+        <div className="bjobs-sort-row" role="group" aria-label="Filter and sort shifts">
           <label className="pill-select">
             <span className="visually-hidden">Position type</span>
             <select
@@ -247,21 +245,10 @@ export default function BusinessJobs() {
           </label>
 
           <label className="pill-select">
-            <span className="visually-hidden">Sort by</span>
-            <select value={sortField} onChange={(e) => setSortField(e.target.value)}>
-              <option value="start_time">Start date</option>
-              <option value="end_time">End date</option>
-              <option value="salary_min">Min salary</option>
-              <option value="salary_max">Max salary</option>
-              <option value="createdAt">Date posted</option>
-              <option value="updatedAt">Last updated</option>
-            </select>
-          </label>
-          <label className="pill-select">
-            <span className="visually-hidden">Order</span>
+            <span className="visually-hidden">Sort order</span>
             <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-              <option value="desc">Descending</option>
-              <option value="asc">Ascending</option>
+              <option value="asc">Soonest first</option>
+              <option value="desc">Latest first</option>
             </select>
           </label>
         </div>

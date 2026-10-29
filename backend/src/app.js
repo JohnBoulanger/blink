@@ -33,7 +33,7 @@ function create_app() {
     })
   );
 
-  // security headers — relax CSP so leaflet map tiles and styles load
+  // security headers — relax CSP so maplibre can load openfreemap tiles and run its worker
   // allow cross-origin resource loading so frontend can display uploaded files
   app.use(
     helmet({
@@ -42,8 +42,16 @@ function create_app() {
           defaultSrc: ["'self'"],
           scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
           styleSrc: ["'self'", "'unsafe-inline'", "https://unpkg.com"],
-          imgSrc: ["'self'", "data:", "blob:", "https://tile.openstreetmap.org"],
-          connectSrc: ["'self'", "ws:", "wss:", "https://nominatim.openstreetmap.org"],
+          imgSrc: ["'self'", "data:", "blob:", "https://tiles.openfreemap.org"],
+          connectSrc: [
+            "'self'",
+            "ws:",
+            "wss:",
+            "https://nominatim.openstreetmap.org",
+            "https://tiles.openfreemap.org",
+          ],
+          workerSrc: ["'self'", "blob:"],
+          childSrc: ["'self'", "blob:"],
           fontSrc: ["'self'", "data:"],
           objectSrc: ["'none'"],
         },

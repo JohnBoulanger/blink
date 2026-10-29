@@ -9,7 +9,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import CountdownTimer from "../../../components/CountdownTimer";
 import StatusBadge from "../../../components/StatusBadge";
 import Logo from "../../../components/Logo";
-import { formatRate, formatShiftWhen } from "../../../utils/format";
+import { formatRate, formatShiftWhen, formatTime } from "../../../utils/format";
 import "./style.css";
 
 // role-appropriate fallback links
@@ -256,7 +256,7 @@ export default function Negotiation() {
             15-minute negotiation. It appears here.
           </p>
           <Link to={jobsTo} className="btn-secondary">
-            {role === "business" ? "Go to your jobs" : "Go to my shifts"}
+            {role === "business" ? "Go to your shifts" : "Go to my shifts"}
           </Link>
         </div>
       </div>
@@ -336,10 +336,7 @@ export default function Negotiation() {
                     <span className="visually-hidden">{isMine ? "You" : otherName}:</span>
                     <p className="msg-text">{msg.text}</p>
                     <time className="msg-time tabular" dateTime={msg.createdAt}>
-                      {new Date(msg.createdAt).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {formatTime(msg.createdAt)}
                     </time>
                   </li>
                 );
@@ -474,7 +471,7 @@ export default function Negotiation() {
                 </div>
               </div>
               <Link to={doneLink} className="btn-secondary neg-result-link">
-                {iAmCandidate ? "View my shifts" : "View your jobs"}
+                {iAmCandidate ? "View my shifts" : "View your shifts"}
               </Link>
             </div>
           )}
@@ -488,7 +485,7 @@ export default function Negotiation() {
                 to={BROWSE_LINK[role ?? "regular"] ?? "/jobs"}
                 className="btn-secondary neg-result-link"
               >
-                {iAmCandidate ? "Browse more jobs" : "Back to your jobs"}
+                {iAmCandidate ? "Browse more shifts" : "Back to your shifts"}
               </Link>
             </div>
           )}

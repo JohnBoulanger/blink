@@ -47,7 +47,6 @@
   --color-danger-border: #f5c7bb;
 
   /* radii */
-  --radius-sm: 6px;
   --radius-control: 8px;
   --radius-card: 14px;
   --radius-bubble: 16px;
@@ -70,6 +69,7 @@
   /* type scale */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
+  --text-md: 0.9375rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;
@@ -83,9 +83,6 @@
   /* the one shadow tier: search bar, hovered cards and menus */
   --shadow-tier:
     rgba(0, 0, 0, 0.02) 0 0 0 1px, rgba(0, 0, 0, 0.04) 0 2px 6px 0, rgba(0, 0, 0, 0.1) 0 4px 8px 0;
-  --shadow-sm: none;
-  --shadow-md: var(--shadow-tier);
-  --shadow-lg: var(--shadow-tier);
 
   /* control sizes */
   --control-height: 44px;
@@ -105,32 +102,12 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
   /* legacy names, mapped onto the system so existing pages keep working */
-  --bg: var(--color-surface);
-  --bg-base: var(--color-surface);
-  --bg-surface: var(--color-surface-subtle);
-  --bg-elevated: var(--color-surface);
-  --bg-hover: var(--color-surface-subtle);
-  --text: var(--color-text-body);
-  --text-body: var(--color-text-body);
-  --text-strong: var(--color-text);
   --text-muted: var(--color-text-muted);
   --border: var(--color-border);
   --border-light: var(--color-border-soft);
-  --accent: var(--color-accent);
   --accent-hover: var(--color-accent-hover);
   --accent-subtle: var(--color-accent-subtle);
-  --accent2: var(--color-text-muted);
-  --accent2-hover: var(--color-text);
-  --accent2-subtle: var(--color-surface-muted);
-  --accent-warm: var(--color-text-secondary);
-  --accent-warm-subtle: var(--color-surface-muted);
-  --error: var(--color-danger);
-  --error-bg: var(--color-danger-subtle);
-  --success: var(--color-success);
   --success-bg: var(--color-success-subtle);
-  --status-green-bg: var(--color-success-subtle);
-  --status-amber-bg: var(--color-warning-subtle);
-  --status-amber-text: var(--color-warning);
 
   font-family: var(--font-body);
   font-size: 16px;
@@ -477,7 +454,7 @@ button:disabled {
 .btn-sm {
   min-height: 32px;
   padding: 5px 12px;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
 }
 
 .btn-lg {
@@ -973,12 +950,12 @@ button:disabled {
 
 /* helper and error lines under a field */
 .field-hint {
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   color: var(--color-text-secondary);
 }
 
 .field-error {
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 500;
   color: var(--color-danger);
 }
@@ -992,11 +969,6 @@ button:disabled {
 /* pages render in place; the brand keeps motion to a few named moments */
 .page-enter {
   animation: none;
-}
-
-/* map tiles stay quiet so pins, price pills and controls carry the colour */
-.leaflet-tile-pane {
-  filter: grayscale(0.85) contrast(0.95) brightness(1.03);
 }
 
 .visually-hidden {
@@ -1038,5 +1010,13 @@ button:disabled {
   .detail-list > div {
     grid-template-columns: minmax(0, 1fr);
     gap: 2px;
+  }
+}
+
+/* touch targets on phones */
+@media (max-width: 768px) {
+  .chip,
+  .btn-sm {
+    min-height: 44px;
   }
 }

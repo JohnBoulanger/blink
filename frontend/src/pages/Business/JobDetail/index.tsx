@@ -14,6 +14,7 @@ import {
   formatLongDay,
   formatRate,
   formatTimeRange,
+  toDateTimeLocal,
 } from "../../../utils/format";
 import { JOB_STATUS, getStatus } from "../../../utils/status";
 import "./style.css";
@@ -28,11 +29,6 @@ interface JobDetail {
   end_time: string;
   note: string | null;
   worker: { id: number; first_name: string; last_name: string } | null;
-}
-
-// format a date string for datetime-local input
-function toLocalInput(iso: string): string {
-  return new Date(iso).toISOString().slice(0, 16);
 }
 
 const timeFormat = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" });
@@ -72,16 +68,16 @@ export default function BusinessJobDetail() {
         setEditForm({
           salary_min: String(res.data.salary_min),
           salary_max: String(res.data.salary_max),
-          start_time: toLocalInput(res.data.start_time),
-          end_time: toLocalInput(res.data.end_time),
+          start_time: toDateTimeLocal(res.data.start_time),
+          end_time: toDateTimeLocal(res.data.end_time),
           note: res.data.note ?? "",
         });
       })
       .catch((err) => {
         if (axios.isAxiosError(err) && err.response?.status === 404) {
-          setError("Job not found.");
+          setError("Shift not found.");
         } else {
-          setError("Failed to load job.");
+          setError("Failed to load shift.");
         }
       })
       .finally(() => setLoading(false));
@@ -133,8 +129,8 @@ export default function BusinessJobDetail() {
       setEditForm({
         salary_min: String(updated.salary_min ?? salaryMin),
         salary_max: String(updated.salary_max ?? salaryMax),
-        start_time: toLocalInput(updated.start_time ?? editForm.start_time),
-        end_time: toLocalInput(updated.end_time ?? editForm.end_time),
+        start_time: toDateTimeLocal(updated.start_time ?? editForm.start_time),
+        end_time: toDateTimeLocal(updated.end_time ?? editForm.end_time),
         note: updated.note ?? "",
       });
       setEditing(false);
@@ -182,7 +178,7 @@ export default function BusinessJobDetail() {
   if (error) {
     return (
       <div className="BusinessJobDetail page-enter">
-        <BackLink to="/business/jobs">Your jobs</BackLink>
+        <BackLink to="/business/jobs">Your shifts</BackLink>
         <p className="error-message" role="alert">
           {error}
         </p>
@@ -209,7 +205,7 @@ export default function BusinessJobDetail() {
     <div className="bjd-actions">
       {isOpen && !editing && (
         <button type="button" className="btn-secondary" onClick={() => setEditing(true)}>
-          Edit job
+          Edit shift
         </button>
       )}
 
@@ -217,7 +213,7 @@ export default function BusinessJobDetail() {
         !editing &&
         (confirmDelete ? (
           <div className="bjd-confirm" role="group" aria-label="Confirm delete">
-            <span>Delete this job?</span>
+            <span>Delete this shift?</span>
             <button type="button" className="btn-secondary" onClick={() => setConfirmDelete(false)}>
               Keep
             </button>
@@ -252,7 +248,7 @@ export default function BusinessJobDetail() {
 
   return (
     <div className="BusinessJobDetail page-enter">
-      <BackLink to="/business/jobs">Your jobs</BackLink>
+      <BackLink to="/business/jobs">Your shifts</BackLink>
 
       <header className="bjd-header">
         <div className="bjd-heading">
@@ -262,7 +258,6 @@ export default function BusinessJobDetail() {
           </div>
           <p className="bjd-meta tabular">
             {formatLongDay(job.start_time)} · {formatTimeRange(job.start_time, job.end_time)}
-            <span className="bjd-id"> · Job #{job.id}</span>
           </p>
         </div>
         {actions}
@@ -340,7 +335,7 @@ export default function BusinessJobDetail() {
         {/* inline edit form — open jobs only */}
         {editing && (
           <form onSubmit={handleEditSave} className="bjd-edit-form" aria-labelledby="bjd-edit">
-            <h2 id="bjd-edit">Edit job</h2>
+            <h2 id="bjd-edit">Edit shift</h2>
             {editError && (
               <p className="error-message" role="alert">
                 {editError}

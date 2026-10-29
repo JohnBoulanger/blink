@@ -65,7 +65,7 @@ The seed script (`npx prisma db seed`) creates these accounts. All accounts use 
 | Backend | Express.js, Prisma ORM, SQLite |
 | Real-time | Socket.IO (WebSocket) |
 | Auth | JWT (JSON Web Tokens) |
-| Maps | Leaflet + OpenStreetMap |
+| Maps | MapLibre GL JS + OpenFreeMap (OpenStreetMap data) |
 | Fonts | Schibsted Grotesk and Inter, self-hosted with Fontsource |
 | Security | Helmet, express-rate-limit, Zod validation |
 
@@ -167,20 +167,25 @@ Open http://localhost:5173.
 
 ## Photo credits
 
-The clinic photos in `frontend/public/photos/` are illustrative stock photos from [Unsplash](https://unsplash.com), used under the [Unsplash License](https://unsplash.com/license). They do not show the seeded clinics.
+The clinic photos in `frontend/public/photos/clinics/` are illustrative stock photos of optical shop fronts, windows and signs from [Unsplash](https://unsplash.com), used under the [Unsplash License](https://unsplash.com/license). Each seeded clinic has one fixed photo, cropped to 4:3. The clinics are fictional, and the photos do not show the buildings at their addresses.
 
 | File | Photographer | Source |
 |------|--------------|--------|
-| `clinic-01.jpg` | Donald Teel | [Unsplash](https://unsplash.com/photos/wall-display-of-sunglasses-in-an-optical-shop--G2kzjBx3Ps) |
-| `clinic-02.jpg` | Scott Van Daalen | [Unsplash](https://unsplash.com/photos/arranged-assorted-color-eyeglasses-on-rack-UsALNdok2m4) |
-| `clinic-03.jpg` | nrd | [Unsplash](https://unsplash.com/photos/white-eye-testing-machine-aMmDIsdnUro) |
-| `clinic-04.jpg` | Viktor Talashuk | [Unsplash](https://unsplash.com/photos/close-up-photo-of-eyeglasses-rack-5hC2YalkXHw) |
-| `clinic-05.jpg` | Sabhyata Sahu | [Unsplash](https://unsplash.com/photos/eyeglasses-displayed-on-optical-store-shelves-xGsOQcGFA9g) |
-| `clinic-06.jpg` | CHUTTERSNAP | [Unsplash](https://unsplash.com/photos/eyeglasses-lot-G8ioIHUDfNc) |
-| `clinic-07.jpg` | Judy Beth Morris | [Unsplash](https://unsplash.com/photos/Y0D5L-qKUcw) |
-| `clinic-08.jpg` | mdreza jalali | [Unsplash](https://unsplash.com/photos/collection-of-vintage-eyeglasses-displayed-in-a-shop-JA21BnjBtvo) |
-| `clinic-09.jpg` | Sabhyata Sahu | [Unsplash](https://unsplash.com/photos/eyeglasses-displayed-on-store-shelves-3yBmSWXbwyw) |
-| `clinic-10.jpg` | atelierbyvineeth | [Unsplash](https://unsplash.com/photos/a-person-looking-at-glasses-in-a-store-display-Mk3Bp2G5I5M) |
+| `bahen-vision-clinic.jpg` | Annie Spratt | [Unsplash](https://unsplash.com/photos/street-corner-with-optician-shop-and-bicycles-06g9ZCVDnhg) |
+| `spadina-vision-centre.jpg` | Zuzanna Adamczyk | [Unsplash](https://unsplash.com/photos/white-hippie-glasses-neon-light-decor-on-door-smbcpZ0OvRs) |
+| `bloor-eye-care.jpg` | Carlos Torres | [Unsplash](https://unsplash.com/photos/a-building-that-has-a-bunch-of-windows-on-it--Va3CiFtsYU) |
+| `king-west-optometry.jpg` | Isaac Owens | [Unsplash](https://unsplash.com/photos/person-in-doorway-of-optician-shop-rOC-_ssUw2o) |
+| `danforth-vision-studio.jpg` | Samuel Regan-Asante | [Unsplash](https://unsplash.com/photos/a-building-with-a-sign-that-says-sungglasses-on-it-mKgj3VawOT0) |
+| `queen-street-eyecare.jpg` | adrien lopes | [Unsplash](https://unsplash.com/photos/stylish-sunglasses-displayed-in-a-shop-window-WDT_HvnMyh0) |
+| `yorkville-optometry-group.jpg` | Alexander Zvir | [Unsplash](https://unsplash.com/photos/hats-and-sunglasses-in-shop-window-YZBXj3k03aU) |
+| `college-vision-clinic.jpg` | Joel Ambass | [Unsplash](https://unsplash.com/photos/red-neon-sign-reading-eye-exams-EM7A3xWfgqE) |
+| `harbourfront-eye-care.jpg` | martin lea | [Unsplash](https://unsplash.com/photos/neon-glasses-sign-on-brick-wall-lm3MpmxRFCw) |
+| `cssu-eyecare.jpg` | Emily Barnett | [Unsplash](https://unsplash.com/photos/a-building-with-a-neon-sign-on-the-side-of-it-5ihfJUEJUIM) |
+| `annex-vision-studio.jpg` | Alexander Zvir | [Unsplash](https://unsplash.com/photos/hats-and-sunglasses-in-shop-window-9tIr-qYLGUs) |
+| `rosedale-optometry.jpg` | Hoai Nam Mai | [Unsplash](https://unsplash.com/photos/street-view-of-buildings-with-an-optician-sign-wTIFfgG1saU) |
+| `liberty-village-eye-centre.jpg` | B C | [Unsplash](https://unsplash.com/photos/neon-sign-shaped-like-glasses-at-night-NBIjuClLAW0) |
+| `leslieville-vision-care.jpg` | lesha tuman | [Unsplash](https://unsplash.com/photos/optician-shop-sign-with-sunglasses-logo-ql_w4SwGKaM) |
+| `midtown-eye-centre.jpg` | Alexander Zvir | [Unsplash](https://unsplash.com/photos/hats-and-sunglasses-on-wire-mannequins-mFTM9nSMzJQ) |
 
 ## License
 

@@ -16,10 +16,6 @@ export interface ShiftCardData {
 interface ShiftCardProps {
   shift: ShiftCardData;
   to: string;
-  // position in the row or grid, so photos do not repeat
-  photoIndex?: number;
-  // router state passed along with the link
-  state?: unknown;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   // shows a spinner line while the click is being handled
   opening?: boolean;
@@ -32,8 +28,6 @@ interface ShiftCardProps {
 export default function ShiftCard({
   shift,
   to,
-  photoIndex,
-  state,
   onClick,
   opening = false,
   active = false,
@@ -42,7 +36,6 @@ export default function ShiftCard({
   return (
     <Link
       to={to}
-      state={state}
       className={`ShiftCard shift-card${active ? " active" : ""}`}
       onClick={onClick}
       aria-busy={opening}
@@ -53,7 +46,7 @@ export default function ShiftCard({
     >
       <ClinicPhoto
         businessId={shift.business.id}
-        photoIndex={photoIndex}
+        businessName={shift.business.business_name}
         badge={
           shift.business.verified ? <span className="photo-pill">Verified clinic</span> : undefined
         }

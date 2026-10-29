@@ -56,6 +56,11 @@
   text-decoration-thickness: 2px;
 }
 
+.jd-verified {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
 /* sections split by hairlines */
 .jd-section {
   display: flex;
@@ -89,12 +94,9 @@
   white-space: pre-line;
 }
 
-.jd-map .map-embed {
-  margin-top: var(--space-3);
-}
-
-.jd-map .map-container {
+.jd-map-frame {
   height: 260px;
+  margin-top: var(--space-3);
 }
 
 /* sticky card */

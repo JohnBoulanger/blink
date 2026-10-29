@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
 import { useAuth } from "../../../contexts/AuthContext/AuthContext";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import MapEmbed from "../../../components/MapEmbed";
 import BackLink from "../../../components/BackLink";
 import ClinicPhoto from "../../../components/ClinicPhoto";
-import ShiftCard from "../../../components/ShiftCard";
+import ClinicMap from "../../../components/ClinicMap";
+import { formatRate, formatShiftWhen } from "../../../utils/format";
 import useDemoLogin from "../Landing/useDemoLogin";
 import type { PublicShift } from "../Landing/types";
 import "./style.css";
@@ -103,7 +103,11 @@ export default function PublicBusinessProfile() {
     <div className="PublicBusinessProfile page-enter">
       <BackLink to="/businesses">All clinics</BackLink>
 
-      <ClinicPhoto businessId={business.id} className="pbp-photo" />
+      <ClinicPhoto
+        businessId={business.id}
+        businessName={business.business_name}
+        className="pbp-photo"
+      />
 
       <div className="pbp-layout">
         <div className="pbp-main">
@@ -137,18 +141,52 @@ export default function PublicBusinessProfile() {
                   {demo.error}
                 </p>
               )}
+              {/* the clinic is the page, so rows leave out its name and photo */}
               <ul className="pbp-shifts">
-                {shifts.map((shift, i) => (
-                  <li key={shift.id}>
-                    <ShiftCard
-                      shift={shift}
-                      to={`/jobs/${shift.id}`}
-                      photoIndex={i}
-                      onClick={(e) => openShift(e, shift.id)}
-                      opening={demo.pending !== null && openingId === shift.id}
-                    />
-                  </li>
-                ))}
+                {shifts.map((shift) => {
+                  const opening = demo.pending !== null && openingId === shift.id;
+                  return (
+                    <li key={shift.id}>
+                      <Link
+                        to={`/jobs/${shift.id}`}
+                        className="pbp-shift-row"
+                        onClick={(e) => openShift(e, shift.id)}
+                        aria-busy={opening}
+                      >
+                        <span className="pbp-shift-main">
+                          <span className="pbp-shift-title">{shift.position_type.name}</span>
+                          <span className="pbp-shift-meta tabular">
+                            {formatShiftWhen(shift.start_time, shift.end_time)}
+                          </span>
+                        </span>
+                        <span className="pbp-shift-rate tabular">
+                          {formatRate(shift.salary_min, shift.salary_max)}
+                          <span className="pbp-shift-rate-unit"> /hr</span>
+                        </span>
+                        {opening ? (
+                          <span className="btn-spinner pbp-shift-spinner" aria-hidden="true" />
+                        ) : (
+                          <svg
+                            className="pbp-shift-chevron"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            aria-hidden="true"
+                          >
+                            <path
+                              d="M9 6l6 6-6 6"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </section>
           )}
@@ -157,7 +195,27 @@ export default function PublicBusinessProfile() {
             <section className="pbp-section" aria-labelledby="pbp-map-title">
               <h2 id="pbp-map-title">Where the clinic is</h2>
               <p className="pbp-text">{business.postal_address}</p>
-              <MapEmbed lat={located.lat} lon={located.lon} />
+              <ClinicMap
+                pins={[
+                  {
+                    id: business.id,
+                    lat: located.lat,
+                    lon: located.lon,
+                    title: business.business_name,
+                    card: {
+                      businessId: business.id,
+                      businessName: business.business_name,
+                      lines: [business.postal_address],
+                      to: `/businesses/${business.id}`,
+                      linkLabel: "View clinic",
+                    },
+                  },
+                ]}
+                variant="dot"
+                label={`Map of ${business.business_name}`}
+                touchPan={false}
+                className="pbp-map"
+              />
             </section>
           )}
         </div>

@@ -26,6 +26,18 @@ export function formatLongDay(value: string): string {
   return longDayFormat.format(new Date(value));
 }
 
+// 12-hour clock, e.g. "9:05 AM"
+export function formatTime(value: string | Date): string {
+  return timeFormat.format(new Date(value));
+}
+
+// a value for <input type="datetime-local"> in the viewer's own time zone
+export function toDateTimeLocal(value: string | Date): string {
+  const d = new Date(value);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export function formatTimeRange(start: string, end: string): string {
   return `${timeFormat.format(new Date(start))}–${timeFormat.format(new Date(end))}`;
 }

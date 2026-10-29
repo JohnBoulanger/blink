@@ -31,7 +31,10 @@
   min-width: 88px;
 }
 
-.cand-profile-link {
+.cand-actions .cand-profile-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   text-decoration: underline;
 }
 

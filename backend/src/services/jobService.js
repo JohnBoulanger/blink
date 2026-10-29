@@ -102,6 +102,7 @@ class JobService {
         business: {
           id: job.business.accountId,
           business_name: job.business.business_name,
+          verified: job.business.verified,
         },
         salary_min: job.salary_min,
         salary_max: job.salary_max,
@@ -128,14 +129,24 @@ class JobService {
     const jobs = await prisma.job.findMany({
       where: { status: "open", start_time: { gt: new Date() }, positionType: { hidden: false } },
       orderBy: { start_time: "asc" },
-      take: 8,
+      take: 30,
       include: {
         business: true,
         positionType: true,
       },
     });
 
-    const results = jobs.map((job) => ({
+    // at most two shifts per clinic, so one clinic does not fill the list
+    const perBusiness = new Map();
+    const spread = jobs
+      .filter((job) => {
+        const count = perBusiness.get(job.businessId) ?? 0;
+        perBusiness.set(job.businessId, count + 1);
+        return count < 2;
+      })
+      .slice(0, 8);
+
+    const results = spread.map((job) => ({
       id: job.id,
       position_type: {
         id: job.positionType.id,
@@ -227,6 +238,7 @@ class JobService {
       business: {
         id: job.business.accountId,
         business_name: job.business.business_name,
+        verified: job.business.verified,
       },
       worker: job.worker
         ? {

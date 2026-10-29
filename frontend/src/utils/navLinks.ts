@@ -18,8 +18,8 @@ const regularLinks: NavItem[] = [
 ];
 
 const businessLinks: NavItem[] = [
-  { to: "/business/jobs", label: "My jobs", end: true },
-  { to: "/business/jobs/new", label: "Post job", end: true },
+  { to: "/business/jobs", label: "Your shifts", end: true },
+  { to: "/business/jobs/new", label: "Post a shift", end: true },
   { to: "/business/negotiations/me", label: "Negotiation", negotiation: true },
   { to: "/business/profile", label: "Profile" },
 ];

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import api from "../../../utils/api";
 import useDebounce from "../../../hooks/useDebounce";
@@ -16,7 +16,6 @@ interface Business extends ClinicSummary {
 }
 
 export default function BusinessList() {
-  const navigate = useNavigate();
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [count, setCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -63,7 +62,7 @@ export default function BusinessList() {
     setPage(1);
   }, [keyword, sortOrder]);
 
-  // one plain pin per clinic on this page
+  // one dot per clinic on this page
   const pins = useMemo<MapPin[]>(
     () =>
       businesses.flatMap((b) =>
@@ -73,8 +72,14 @@ export default function BusinessList() {
                 id: b.id,
                 lat: b.location.lat,
                 lon: b.location.lon,
-                label: "",
                 title: b.business_name,
+                card: {
+                  businessId: b.id,
+                  businessName: b.business_name,
+                  lines: [b.postal_address],
+                  to: `/businesses/${b.id}`,
+                  linkLabel: "View clinic",
+                },
               },
             ]
           : []
@@ -119,7 +124,7 @@ export default function BusinessList() {
     results = (
       <>
         <ul className="bl-grid">
-          {businesses.map((b, i) => (
+          {businesses.map((b) => (
             <li key={b.id}>
               <Link
                 to={`/businesses/${b.id}`}
@@ -129,7 +134,7 @@ export default function BusinessList() {
                 onFocus={() => setActiveId(b.id)}
                 onBlur={() => setActiveId(null)}
               >
-                <ClinicPhoto businessId={b.id} photoIndex={i} />
+                <ClinicPhoto businessId={b.id} businessName={b.business_name} />
                 <span className="bl-card-name">{b.business_name}</span>
                 <span className="bl-card-meta">{b.postal_address}</span>
                 {b.phone_number && <span className="bl-card-meta tabular">{b.phone_number}</span>}
@@ -179,10 +184,12 @@ export default function BusinessList() {
         <aside className="bl-map" aria-label="Map of the clinics on this page">
           <ClinicMap
             pins={pins}
+            variant="dot"
             activeId={activeId}
             onActiveChange={setActiveId}
-            onPinClick={(id) => navigate(`/businesses/${id}`)}
+            clusterNoun={["clinic", "clinics"]}
             label="Clinic locations"
+            touchPan={false}
             className="bl-map-frame"
           />
         </aside>

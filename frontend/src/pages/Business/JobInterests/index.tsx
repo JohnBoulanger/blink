@@ -9,6 +9,7 @@ import JobTabs from "../../../components/JobTabs";
 import NegotiationBanner from "../../../components/NegotiationBanner";
 import StatusBadge from "../../../components/StatusBadge";
 import { useNegotiation } from "../../../contexts/NegotiationContext/NegotiationContext";
+import { formatDay } from "../../../utils/format";
 import "./style.css";
 
 interface InterestRow {
@@ -30,6 +31,7 @@ export default function BusinessJobInterests() {
   // job status — needed to block negotiation start on filled/expired/cancelled jobs
   const [jobStatus, setJobStatus] = useState<string | null>(null);
   const [positionName, setPositionName] = useState("");
+  const [startTime, setStartTime] = useState("");
 
   // per-row negotiation start loading/error
   const [negLoading, setNegLoading] = useState<number | null>(null);
@@ -44,6 +46,7 @@ export default function BusinessJobInterests() {
       .then((res) => {
         setJobStatus(res.data.status);
         setPositionName(res.data.position_type?.name ?? "");
+        setStartTime(res.data.start_time ?? "");
       })
       .catch(() => {});
   }, [jobId]);
@@ -136,7 +139,7 @@ export default function BusinessJobInterests() {
                 <span className="bji-status">
                   {/* mutual = both parties interested, so a negotiation can start */}
                   {row.mutual && jobStatus === "filled" ? (
-                    <StatusBadge tone="success">Job filled</StatusBadge>
+                    <StatusBadge tone="success">Shift filled</StatusBadge>
                   ) : row.mutual ? (
                     <StatusBadge tone="success">Both interested</StatusBadge>
                   ) : (
@@ -179,13 +182,18 @@ export default function BusinessJobInterests() {
 
   return (
     <div className="BusinessJobInterests page-enter">
-      <BackLink to="/business/jobs">Your jobs</BackLink>
+      <BackLink to="/business/jobs">Your shifts</BackLink>
       <header className="page-header">
         <div className="page-header-text">
           <h1>Interests</h1>
           <p className="page-subtitle" aria-live="polite">
-            {positionName ? `${positionName} · ` : ""}Job #{jobId}
-            {!loading && !error && ` · ${count} interested`}
+            {[
+              positionName,
+              startTime && formatDay(startTime),
+              !loading && !error && `${count} interested`,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
           </p>
         </div>
       </header>

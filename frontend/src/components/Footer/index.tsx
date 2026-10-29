@@ -14,7 +14,7 @@ export default function Footer() {
           <p>
             Clinic photos are illustrative, from Unsplash.{" "}
             <a
-              href="https://github.com/JohnBoulanger/visus#photo-credits"
+              href="https://github.com/JohnBoulanger/blink#photo-credits"
               target="_blank"
               rel="noreferrer"
             >
@@ -24,7 +24,7 @@ export default function Footer() {
         </div>
         <a
           className="footer-link"
-          href="https://github.com/JohnBoulanger/visus"
+          href="https://github.com/JohnBoulanger/blink"
           target="_blank"
           rel="noreferrer"
         >

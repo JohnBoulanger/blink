@@ -35,7 +35,7 @@ Two mechanisms together, weighted equally:
 
 ## Capabilities and Constraints
 
-- Stack: React 19 + TypeScript + Vite frontend, Express + Prisma + SQLite + Socket.IO backend, single-service deploy. Maps use Leaflet with OpenStreetMap tiles. Fonts are self-hosted.
+- Stack: React 19 + TypeScript + Vite frontend, Express + Prisma + SQLite + Socket.IO backend, single-service deploy. Maps use MapLibre GL JS with OpenFreeMap tiles (OpenStreetMap data). Fonts are self-hosted.
 - All existing features, pages, and workflows stay. The overhaul changes presentation, not functionality.
 - The product name is Blink (formerly Visus). No logo asset exists yet.
 - The seeded Toronto clinics and demo accounts stay as the content shown.

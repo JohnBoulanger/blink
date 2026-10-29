@@ -34,10 +34,6 @@
   color: var(--color-text-secondary);
 }
 
-.bjd-id {
-  color: var(--color-text-secondary);
-}
-
 .bjd-actions {
   display: flex;
   flex-wrap: wrap;

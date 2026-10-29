@@ -33,7 +33,6 @@ export default function AdminPositionTypes() {
   // filters + sort
   const [keyword, setKeyword] = useState("");
   const [hiddenFilter, setHiddenFilter] = useState("");
-  const [sortField, setSortField] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
 
   // inline edit state — keyed by id
@@ -57,7 +56,7 @@ export default function AdminPositionTypes() {
   const debouncedKeyword = useDebounce(keyword, 300);
 
   // track previous filter values to detect changes and reset page atomically
-  const prevFiltersRef = useRef({ debouncedKeyword, hiddenFilter, sortField, sortOrder });
+  const prevFiltersRef = useRef({ debouncedKeyword, hiddenFilter, sortOrder });
 
   // fetch position types — resets to page 1 when filters change to avoid stale-page fetches
   useEffect(() => {
@@ -66,10 +65,9 @@ export default function AdminPositionTypes() {
     if (
       prev.debouncedKeyword !== debouncedKeyword ||
       prev.hiddenFilter !== hiddenFilter ||
-      prev.sortField !== sortField ||
       prev.sortOrder !== sortOrder
     ) {
-      prevFiltersRef.current = { debouncedKeyword, hiddenFilter, sortField, sortOrder };
+      prevFiltersRef.current = { debouncedKeyword, hiddenFilter, sortOrder };
       activePage = 1;
       setPage(1);
     }
@@ -78,12 +76,11 @@ export default function AdminPositionTypes() {
       setLoading(true);
       setError("");
       try {
-        // api uses separate sort keys: send only the active sort field key
-        // e.g. { name: "asc" } or { num_qualified: "desc" } — never both at once
+        // the api takes the sort as its own key, e.g. { name: "asc" }
         const params: Record<string, unknown> = {
           page: activePage,
           limit,
-          [sortField]: sortOrder,
+          name: sortOrder,
         };
         if (debouncedKeyword) params.keyword = debouncedKeyword;
         if (hiddenFilter !== "") params.hidden = hiddenFilter;
@@ -102,7 +99,7 @@ export default function AdminPositionTypes() {
       }
     }
     fetchPosTypes();
-  }, [page, debouncedKeyword, hiddenFilter, sortField, sortOrder]);
+  }, [page, debouncedKeyword, hiddenFilter, sortOrder]);
 
   // open inline edit for a row
   function startEdit(pt: PositionType) {
@@ -280,23 +277,10 @@ export default function AdminPositionTypes() {
           </select>
         </label>
         <label className="pill-select">
-          <span className="visually-hidden">Sort field</span>
-          <select
-            value={sortField}
-            onChange={(e) => {
-              setSortField(e.target.value);
-              setSortOrder("asc");
-            }}
-          >
-            <option value="name">Sort by name</option>
-            <option value="num_qualified">Sort by qualified</option>
-          </select>
-        </label>
-        <label className="pill-select">
           <span className="visually-hidden">Sort order</span>
           <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
+            <option value="asc">Name, A to Z</option>
+            <option value="desc">Name, Z to A</option>
           </select>
         </label>
       </div>

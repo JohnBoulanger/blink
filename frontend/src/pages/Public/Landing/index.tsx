@@ -73,7 +73,7 @@ export default function Landing() {
     <div className="Landing">
       <Hero clinics={clinics} positionTypes={positionTypes} loading={loading} />
 
-      <ShiftCards />
+      <ShiftCards clinics={clinics} />
 
       <HowItWorks />
 

@@ -398,7 +398,7 @@ export default function AdminQualifications() {
                         <td className="cell-actions">
                           <button
                             type="button"
-                            className={`btn-sm aq-toggle ${open ? "btn-secondary" : adminActions(q.status).length ? "btn-primary" : "btn-secondary"}`}
+                            className="btn-secondary btn-sm aq-toggle"
                             onClick={() => toggleExpand(q.id)}
                             aria-expanded={open}
                             aria-controls={open ? panelId : undefined}

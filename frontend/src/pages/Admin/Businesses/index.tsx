@@ -31,7 +31,6 @@ export default function AdminBusinesses() {
   const [keyword, setKeyword] = useState("");
   const [activatedFilter, setActivatedFilter] = useState("");
   const [verifiedFilter, setVerifiedFilter] = useState("");
-  const [sortField, setSortField] = useState("business_name");
   const [sortOrder, setSortOrder] = useState("asc");
 
   // per-row verify loading
@@ -45,7 +44,6 @@ export default function AdminBusinesses() {
     debouncedKeyword,
     activatedFilter,
     verifiedFilter,
-    sortField,
     sortOrder,
   });
 
@@ -57,14 +55,12 @@ export default function AdminBusinesses() {
       prev.debouncedKeyword !== debouncedKeyword ||
       prev.activatedFilter !== activatedFilter ||
       prev.verifiedFilter !== verifiedFilter ||
-      prev.sortField !== sortField ||
       prev.sortOrder !== sortOrder
     ) {
       prevFiltersRef.current = {
         debouncedKeyword,
         activatedFilter,
         verifiedFilter,
-        sortField,
         sortOrder,
       };
       activePage = 1;
@@ -78,7 +74,7 @@ export default function AdminBusinesses() {
         const params: Record<string, unknown> = {
           page: activePage,
           limit,
-          sort: sortField,
+          sort: "business_name",
           order: sortOrder,
         };
         if (debouncedKeyword) params.keyword = debouncedKeyword;
@@ -99,7 +95,7 @@ export default function AdminBusinesses() {
       }
     }
     fetchBusinesses();
-  }, [page, debouncedKeyword, activatedFilter, verifiedFilter, sortField, sortOrder]);
+  }, [page, debouncedKeyword, activatedFilter, verifiedFilter, sortOrder]);
 
   // toggle verified status for a single business
   async function toggleVerify(biz: Business) {
@@ -165,18 +161,10 @@ export default function AdminBusinesses() {
           </select>
         </label>
         <label className="pill-select">
-          <span className="visually-hidden">Sort field</span>
-          <select value={sortField} onChange={(e) => setSortField(e.target.value)}>
-            <option value="business_name">Sort by name</option>
-            <option value="owner_name">Sort by owner</option>
-            <option value="email">Sort by email</option>
-          </select>
-        </label>
-        <label className="pill-select">
           <span className="visually-hidden">Sort order</span>
           <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-            <option value="asc">A to Z</option>
-            <option value="desc">Z to A</option>
+            <option value="asc">Name, A to Z</option>
+            <option value="desc">Name, Z to A</option>
           </select>
         </label>
       </div>
@@ -235,7 +223,7 @@ export default function AdminBusinesses() {
                     <td className="cell-actions">
                       <button
                         type="button"
-                        className={`btn-sm ${biz.verified ? "btn-secondary" : "btn-primary"} ab-action`}
+                        className="btn-secondary btn-sm ab-action"
                         disabled={pendingId === biz.id}
                         onClick={() => toggleVerify(biz)}
                         aria-label={`${biz.verified ? "Unverify" : "Verify"} ${biz.business_name}`}

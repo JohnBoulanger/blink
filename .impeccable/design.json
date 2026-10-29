@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-29T00:00:00Z",
+  "title": "Design System: Blink",
+  "extensions": {
+    "colorMeta": {
+      "pine": { "role": "primary", "displayName": "Pine", "canonical": "#1f6f4a", "tonalRamp": ["#0b2a1b", "#123f29", "#175a3c", "#1f6f4a", "#3e8c66", "#7cb898", "#b5d9c5", "#e2f1e9"] },
+      "pine-deep": { "role": "primary", "displayName": "Deep Pine", "canonical": "#175a3c", "tonalRamp": ["#0b2a1b", "#123f29", "#175a3c", "#1f6f4a", "#3e8c66", "#7cb898", "#b5d9c5", "#e2f1e9"] },
+      "pine-tint": { "role": "primary", "displayName": "Pine Tint", "canonical": "#e2f1e9", "tonalRamp": ["#0b2a1b", "#123f29", "#175a3c", "#1f6f4a", "#3e8c66", "#7cb898", "#b5d9c5", "#e2f1e9"] },
+      "pine-band": { "role": "primary", "displayName": "Pine Band", "canonical": "#edf6f1", "tonalRamp": ["#123f29", "#1f6f4a", "#3e8c66", "#7cb898", "#b5d9c5", "#e2f1e9", "#edf6f1", "#f6fbf8"] },
+      "pine-border": { "role": "primary", "displayName": "Pine Border", "canonical": "#b5d9c5", "tonalRamp": ["#0b2a1b", "#123f29", "#175a3c", "#1f6f4a", "#3e8c66", "#7cb898", "#b5d9c5", "#e2f1e9"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#222222", "tonalRamp": ["#000000", "#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f7f7f7"] },
+      "ink-pressed": { "role": "neutral", "displayName": "Pressed Ink", "canonical": "#000000", "tonalRamp": ["#000000", "#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f7f7f7"] },
+      "text-secondary": { "role": "neutral", "displayName": "Secondary Grey", "canonical": "#6a6a6a", "tonalRamp": ["#000000", "#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f7f7f7"] },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "#dddddd", "tonalRamp": ["#000000", "#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f7f7f7"] },
+      "hairline-soft": { "role": "neutral", "displayName": "Soft Hairline", "canonical": "#ebebeb", "tonalRamp": ["#000000", "#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f7f7f7"] },
+      "border-strong": { "role": "neutral", "displayName": "Strong Border", "canonical": "#b0b0b0", "tonalRamp": ["#000000", "#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f7f7f7"] },
+      "surface": { "role": "neutral", "displayName": "White", "canonical": "#ffffff", "tonalRamp": ["#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f7f7f7", "#ffffff"] },
+      "surface-subtle": { "role": "neutral", "displayName": "Soft Surface", "canonical": "#f7f7f7", "tonalRamp": ["#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f2f2f2", "#f7f7f7"] },
+      "surface-muted": { "role": "neutral", "displayName": "Muted Surface", "canonical": "#f2f2f2", "tonalRamp": ["#222222", "#3d3d3d", "#6a6a6a", "#b0b0b0", "#dddddd", "#ebebeb", "#f2f2f2", "#f7f7f7"] },
+      "dot-ended": { "role": "neutral", "displayName": "Ended Grey", "canonical": "#c1c1c1", "tonalRamp": ["#222222", "#3d3d3d", "#6a6a6a", "#8f8f8f", "#c1c1c1", "#dddddd", "#ebebeb", "#f7f7f7"] },
+      "warning": { "role": "feedback", "displayName": "Amber", "canonical": "#8a5300", "tonalRamp": ["#3a2300", "#5c3800", "#8a5300", "#b06f10", "#d4993f", "#f3d9a4", "#fbecd0", "#fff6e5"] },
+      "warning-subtle": { "role": "feedback", "displayName": "Amber Wash", "canonical": "#fff6e5", "tonalRamp": ["#3a2300", "#5c3800", "#8a5300", "#b06f10", "#d4993f", "#f3d9a4", "#fbecd0", "#fff6e5"] },
+      "danger": { "role": "feedback", "displayName": "Danger Red", "canonical": "#c13515", "tonalRamp": ["#4a1407", "#7a210c", "#a12c11", "#c13515", "#de6a4f", "#f5c7bb", "#fbe3dc", "#fff4f1"] },
+      "danger-subtle": { "role": "feedback", "displayName": "Danger Wash", "canonical": "#fff4f1", "tonalRamp": ["#4a1407", "#7a210c", "#a12c11", "#c13515", "#de6a4f", "#f5c7bb", "#fbe3dc", "#fff4f1"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The landing hero headline only." },
+      "headline": { "displayName": "Headline", "purpose": "Page titles (h1) in the app; 1.75rem on phones." },
+      "title": { "displayName": "Title", "purpose": "Section headings (h2); 1.375rem on phones." },
+      "subtitle": { "displayName": "Subtitle", "purpose": "Card and panel headings (h3, h4)." },
+      "body": { "displayName": "Body", "purpose": "Running text and inputs." },
+      "body-sm": { "displayName": "Body small", "purpose": "Page subtitles, helper text, table cells." },
+      "label": { "displayName": "Label", "purpose": "Form labels, chips, nav links, status labels; buttons use 600." },
+      "caption": { "displayName": "Caption", "purpose": "Table headers, tab counts, photo overlays, search pill field labels. Sentence case." },
+      "figures": { "displayName": "Figures", "purpose": "Rates, times, counts and the countdown, in tabular figures." }
+    },
+    "shadows": [
+      { "name": "tier", "value": "rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0", "purpose": "The one shadow: landing search pill, hovered listing cards, account pill on hover, menus, map markers and the map card popup." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Card lift and map marker scale." },
+      { "name": "state", "value": "0.15s ease", "purpose": "Colour and border changes on controls and links." },
+      { "name": "card-lift", "value": "0.25s cubic-bezier(0.16, 1, 0.3, 1), translateY(-2px)", "purpose": "Listing card hover." },
+      { "name": "press", "value": "transform: scale(0.98), 0.1s ease", "purpose": "Button press." },
+      { "name": "status-pulse", "value": "opacity 1 to 0.35, 1.6s ease-in-out infinite", "purpose": "Live status dot, sidebar live dot and the current countdown minute." },
+      { "name": "logo-blink-loop", "value": "4.5s ease-in-out infinite, lids meet at 92%", "purpose": "The logo in the top bar." },
+      { "name": "logo-blink-once", "value": "0.42s ease-in-out, 0.15s delay", "purpose": "One blink when a negotiation is confirmed." },
+      { "name": "lid-close", "value": "scroll(root block), range 0 to 300px, curve 220px to 24px (96px to 12px on phones)", "purpose": "The landing eyelid band flattens on scroll." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "768px" },
+      { "name": "table-scroll", "value": "769px to 1100px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one coloured action on a screen.",
+      "html": "<button class=\"ds-btn-primary\">Try the demo</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 18px; border: 1px solid var(--color-pine, #1f6f4a); border-radius: 8px; background: var(--color-pine, #1f6f4a); color: #ffffff; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 600; line-height: 1.25; cursor: pointer; transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease; } .ds-btn-primary:hover { background: var(--color-pine-deep, #175a3c); border-color: var(--color-pine-deep, #175a3c); } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ink outline for secondary and destructive actions.",
+      "html": "<button class=\"ds-btn-secondary\">Decline</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 18px; border: 1px solid var(--color-ink, #222222); border-radius: 8px; background: #ffffff; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 600; line-height: 1.25; cursor: pointer; transition: background-color 0.15s ease, transform 0.1s ease; } .ds-btn-secondary:hover { background: var(--color-surface-subtle, #f7f7f7); } .ds-btn-secondary:active { transform: scale(0.98); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Hairline field with a doubled ink border on focus.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Hourly rate</span><input class=\"ds-input\" placeholder=\"35\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; } .ds-field-label { font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #222222); } .ds-input { width: 100%; min-height: 44px; padding: 10px 14px; border: 1px solid var(--color-border, #dddddd); border-radius: 8px; background: #ffffff; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 1rem; caret-color: var(--color-pine, #1f6f4a); outline: none; transition: border-color 0.15s ease, box-shadow 0.15s ease; } .ds-input::placeholder { color: #6a6a6a; } .ds-input:hover:not(:focus) { border-color: #b0b0b0; } .ds-input:focus { border-color: var(--color-ink, #222222); box-shadow: inset 0 0 0 1px var(--color-ink, #222222); }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Full pill toggle; Pine Tint when selected.",
+      "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-chip\" aria-pressed=\"true\">Optician</button><button class=\"ds-chip\" aria-pressed=\"false\">Technician</button></div>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; min-height: 36px; padding: 0 16px; border: 1px solid var(--color-border, #dddddd); border-radius: 999px; background: #ffffff; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: border-color 0.15s ease, background-color 0.15s ease; } .ds-chip:hover { border-color: var(--color-ink, #222222); } .ds-chip[aria-pressed=\"true\"] { background: var(--color-pine-tint, #e2f1e9); border-color: var(--color-pine, #1f6f4a); color: var(--color-pine-deep, #175a3c); } .ds-chip:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
+    },
+    {
+      "name": "Top Bar Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Pill hit area with a soft fill on hover.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link ds-active\" href=\"#\">Clinics</a><a class=\"ds-nav-link\" href=\"#\">How it works</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 4px; } .ds-nav-link { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 999px; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: background-color 0.15s ease; } .ds-nav-link:hover { background: var(--color-surface-subtle, #f7f7f7); } .ds-nav-link.ds-active { font-weight: 600; } .ds-nav-link:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
+    },
+    {
+      "name": "Listing Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Photo-led shift card that lifts on hover.",
+      "html": "<a class=\"ds-listing\" href=\"#\"><span class=\"ds-listing-photo\"><span class=\"ds-photo-pill\">Verified clinic</span></span><span class=\"ds-listing-name\">Bahen Vision Clinic</span><span class=\"ds-listing-meta\">Optometric Assistant (Level 1)</span><span class=\"ds-listing-meta\">Fri, Oct 30 · 9:00 AM–5:00 PM</span><span class=\"ds-listing-rate\"><strong>$25–35</strong> /hr</span></a>",
+      "css": ".ds-listing { display: flex; flex-direction: column; gap: 2px; width: 260px; padding: 8px; border-radius: 20px; color: var(--color-ink, #222222); font-family: var(--font-body, Inter, system-ui, sans-serif); text-decoration: none; transition: box-shadow 0.25s cubic-bezier(0.16,1,0.3,1), transform 0.25s cubic-bezier(0.16,1,0.3,1); } .ds-listing:hover, .ds-listing:focus-visible { box-shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0; transform: translateY(-2px); outline: none; } .ds-listing-photo { position: relative; display: block; aspect-ratio: 4 / 3; margin-bottom: 10px; border-radius: 14px; background: var(--color-pine-tint, #e2f1e9); } .ds-photo-pill { position: absolute; top: 12px; left: 12px; padding: 4px 10px; border-radius: 999px; background: #ffffff; font-size: 0.75rem; font-weight: 600; } .ds-listing-name { font-size: 0.9375rem; font-weight: 600; line-height: 1.35; } .ds-listing-meta { font-size: 0.9375rem; line-height: 1.35; color: #6a6a6a; } .ds-listing-rate { margin-top: 4px; font-size: 0.9375rem; font-variant-numeric: tabular-nums; } .ds-listing-rate strong { font-weight: 600; }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "custom",
+      "refersTo": "status-badge",
+      "description": "Dot plus label; only Live is green and pulses.",
+      "html": "<div style=\"display:flex;gap:20px\"><span class=\"ds-status ds-live\"><span class=\"ds-dot\"></span>Live</span><span class=\"ds-status ds-success\"><span class=\"ds-dot\"></span>Filled</span><span class=\"ds-status ds-pending\"><span class=\"ds-dot\"></span>Open</span><span class=\"ds-status ds-ended\"><span class=\"ds-dot\"></span>Expired</span></div>",
+      "css": ".ds-status { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #222222); } .ds-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-ink, #222222); } .ds-live .ds-dot { background: var(--color-pine, #1f6f4a); animation: ds-pulse 1.6s ease-in-out infinite; } .ds-pending .ds-dot { background: transparent; box-shadow: inset 0 0 0 1.5px #6a6a6a; } .ds-ended { color: #6a6a6a; } .ds-ended .ds-dot { background: #c1c1c1; } @keyframes ds-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } } @media (prefers-reduced-motion: reduce) { .ds-live .ds-dot { animation: none; } }"
+    },
+    {
+      "name": "Negotiation Countdown",
+      "kind": "custom",
+      "refersTo": "countdown",
+      "description": "Fifteen dots, one per minute, with a plain sentence.",
+      "html": "<div class=\"ds-countdown\" role=\"timer\"><span class=\"ds-cd-dots\"><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-left\"></i><i class=\"ds-cd ds-current\"></i><i class=\"ds-cd\"></i><i class=\"ds-cd\"></i><i class=\"ds-cd\"></i></span><span class=\"ds-cd-value\">12 of 15 minutes left</span></div>",
+      "css": ".ds-countdown { display: inline-flex; flex-direction: column; gap: 8px; font-family: var(--font-body, Inter, system-ui, sans-serif); } .ds-cd-dots { display: flex; gap: 5px; } .ds-cd { display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-border, #dddddd); } .ds-left, .ds-current { background: var(--color-pine, #1f6f4a); } .ds-current { animation: ds-cd-pulse 1.6s ease-in-out infinite; } .ds-cd-value { font-size: 0.875rem; font-weight: 500; color: var(--color-ink, #222222); font-variant-numeric: tabular-nums; } @keyframes ds-cd-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } } @media (prefers-reduced-motion: reduce) { .ds-current { animation: none; } }"
+    },
+    {
+      "name": "Map Price Pill",
+      "kind": "custom",
+      "refersTo": "map-price-pill",
+      "description": "White rate pill on the map; Pine when active; ink cluster.",
+      "html": "<div style=\"display:flex;gap:10px;padding:16px;background:#f7f7f7\"><button class=\"ds-map-pill\">$29–39</button><button class=\"ds-map-pill ds-active\">$37–47</button><button class=\"ds-map-cluster\">4 shifts</button></div>",
+      "css": ".ds-map-pill, .ds-map-cluster { display: inline-flex; align-items: center; border: 0; border-radius: 999px; font-family: var(--font-body, Inter, system-ui, sans-serif); font-size: 0.875rem; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; cursor: pointer; box-shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.1) 0 4px 8px 0; transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s cubic-bezier(0.16,1,0.3,1); } .ds-map-pill { min-height: 28px; padding: 0 10px; background: #ffffff; color: var(--color-ink, #222222); font-weight: 700; } .ds-map-pill:hover, .ds-map-pill.ds-active { background: var(--color-pine, #1f6f4a); color: #ffffff; transform: scale(1.06); } .ds-map-cluster { min-height: 30px; padding: 0 12px; background: var(--color-ink, #222222); color: #ffffff; font-weight: 600; } .ds-map-cluster:hover { transform: scale(1.06); } .ds-map-pill:focus-visible, .ds-map-cluster:focus-visible { outline: 2px solid var(--color-ink, #222222); outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Marketplace",
+    "overview": "Blink borrows the grammar of a mature listings marketplace and applies it to optometry shifts. Shifts read like listings: a storefront photo, the clinic name, the role, the day and the rate. Search comes first and sits in a wide pill. The canvas is white, the text is near-black ink, and one green does every job that needs colour. Everything else is hairlines, soft grey surfaces and type.\n\nDensity changes with the mode. Public pages breathe, with a centred display headline and generous vertical space. App screens (shift search, negotiation, admin tables) are tighter and more precise: hairline rows, sticky table headers, tabular figures and quiet underline tabs. Motion is rare and named: the logo blinks, the hero's eyelid band flattens on scroll, the live dot pulses, and a confirmed match plays one blink. Pages do not animate in.\n\nThe brand mark is a two-lid eye. The upper lid is ink, the lower lid is Pine with three short lashes, and the lowercase \"blink\" wordmark sits beside it in the display face. The product rejects the gradient hero with stock icon cards, a clinical white-and-blue hospital look, playful styling and a dark technical look.",
+    "keyCharacteristics": [
+      "One accent, Pine, on a white and ink base.",
+      "Photo-led listing cards with one fixed illustrative storefront photo per clinic.",
+      "Schibsted Grotesk headlines, Inter interface text, tabular figures for money and times.",
+      "8px controls, 14px cards, full pills for search, chips and map markers.",
+      "One soft shadow tier, used only for lift: search, hovered cards, menus and map markers.",
+      "Statuses are a dot and a label, never a coloured pill."
+    ],
+    "rules": [
+      { "name": "The One Green Rule", "body": "Pine is the only accent. If a new element needs emphasis and is not a primary action, a live state or a selected state, it gets ink or weight, not a colour.", "section": "colors" },
+      { "name": "The Live Is Green Rule", "body": "Among statuses, only Live is green, and it pulses. Filled and Approved use a solid ink dot, Open and In review use a hollow grey ring, Ended states use a grey dot.", "section": "colors" },
+      { "name": "The Tabular Money Rule", "body": "Rates, times, counts and the countdown use tabular figures (`font-variant-numeric: tabular-nums`), so columns and live numbers do not jitter.", "section": "typography" },
+      { "name": "The Sentence Case Rule", "body": "No text in the product is uppercase or letter-spaced for decoration. Small labels name a field; they never sit above a heading as a tag.", "section": "typography" },
+      { "name": "The One Tier Rule", "body": "There is one shadow. A hovered listing card gets the tier and rises 2px; nothing gets a second, heavier shadow.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Pine (#1f6f4a) only for primary actions, live and selected states, form-control fills, clinic map pins and the logo's lower lid.",
+      "Do show every status as an 8px dot plus a sentence-case label.",
+      "Do set rates, times and counts in tabular figures.",
+      "Do use 8px corners for controls, 14px for cards and photos, and full pills for search, chips and map markers.",
+      "Do keep surfaces flat at rest and use the one shadow tier for lift.",
+      "Do lead listings with the clinic's fixed photo and keep the \"Illustrative photo\" note.",
+      "Do honour reduced motion: the logo, the eyelid band and the pulses all stop."
+    ],
+    "donts": [
+      "Don't add a second accent colour or colour-coded status pills.",
+      "Don't make any status other than Live green.",
+      "Don't show a large ticking countdown number; the 15 dots carry the time.",
+      "Don't add a second, heavier shadow.",
+      "Don't use a gradient hero, stock icon feature cards, a white-and-blue clinical look, playful styling or a dark technical theme.",
+      "Don't put uppercase or letter-spaced tags above headings.",
+      "Don't colour destructive buttons red; confirm the action in context instead."
+    ]
+  }
+}
